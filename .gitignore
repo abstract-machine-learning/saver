@@ -1,1 +1,4 @@
+*.o
+src/saver
+
 bin/*
