@@ -55,6 +55,7 @@ saver:
 
 install:
 	@echo "Moving into installation folder $(INSTALL_FOLDER)/$(NAME)..."
+	@mkdir -p ../bin
 	@mv $(NAME) $(INSTALL_FOLDER)/$(NAME)
 
 clean:
