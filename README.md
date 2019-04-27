@@ -25,6 +25,11 @@ then:
     make install
 The executable file will be available under `saver/bin/saver`.
 
+Every piece of code is documented using [Doxygen](http://www.doxygen.nl/). If you wish to generate the documentation pages (HTML), run:
+
+    cd saver/src
+    make doc
+
 ## Usage
 Run `saver` without arguments for a quick online help message. Full syntax is:
 
