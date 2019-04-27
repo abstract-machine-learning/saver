@@ -1,7 +1,7 @@
 # SAVer
 SAVer (**S**VM **A**bstract **Ver**ifier) is an abstract interpretation based tool for proving properties of SVMs, in particular we aim at proving robustness or vulnerability properties of classifiers.
 
-Given a point *x* and perturbation function *P*, SAVer symbolically computes *P(x)*, the region of (possibly infinite) points which corresponds to perturbations of *x*, and runs an abstract version of the SVM on it, returning a superset of the labels associated to points in *P(x)*. Whenever such set contains a single label, the concrete SVM classifier is definitively robust on point *x* for perturbation *P*.
+Given a point *x* and perturbation function *P*, SAVer symbolically computes an overapproximation of *P(x)*, the region of (possibly infinite) points which corresponds to perturbations of *x*, and runs an abstract version of the SVM on it, returning a superset of the labels associated to points in *P(x)*. Whenever such set contains a single label, the concrete SVM classifier is definitively robust on point *x* for perturbation *P*.
 
 ## Requirements
 
