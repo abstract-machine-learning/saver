@@ -1,9 +1,9 @@
 # SAVer
-SVM Abstract Verifier tool
+SAVer (**S**VM **A**bstract **Ver**ifier) is an abstract interpretation based tool for proving properties of SVMs, in particular we aim at proving robustness or vulnerability properties. Given a point *x* and perturbation function *P*, SAVer symbolically computes *P(x)*, the region of (possibly infinite) points which corresponds to perturbations of *x*, and runs an abstract version of the SVM on it, returning a superset of the labels associated to points in *P(x)*.
 
 ## Requirements
 
- - Any C compiler compatible with C99
+ - Any C99-compatible C compiler
 
 ## Installation
 To install SAVer you need to clone or download the source files from this repository and compile them. There are no additional requirement nor dependencies:
