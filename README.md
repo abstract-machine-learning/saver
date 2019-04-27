@@ -3,6 +3,8 @@ SAVer (**S**VM **A**bstract **Ver**ifier) is an abstract interpretation based to
 
 Given a point *x* and perturbation function *P*, SAVer symbolically computes an overapproximation of *P(x)*, the region of (possibly infinite) points which corresponds to perturbations of *x*, and runs an abstract version of the SVM on it, returning a superset of the labels associated to points in *P(x)*. Whenever such set contains a single label, the concrete SVM classifier is definitively robust on point *x* for perturbation *P*.
 
+![Example of provable robustness](https://raw.githubusercontent.com/svm-abstract-verifier/saver/master/doc/images/example-right.svg?sanitize=true)
+
 ## Requirements
 
  - Any C99-compatible C compiler
