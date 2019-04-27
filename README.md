@@ -37,7 +37,7 @@ You can find data sets and trained SVM classifiers in our [data-collection repos
 
 ## Example
     bin/saver ../data/mnist/svm-rbf-60k.dat ../data/mnist/test-set-normalized.csv raf l_inf 0.15
-will evaluate whether the classifier in `../data/mnist/svn-rbf-60k.dat` is robust on the points taken from the data set in `../data/mnist/test-set-normalized.csv`, with respect to an L-infinity perturbation of magnitude 15% using the RAF abstract domain for the analysis.
+will evaluate whether the classifier in `../data/mnist/svm-rbf-60k.dat` is robust on each point taken from the data set in `../data/mnist/test-set-normalized.csv`, with respect to an L-infinity perturbation of magnitude 15% using the RAF abstract domain for the analysis.
 
 ## Classifier format
 SAVer supports OVO SVM classifier files in the following format:
@@ -54,6 +54,8 @@ SAVer supports OVO SVM classifier files in the following format:
     <support vectors>
     <biases>
 Where alpha, support vectors and biases are stored as described by [Support Vector Machines - scikit-learn](https://scikit-learn.org/stable/modules/svm.html#multi-class-classification) documentation. You may also want to check [our data collection repository](https://github.com/svm-abstract-verifier/data-collection) for some examples, in particular the easy-to-read [Iris linear SVM classifier](https://github.com/svm-abstract-verifier/data-collection/blob/master/iris/svm-linear.dat.zip).
+
+In particular, every SVM trained with `scikit-learn` and `libsvm` is compatible with this format.
 
 ## Data set format
 Data sets are comma-separated-values (CSV) files in the following format:
