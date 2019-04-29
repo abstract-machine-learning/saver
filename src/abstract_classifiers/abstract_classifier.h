@@ -9,6 +9,7 @@
 #define ABSTRACT_CLASSIFIER_H
 
 #include "../classifier.h"
+#include "../adversarial_region.h"
 #include "../abstract_domains/abstract_domain.h"
 #include "../perturbation.h"
 
@@ -17,21 +18,8 @@
 #define DEFAULT_ABSTRACTION "interval"
 
 
-/**
- * Structure of an adversarial region.
- */
-struct adversarial_region {
-    const Real *sample;               /**< Originator of the region. */
-    const Perturbation perturbation;  /**< Perturbation function. */
-};
-
-
 /** Type of an abstract classifier.*/
 typedef struct abstract_classifier *AbstractClassifier;
-
-
-/** Type of an adversarial region. */
-typedef struct adversarial_region AdversarialRegion;
 
 
 /**
