@@ -44,7 +44,7 @@ Where
  - *perturbation*: optional, type of perturbation; must be one of *l_inf*, *frame* (default: *frame*)
  - *perturbation parameters*: list of parameter specific for the type of perturbation; all perturbation have at least the magnitude parameter
 
-You can find data sets and trained SVM classifiers in our [data-collection repository](https://github.com/svm-abstract-verifier/data-collection/blob/master/iris/data-set.csv.zip).
+You can find data sets and trained SVM classifiers in our [data-collection repository](https://github.com/svm-abstract-verifier/data-collection/).
 
 ## Example
     bin/saver ../data/mnist/svm-rbf-60k.dat ../data/mnist/test-set-normalized.csv raf l_inf 0.15
