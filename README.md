@@ -18,6 +18,7 @@ To install SAVer you need to clone or download the source files from this reposi
 or:
 
     wget https://github.com/svm-abstract-verifier/saver/archive/master.zip
+    unzip master.zip
 then:
 
     cd saver/src
