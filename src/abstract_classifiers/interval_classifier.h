@@ -4,6 +4,7 @@
  * Performs an interval analysis on a classifier.
  *
  * @file interval_classifier.h
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #ifndef INTERVAL_CLASSIFIER_H
 #define INTERVAL_CLASSIFIER_H

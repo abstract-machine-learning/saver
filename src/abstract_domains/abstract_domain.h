@@ -4,6 +4,7 @@
  * Defines which abstractions are available.
  * 
  * @file abstract_domain.h
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #ifndef ABSTRACT_DOMAIN_H
 #define ABSTRACT_DOMAIN_H

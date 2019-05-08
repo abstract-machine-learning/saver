@@ -4,6 +4,7 @@
  * Performs a RAF analysis on a classifier.
  *
  * @file raf_classifier.h
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #ifndef RAF_CLASSIFIER_H
 #define RAF_CLASSIFIER_H

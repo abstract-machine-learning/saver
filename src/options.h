@@ -4,6 +4,7 @@
  * Reads and sets program options.
  *
  * @file options.h
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #ifndef OPTIONS_H
 #define OPTIONS_H

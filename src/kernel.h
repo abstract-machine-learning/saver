@@ -4,6 +4,7 @@
  * Defines a kernel function.
  * 
  * @file kernel.h
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #ifndef KERNEL_H
 #define KERNEL_H

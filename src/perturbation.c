@@ -12,6 +12,11 @@ struct perturbation {
     unsigned int space_size;  /**< Size of the space. */
     /** Data of different perturbations. */
     union {
+        /** Structure of a hyper rectangle perturbation. */
+        struct {
+            Real *epsilon_l;  /**< Array of lowerbound epsilons. */
+            Real *epsilon_u;  /**< Array of upperbound epsilons. */
+        } hyper_rectangle;
         /** Structure of a frame perturbation. */
         struct {
             unsigned int image_width;   /**< Width of the image. */
@@ -21,6 +26,27 @@ struct perturbation {
         } frame;
     } perturbation_data;
 };
+
+
+
+void perturbation_create_hyper_rectangle(
+    Perturbation *perturbation,
+    const unsigned int space_size
+) {
+    unsigned int i;
+
+    *perturbation = (Perturbation) malloc(sizeof(struct perturbation));
+    (*perturbation)->type = PERTURBATION_HYPER_RECTANGLE;
+    (*perturbation)->magnitude = 0.0;
+    (*perturbation)->space_size = space_size;
+    (*perturbation)->perturbation_data.hyper_rectangle.epsilon_l = (Real *) malloc(space_size * sizeof(Real));
+    (*perturbation)->perturbation_data.hyper_rectangle.epsilon_u = (Real *) malloc(space_size * sizeof(Real));
+
+    for (i = 0; i < space_size; ++i) {
+        (*perturbation)->perturbation_data.hyper_rectangle.epsilon_l[i] = 0.0;
+        (*perturbation)->perturbation_data.hyper_rectangle.epsilon_u[i] = 0.0;
+    }
+}
 
 
 
@@ -61,8 +87,35 @@ void perturbation_read(
 
 
 void perturbation_delete(Perturbation *perturbation) {
+    if ((*perturbation)->type == PERTURBATION_HYPER_RECTANGLE) {
+        free((*perturbation)->perturbation_data.hyper_rectangle.epsilon_l);
+        free((*perturbation)->perturbation_data.hyper_rectangle.epsilon_u);
+    }
+
     free(*perturbation);
     *perturbation = NULL;
+}
+
+
+
+void perturbation_copy(Perturbation dst, const Perturbation src) {
+    dst->type = src->type;
+    dst->magnitude = src->magnitude;
+    dst->space_size = src->space_size;
+
+    if (src->type == PERTURBATION_HYPER_RECTANGLE) {
+        memcpy(
+            dst->perturbation_data.hyper_rectangle.epsilon_l,
+            src->perturbation_data.hyper_rectangle.epsilon_l,
+            src->space_size * sizeof(Real)
+        );
+
+        memcpy(
+            dst->perturbation_data.hyper_rectangle.epsilon_u,
+            src->perturbation_data.hyper_rectangle.epsilon_u,
+            src->space_size * sizeof(Real)
+        );
+    }
 }
 
 
@@ -75,6 +128,24 @@ PerturbationType perturbation_get_type(const Perturbation perturbation) {
 
 Real perturbation_get_magnitude(const Perturbation perturbation) {
     return perturbation->magnitude;
+}
+
+
+
+unsigned int perturbation_get_space_size(const Perturbation perturbation) {
+    return perturbation->space_size;
+}
+
+
+
+Real *perturbation_get_epsilon_lowerbounds(const Perturbation perturbation) {
+    return perturbation->perturbation_data.hyper_rectangle.epsilon_l;
+}
+
+
+
+Real *perturbation_get_epsilon_upperbounds(const Perturbation perturbation) {
+    return perturbation->perturbation_data.hyper_rectangle.epsilon_l;
 }
 
 
@@ -99,4 +170,35 @@ Real perturbation_get_frame_width(const Perturbation perturbation) {
 
 Real perturbation_get_frame_height(const Perturbation perturbation) {
     return perturbation->perturbation_data.frame.frame_height;
+}
+
+
+
+void perturbation_set_magnitude(Perturbation perturbation, const Real magnitude) {
+    perturbation->magnitude = magnitude;
+}
+
+
+
+void perturbation_print(const Perturbation perturbation, FILE *stream) {
+    switch (perturbation->type) {
+        case PERTURBATION_L_ONE:
+            fprintf(stream, "Perturbation L-1\n");
+            return;
+
+        case PERTURBATION_L_INF:
+            fprintf(stream, "Perturbation L-inf\n");
+            return;
+
+        case PERTURBATION_HYPER_RECTANGLE:
+            fprintf(stream, "Hyper rectangle perturbation.\n");
+            return;
+
+        case PERTURBATION_FRAME:
+            fprintf(stream, "Occlusive frame perturbation\n");
+            return;
+
+        default:
+            fprintf(stream, "Unrecognized perturbation (code: %u)\n", perturbation->type);
+    }
 }

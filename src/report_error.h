@@ -4,6 +4,7 @@
  * Defines function to report errors and warnings.
  * 
  * @file report_error.h
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #ifndef REPORT_ERROR_H
 #define REPORT_ERROR_H

@@ -61,11 +61,13 @@ static void overapproximate(
     const Real *sample = adversarial_region.sample;
     const Perturbation perturbation = adversarial_region.perturbation;
     const Real magnitude = perturbation_get_magnitude(perturbation);
-    unsigned int i, j;
+    const Real *epsilon_l = perturbation_get_epsilon_lowerbounds(perturbation),
+               *epsilon_u = perturbation_get_epsilon_upperbounds(perturbation);
     const unsigned int image_width = perturbation_get_image_width(perturbation),
                        image_height = perturbation_get_image_height(perturbation),
                        frame_width = perturbation_get_frame_width(perturbation),
                        frame_height = perturbation_get_frame_height(perturbation);
+    unsigned int i, j;
 
     switch (perturbation_get_type(perturbation)) {
         case PERTURBATION_L_ONE:
@@ -73,6 +75,13 @@ static void overapproximate(
             for (i = 0; i < space_size; ++i) {
                 abstract_sample[i].l = (sample[i] - magnitude >= 0.0) ? sample[i] - magnitude : 0.0;
                 abstract_sample[i].u = (sample[i] + magnitude <= 1.0) ? sample[i] + magnitude : 1.0;
+            }
+            break;
+
+        case PERTURBATION_HYPER_RECTANGLE:
+            for (i = 0; i < space_size; ++i) {
+                abstract_sample[i].l = sample[i] - epsilon_l[i];
+                abstract_sample[i].u = sample[i] + epsilon_u[i];
             }
             break;
 

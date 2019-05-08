@@ -4,6 +4,7 @@
  * Defines the abstract version of an SVM classifier.
  * 
  * @file abstract_classifier.h
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #ifndef ABSTRACT_CLASSIFIER_H
 #define ABSTRACT_CLASSIFIER_H
@@ -18,7 +19,7 @@
 #define DEFAULT_ABSTRACTION "interval"
 
 
-/** Type of an abstract classifier.*/
+/** Type of an abstract classifier. */
 typedef struct abstract_classifier *AbstractClassifier;
 
 
@@ -31,6 +32,7 @@ typedef struct abstract_classifier *AbstractClassifier;
  * @param[in] classifier Concrete classifier to abstract
  * @param[in] abstract_domain Abstraction to use
  * @return Abstract classifier
+ * @note #abstract_classifier_delete should be called to ensure proper memory deallocation.
  */
 AbstractClassifier abstract_classifier_create(
     const Classifier classifier,
@@ -64,13 +66,24 @@ AbstractClassifier abstract_classifier_read(
 
 
 /**
+ * Returns concrete classifier.
+ *
+ * @param[in] abstract_classifier Abstract classifier
+ * @return Concrete classifier
+ */
+Classifier abstract_classifier_get_classifier(
+    const AbstractClassifier abstract_classifier
+);
+
+
+/**
  * Computes decision function of an abstract sample.
  *
  * Type and nature of the result depend on the type of classifier
  * (binary, OVO, OVR...) and on the abstraction.
  *
  * @param[in] abstract_classifier Abstract classifier to use
- * @param[in] adversarial_region     Sample to compute decision function on
+ * @param[in] adversarial_region  Sample to compute decision function on
  * @return Pointer to a memory area containing the results (depends on
  *         classifier and abstract domain)
  */
@@ -88,7 +101,7 @@ void *abstract_classifier_score(
  * point in \f$\gamma(abstract\_sample)\f$ (soundness).
  * 
  * @param[in]  abstract_classifier Abstract classifier to user
- * @param[in]  adversarial_region     Sample to classify
+ * @param[in]  adversarial_region  Sample to classify
  * @param[out] classes             Previously allocated array of strings,
  *                                 will be filled with classes chosen by classifier
  * @return Number of chosen classes

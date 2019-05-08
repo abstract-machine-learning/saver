@@ -3,7 +3,8 @@
  * 
  * Verifies property of SVM classifiers using abstract interpretation.
  * 
- * @file main.c
+ * @file saver.c
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +19,7 @@
 #include "abstract_domains/abstract_domain.h"
 #include "abstract_domains/interval.h"
 #include "abstract_classifiers/abstract_classifier.h"
+#include "counterexamples/counterexample_seeker.h"
 
 
 /**
@@ -120,11 +122,13 @@ int main(const int argc, const char **argv) {
     AbstractClassifier abstract_classifier;
     Dataset dataset;
     Stopwatch stopwatch;
-    unsigned int i, robust_cases = 0, correct_cases = 0, conditionally_robust_cases = 0;
+    unsigned int i, robust_cases = 0, correct_cases = 0, conditionally_robust_cases = 0, counterexamples_found = 0;
     Real epsilon = 0.01;
     char **classes, **abstract_classes;
     Perturbation perturbation;
     Options options;
+    CounterexampleSeeker counterexample_seeker;
+    Counterexample counterexample;
 
 
     /* Input check */
@@ -153,19 +157,28 @@ int main(const int argc, const char **argv) {
     /* Builds abstract classifier */
     abstract_classifier = abstract_classifier_read(classifier, argc - 3, argv + 3);
 
+    /* Builds counterexample seeker */
+    counterexample_seeker_create(&counterexample_seeker, abstract_classifier, COUNTEREXAMPLE_ROBUSTNESS);
+    counterexample_create(&counterexample, dataset_get_space_size(dataset), 2);
+
     /* Allocates memory */
     classes = (char **) malloc(classifier_get_n_classes(classifier) * sizeof(char *));
     abstract_classes = (char **) malloc(classifier_get_n_classes(classifier) * sizeof(char *));
 
 
     /* Prints heading */
-    printf("Classifier\tDtaset\tID\tEpsilon\tLabel\tConcrete\tAbstract\tCounterexample\n");
+    printf("Classifier\tDtaset\tID\tEpsilon\tLabel\tConcrete\tAbstract");
+    if (options.counterexamples_file) {
+        printf("\tCounterexample");
+    }
+    printf("\n");
+
     stopwatch = stopwatch_create();
     stopwatch_start(stopwatch);
     for (i = 0; i < dataset_get_size(dataset); ++i) {
         const Real *sample = dataset_get_row(dataset, i);
         const AdversarialRegion adversarial_region = {sample, perturbation};
-        unsigned int n_concrete_classes, n_abstract_classes, is_correct, is_robust;
+        unsigned int n_concrete_classes, n_abstract_classes, is_correct, is_robust, has_counterexample = 0;
 
         /* Runs concrete and abstract classifiers */
         n_concrete_classes = classifier_classify(classifier, sample, classes);
@@ -178,11 +191,20 @@ int main(const int argc, const char **argv) {
         robust_cases += is_robust;
         conditionally_robust_cases += is_correct && is_robust;
 
+        /* Searches for counterexamples */
+        if (!is_robust && options.counterexamples_file) {
+            has_counterexample = counterexample_seeker_search(counterexample, counterexample_seeker, adversarial_region);
+            counterexamples_found += has_counterexample;
+        }
+
         /* Prints results */
         printf("%s\t%s\t%u\t%f\t%s\t", argv[1], argv[2], i, epsilon, dataset_get_label(dataset, i));
         print_classes(classes, n_concrete_classes);
         printf("\t");
         print_classes(abstract_classes, n_abstract_classes);
+        if (options.counterexamples_file) {
+            printf("\t%s", is_robust ? "NONE" : (has_counterexample ? "FOUND" : "NOT-FOUND"));
+        }
         printf("\n");
 
         /* Debug information */
@@ -192,10 +214,15 @@ int main(const int argc, const char **argv) {
     }
     stopwatch_stop(stopwatch);
 
+
     /* Writes summary */
-    printf("[SUMMARY]\tSize\tEpsilon\tAvg. Time (ms)\tCorrect\tRobust\tCond. robust\n");
+    printf("[SUMMARY]\tSize\tEpsilon\tAvg. Time (ms)\tCorrect\tRobust\tCond. robust");
+    if (options.counterexamples_file) {
+        printf("\tCounterexamples");
+    }
+    printf("\n");
     printf(
-        "[SUMMARY]\t%u\t %g\t %f\t %u\t %u\t %u\n",
+        "[SUMMARY]\t%u\t %g\t %f\t %u\t %u\t %u",
         dataset_get_size(dataset),
         epsilon,
         stopwatch_get_elapsed_milliseconds(stopwatch) / dataset_get_size(dataset),
@@ -203,6 +230,10 @@ int main(const int argc, const char **argv) {
         robust_cases,
         conditionally_robust_cases
     );
+    if (options.counterexamples_file) {
+        printf("\t %u", counterexamples_found);
+    }
+    printf("\n");
 
 
 
@@ -214,6 +245,8 @@ int main(const int argc, const char **argv) {
     abstract_classifier_delete(&abstract_classifier);
     free(classes);
     free(abstract_classes);
+    counterexample_seeker_delete(&counterexample_seeker);
+    counterexample_delete(&counterexample);
 
     return EXIT_SUCCESS;
 }

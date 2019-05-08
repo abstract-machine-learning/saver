@@ -4,6 +4,7 @@
  * Defines abstract transfer functions for intervals.
  *
  * @file interval.h
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #ifndef INTERVAL_H
 #define INTERVAL_H

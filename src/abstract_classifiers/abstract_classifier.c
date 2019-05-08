@@ -99,6 +99,14 @@ AbstractClassifier abstract_classifier_read(
 
 
 
+Classifier abstract_classifier_get_classifier(
+    const AbstractClassifier abstract_classifier
+) {
+    return abstract_classifier->classifier;
+}
+
+
+
 void *abstract_classifier_score(
     const AbstractClassifier abstract_classifier,
     const AdversarialRegion adversarial_region

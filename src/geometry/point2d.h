@@ -4,6 +4,7 @@
  * Defines a point in a bidimensional space.
  *
  * @file point2d.h
+ * @author Marco Zanella <marco.zanella.1991@gmail.com>
  */
 #ifndef POINT2D
 #define POINT2D
