@@ -2,3 +2,5 @@
 src/saver
 
 bin/*
+
+doc/html/*
