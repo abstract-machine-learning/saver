@@ -76,4 +76,4 @@ Data sets are comma-separated-values (CSV) files in the following format:
     label,value-1,...,value-M
     ...
     label,value-1,...,value-M
-First row begins with a *#* and shows number of samples and size of the feature space, that is, number of components for each sample. Actual data is stored in the following rows, one per sample, consisting in the label followed by the values of the components of the vector representing the sample. See our [Iris data set](https://github.com/svm-abstract-verifier/data-collection/blob/master/iris/data-set.csv.zip) for an easy-to-read example.
+First row begins with a *#* and shows number of samples and size of the feature space, that is, number of components for each sample. Actual data is stored in the following rows, one per sample, consisting in the label followed by the values of the components of the vector representing the sample. See our [Iris data set](https://github.com/svm-abstract-verifier/data-collection/blob/master/datasets/iris/data-set.csv.zip) for an easy-to-read example.
