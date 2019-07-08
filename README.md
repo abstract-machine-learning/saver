@@ -64,7 +64,7 @@ SAVer supports OVO SVM classifier files in the following format:
     <alpha coefficients>
     <support vectors>
     <biases>
-Where alpha, support vectors and biases are stored as described by [Support Vector Machines - scikit-learn](https://scikit-learn.org/stable/modules/svm.html#multi-class-classification) documentation. You may also want to check [our data collection repository](https://github.com/svm-abstract-verifier/data-collection) for some examples, in particular the easy-to-read [Iris linear SVM classifier](https://github.com/svm-abstract-verifier/data-collection/blob/master/iris/svm-linear.dat.zip).
+Where alpha, support vectors and biases are stored as described by [Support Vector Machines - scikit-learn](https://scikit-learn.org/stable/modules/svm.html#multi-class-classification) documentation. You may also want to check [our data collection repository](https://github.com/svm-abstract-verifier/data-collection) for some examples, in particular the easy-to-read [Iris linear SVM classifier](https://github.com/svm-abstract-verifier/data-collection/blob/master/models/iris/svm-linear.dat.zip).
 
 In particular, every SVM trained with `scikit-learn` and `libsvm` is compatible with this format.
 
