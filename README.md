@@ -69,4 +69,4 @@ Where alpha, support vectors and biases are stored as described by [Support Vect
 In particular, every SVM trained with `scikit-learn` and `libsvm` is compatible with this format.
 
 ## Data set format
-See [dedicated section on our data-collection repository](https://github.com/svm-abstract-verifier/data-collection#dataset-format).
+See [dedicated section on our data-collection repository](https://github.com/svm-abstract-verifier/data-collection#dataset-format), from which you can also download some ready-to-use [datasets](https://github.com/svm-abstract-verifier/data-collection/tree/master/datasets) and [models](https://github.com/svm-abstract-verifier/data-collection/tree/master/models).
