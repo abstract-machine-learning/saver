@@ -69,11 +69,4 @@ Where alpha, support vectors and biases are stored as described by [Support Vect
 In particular, every SVM trained with `scikit-learn` and `libsvm` is compatible with this format.
 
 ## Data set format
-Data sets are comma-separated-values (CSV) files in the following format:
-
-    # <number of samples> <feature space size>
-    label,value-1,...,value-M
-    label,value-1,...,value-M
-    ...
-    label,value-1,...,value-M
-First row begins with a *#* and shows number of samples and size of the feature space, that is, number of components for each sample. Actual data is stored in the following rows, one per sample, consisting in the label followed by the values of the components of the vector representing the sample. See our [Iris data set](https://github.com/svm-abstract-verifier/data-collection/blob/master/datasets/iris/data-set.csv.zip) for an easy-to-read example.
+See [dedicated section on our data-collection repository](https://github.com/svm-abstract-verifier/data-collection#dataset-format).
