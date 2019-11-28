@@ -7,6 +7,8 @@ Given a point *x* and perturbation function *P*, SAVer symbolically computes an 
 When SAVer returns more than one label, it may happen either due to the classifier really being not robust, or because of a loss of precision induced by the abstraction process.
 ![Example of not provable robustness](https://raw.githubusercontent.com/svm-abstract-verifier/saver/master/doc/images/example-top.svg?sanitize=true)
 
+More information can be found on [Robustness Verification of Support Vector Machines](https://arxiv.org/abs/1904.11803).
+
 ## Requirements
 
  - Any C99-compatible C compiler
@@ -37,6 +39,11 @@ Run `saver` without arguments for a quick online help message. Full syntax is:
 
     bin/saver <path to classifier> <path to dataset> [abstraction] [perturbation] [perturbation parameters]
 Where
+
+
+
+
+
 
  - *path to classifier*: path to classifier file; must be in the appropriate format (see below)
  - *path to dataset*: path to dataset; must be in the appropriate format (see below)
