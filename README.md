@@ -39,12 +39,6 @@ Run `saver` without arguments for a quick online help message. Full syntax is:
 
     bin/saver <path to classifier> <path to dataset> [abstraction] [perturbation] [perturbation parameters]
 Where
-
-
-
-
-
-
  - *path to classifier*: path to classifier file; must be in the appropriate format (see below)
  - *path to dataset*: path to dataset; must be in the appropriate format (see below)
  - *abstraction*: optional, tells which abstract domain to use for analysis; must be one of *interval*, *raf*, *hybrid* (default: *hybrid*)
