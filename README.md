@@ -59,7 +59,7 @@ SAVer will display both per-sample analysis results and a global summary as in t
     ...
     ../classifiers/mnist-svm.dat ../datasets/test-set.csv 9999    0.01      6         6         6
     [SUMMARY]  Size  Epsilon  Avg. Time (ms)  Correct  Robust  Cond. robust
-    [SUMMARY] 10000     0.01           0.573     9975    4707          4598
+    [SUMMARY] 10000     0.01          53.719     9837    4707          4703
 The summary section (last two rows) displays a header and some statistics (from left to right):
  - number of samples in the dataset
  - magnitude of perturbation (same given as input)
@@ -69,8 +69,8 @@ The summary section (last two rows) displays a header and some statistics (from 
  - number of samples on which classifier is both correct and stable at the same time (standard notion of robustness)
  
 The per-sample section contains one row for every sample in the dataset. Every row shows, from left to right:
- - path of the classifier file
- - path of the dataset file
+ - path to the classifier file
+ - path to the dataset file
  - index of the sample in the dataset (starting from 0)
  - magnitude of the perturbation, same given as input
  - label of the sample prescribed by the dataset
@@ -82,8 +82,18 @@ When reading last column keep in mind that SAVer's analysis is:
  - **incomplete**: if a label is in the list, it is **not** guaranteed that there exists a point in the adversarial region which has that label
 
 ## Example
-    bin/saver ../data/mnist/svm-rbf-60k.dat ../data/mnist/test-set-normalized.csv raf l_inf 0.15
-will evaluate whether the classifier in `../data/mnist/svm-rbf-60k.dat` is robust on each point taken from the data set in `../data/mnist/test-set-normalized.csv`, with respect to an L-infinity perturbation of magnitude 15% using the RAF abstract domain for the analysis.
+    bin/saver ../data/mnist/svm-rbf-60k.dat ../data/mnist/test-set-normalized.csv raf l_inf 0.01
+                          classifier                                 dtaset    id  epsilon  label  concrete  abstract
+    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	    0	 0.010000	    7	        7	      7,9
+    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	    1	 0.010000	    2	        2	        2
+    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	    2	 0.010000	    1	        1	      1,7
+    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	    3	 0.010000	    0	        0	        0
+    ...
+    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	 9999	 0.010000	    6	        6	        6
+    [SUMMARY]  Size  Epsilon  Avg. Time (ms)  Correct  Robust  Cond. robust
+    [SUMMARY] 10000     0.01          53.719     9837    4707          4703
+
+will evaluate whether the classifier in `../data/mnist/svm-rbf-60k.dat` is robust on each point taken from the data set in `../data/mnist/test-set-normalized.csv`, with respect to an L-infinity perturbation of magnitude 1% using the RAF abstract domain for the analysis. Analysis will reveal that classifier computes the correct label 98.37% of the times, exhibits a stable behavior (i.e. it consistenlty assigns the same label to points in the same adversarial region) 47.07% of the times, and it is both correct and stable 47.03% of the times. There exist `4707 - 4703 = 4` samples in the dataset on which classifier is provably stable, but does not output the expected label: by checking the per-sample results it is possible to identify those samples.
 
 ## Classifier format
 SAVer supports OVO SVM classifier files in the following format:
