@@ -84,12 +84,12 @@ When reading last column keep in mind that SAVer's analysis is:
 ## Example
     bin/saver ../data/mnist/svm-rbf-60k.dat ../data/mnist/test-set-normalized.csv raf l_inf 0.01
                           classifier                                 dtaset    id  epsilon  label  concrete  abstract
-    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	    0	 0.010000	    7	        7	      7,9
-    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	    1	 0.010000	    2	        2	        2
-    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	    2	 0.010000	    1	        1	      1,7
-    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	    3	 0.010000	    0	        0	        0
+    ../classifiers/mnist-rbf-60k.dat  ../datasets/mnist-test-normalized.csv     0  0.010000     7         7       7,9
+    ../classifiers/mnist-rbf-60k.dat  ../datasets/mnist-test-normalized.csv     1  0.010000     2         2         2
+    ../classifiers/mnist-rbf-60k.dat  ../datasets/mnist-test-normalized.csv     2  0.010000     1         1       1,7
+    ../classifiers/mnist-rbf-60k.dat  ../datasets/mnist-test-normalized.csv     3  0.010000     0         0         0
     ...
-    ../classifiers/mnist-rbf-60k.dat	 ../datasets/mnist-test-normalized.csv	 9999	 0.010000	    6	        6	        6
+    ../classifiers/mnist-rbf-60k.dat  ../datasets/mnist-test-normalized.csv  9999  0.010000     6         6         6
     [SUMMARY]  Size  Epsilon  Avg. Time (ms)  Correct  Robust  Cond. robust
     [SUMMARY] 10000     0.01          53.719     9837    4707          4703
 
