@@ -10,7 +10,6 @@ When SAVer returns more than one label, it may happen either due to the classifi
 More information can be found on [Robustness Verification of Support Vector Machines](http://www.math.unipd.it/~ranzato/papers/sas19a.pdf).
 
 ## Requirements
-
  - Any C99-compatible C compiler
 
 ## Installation
@@ -46,6 +45,40 @@ Where
  - *perturbation parameters*: list of parameter specific for the type of perturbation; all perturbation have at least the magnitude parameter
 
 You can find data sets and trained SVM classifiers in our [data-collection repository](https://github.com/svm-abstract-verifier/data-collection/).
+
+## How to read results
+SAVer will display both per-sample analysis results and a global summary as in the following example:
+
+                      classifier	                 dataset	  id	epsilon	 label	 concrete	 abstract
+    ../classifiers/mnist-svm.dat	../datasets/test-set.csv	   0	   0.01	     7	        7	      7,9
+    ../classifiers/mnist-svm.dat	../datasets/test-set.csv	   1	   0.01	     2	        2	        2
+    ../classifiers/mnist-svm.dat	../datasets/test-set.csv	   2	   0.01	     1	        1	      1,7
+    ../classifiers/mnist-svm.dat	../datasets/test-set.csv	   3	   0.01	     0	        0	        0
+    ../classifiers/mnist-svm.dat	../datasets/test-set.csv	   4	   0.01	     4	        4	      4,9
+    ../classifiers/mnist-svm.dat	../datasets/test-set.csv	   5	   0.01	     1	        1	      1,7
+    ...
+    ../classifiers/mnist-svm.dat	../datasets/test-set.csv	9999	0.01 	6	 6	 6
+    [SUMMARY]  Size  Epsilon  Avg. Time (ms)  Correct  Robust  Cond. robust
+    [SUMMARY] 10000     0.01           0.573     9975    4707          4598
+The summary section (last two rows) displays a header and some statistics (from left to right):
+ - number of samples in the dataset
+ - magnitude of perturbation (same given as input)
+ - average analysis time per sample, in milliseconds
+ - number of samples on which classifier computed the correct label with respect to the one prescribed in the dataset (correctness)
+ - number of samples on which classifier assigned the same labels to every point of an adversarial region, regardeless of correctness (stability)
+ - number of samples on which classifier is both correct and stable at the same time (standard notion of robustness)
+ 
+The per-sample section contains one row for every sample in the dataset. Every row shows, from left to right:
+ - path of the classifier file
+ - path of the dataset file
+ - index of the sample in the dataset (starting from 0)
+ - magnitude of the perturbation, same given as input
+ - label of the sample prescribed by the dataset
+ - labels of the sample computed by the classifier
+ - sound superset of labels of points in the adversarial region of the sample
+When reading last column keep in mind that SAVer's analysis is:
+ - **sound**: if a label is not in the list, it is guaranteed that not point in the adversarial region can have that label
+ - **incomplete**: if a label is in the list, it is **not** guaranteed that there exists a point in the adversarial region which has that label
 
 ## Example
     bin/saver ../data/mnist/svm-rbf-60k.dat ../data/mnist/test-set-normalized.csv raf l_inf 0.15
