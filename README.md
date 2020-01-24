@@ -57,7 +57,7 @@ SAVer will display both per-sample analysis results and a global summary as in t
     ../classifiers/mnist-svm.dat	../datasets/test-set.csv	   4	   0.01	     4	        4	      4,9
     ../classifiers/mnist-svm.dat	../datasets/test-set.csv	   5	   0.01	     1	        1	      1,7
     ...
-    ../classifiers/mnist-svm.dat	../datasets/test-set.csv	9999	0.01 	6	 6	 6
+    ../classifiers/mnist-svm.dat	../datasets/test-set.csv	9999	   0.01 	    6	        6       	 6
     [SUMMARY]  Size  Epsilon  Avg. Time (ms)  Correct  Robust  Cond. robust
     [SUMMARY] 10000     0.01           0.573     9975    4707          4598
 The summary section (last two rows) displays a header and some statistics (from left to right):
