@@ -76,6 +76,7 @@ The per-sample section contains one row for every sample in the dataset. Every r
  - label of the sample prescribed by the dataset
  - labels of the sample computed by the classifier
  - sound superset of labels of points in the adversarial region of the sample
+
 When reading last column keep in mind that SAVer's analysis is:
  - **sound**: if a label is not in the list, it is guaranteed that not point in the adversarial region can have that label
  - **incomplete**: if a label is in the list, it is **not** guaranteed that there exists a point in the adversarial region which has that label
