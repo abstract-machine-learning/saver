@@ -70,7 +70,9 @@ static void overapproximate(
     const Perturbation perturbation = adversarial_region.perturbation;
     const Real magnitude = perturbation_get_magnitude(perturbation);
     const Real *epsilon_l = perturbation_get_epsilon_lowerbounds(perturbation),
-               *epsilon_u = perturbation_get_epsilon_upperbounds(perturbation);
+               *epsilon_u = perturbation_get_epsilon_upperbounds(perturbation),
+               *clip_l = perturbation_get_lowerbounds(perturbation),
+               *clip_u = perturbation_get_upperbounds(perturbation);
     const unsigned int image_width = perturbation_get_image_width(perturbation),
                        image_height = perturbation_get_image_height(perturbation),
                        frame_width = perturbation_get_frame_width(perturbation),
@@ -121,6 +123,18 @@ static void overapproximate(
                 }
             }
             break;
+
+        case PERTURBATION_CLIPPED_HYPERRECTANGLE:
+            for (i = 0; i < space_size; ++i) {
+                const Real l = (sample[i] - epsilon_l[i]) > clip_l[i] ? sample[i] - epsilon_l[i] : clip_l[i],
+                           u = (sample[i] + epsilon_u[i]) < clip_u[i] ? sample[i] + epsilon_u[i] : clip_u[i];
+                raf_create(abstract_sample + i, 1);
+                abstract_sample[i].c = 0.5 * (l + u);
+                abstract_sample[i].noise[0] = 0.5 * (u - l);
+                abstract_sample[i].index = i;
+            }
+            break;
+
         default:
             report_error("Unrecognized type of adversarial region.");
     }

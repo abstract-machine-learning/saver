@@ -35,7 +35,8 @@ typedef enum {
                                        \f$P_\epsilon(p) = \{x \in \mathbb{R}^n ~|~ ||p - x||_\infty \leq \epsilon\}\f$. */
     PERTURBATION_HYPER_RECTANGLE, /**< Hyper rectangle: 
                                        \f$P_\epsilon(p) = \{x \in \mathbb{R}^n ~|~ p - \epsilon_l \leq x \leq p + e_u\}\f$. */
-    PERTURBATION_FRAME            /**< Occlusive fame around an image */
+    PERTURBATION_FRAME,           /**< Occlusive fame around an image */
+    PERTURBATION_CLIPPED_HYPERRECTANGLE
 } PerturbationType;
 
 
@@ -139,6 +140,10 @@ Real *perturbation_get_epsilon_lowerbounds(const Perturbation perturbation);
  * @return Array of epsilon upperbounds
  */
 Real *perturbation_get_epsilon_upperbounds(const Perturbation perturbation);
+
+
+Real *perturbation_get_lowerbounds(const Perturbation perturbation);
+Real *perturbation_get_upperbounds(const Perturbation perturbation);
 
 
 /**
