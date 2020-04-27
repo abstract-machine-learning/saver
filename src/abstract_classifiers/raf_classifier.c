@@ -30,7 +30,7 @@ static void raf_kernel(
         for (i = 0; i < space_size; ++i) {
             raf_translate(&product, y[i], -x[i]);
             raf_sqr(&product, product);
-            raf_add(&exponent, exponent, product);
+            raf_add_sparse_in_place(&exponent, product);
         }
         raf_scale(&exponent, exponent, -kernel_get_gamma(kernel));
         raf_exp(r, exponent);

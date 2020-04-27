@@ -9,6 +9,8 @@
 #ifndef RAF_H
 #define RAF_H
 
+#include <stdio.h>
+
 #include "interval.h"
 
 /** RAF abstract value. */
@@ -129,6 +131,15 @@ void raf_add_in_place(Raf *x, const Raf y);
 
 
 /**
+ * Computes \f$x = x +^\mathcal{Raf} y\f$ when x is sparse.
+ *
+ * @param[in,out] x First addendum
+ * @param[in] y Second addendum
+ */
+void raf_add_sparse_in_place(Raf *r, const Raf x_sparse);
+
+
+/**
  * Computes \f$r = a -^\mathcal{Raf} y\f$.
  *
  * @param[out] r Result
@@ -224,5 +235,14 @@ void raf_fma(Raf *r, const Real alpha, const Raf x, const Raf y);
  * @param[in] x Addendum
  */
 void raf_fma_in_place(Raf *y, const Real alpha, const Raf x);
+
+
+/**
+ * Prints a RAF.
+ *
+ * @param[in,out] fh File pointer
+ * @param[in] r RAF
+ */
+void raf_print(FILE *fp, const Raf r);
 
 #endif

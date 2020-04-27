@@ -302,6 +302,14 @@ void raf_add_in_place(Raf *r, const Raf x) {
 
 
 
+void raf_add_sparse_in_place(Raf *r, const Raf x_sparse) {
+    r->c += x_sparse.c;
+    r->noise[x_sparse.index] += x_sparse.noise[0];
+    r->delta += x_sparse.delta;
+}
+
+
+
 void raf_sub(Raf *r, const Raf x, const Raf y) {
     unsigned int i;
     const unsigned int size = min(r->size, min(x.size, y.size));
@@ -340,8 +348,9 @@ void raf_pow(Raf *r, const Raf x, const unsigned int d) {
 void raf_sqr(Raf *r, const Raf x) {
     if (x.index >= 0) {
         r->c = x.c * x.c;
-        r->noise[0] = 2 * x.c * x.noise[0];
         r->delta = x.noise[0] * x.noise[0];
+        r->noise[0] = 2 * x.c * x.noise[0];
+        r->index = x.index;
         return;
     }
 
@@ -486,4 +495,23 @@ void raf_fma_in_place(Raf *r, const Real alpha, const Raf x) {
     for (i = 0; i < x.size; ++i) {
         r->noise[i] += alpha * x.noise[i];
     }
+}
+
+
+
+void raf_print(FILE *fp, const Raf r) {
+    unsigned int i;
+
+    fprintf(fp, "%.2g", r.c);
+
+    if (r.index >= 0) {
+        fprintf(fp, " + %.2g*e_%u", r.noise[0], r.index);
+    }
+    else {
+        for (i = 0; i < r.size; ++i) {
+            fprintf(fp, " + %.2g*e_%u", r.noise[i], i);
+        }
+    }
+
+    fprintf(fp, " + %.2g*e_r", r.delta);
 }
