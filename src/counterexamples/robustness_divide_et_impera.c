@@ -245,6 +245,8 @@ printf("examining region %u\n", i);
                    *epsilon_u = perturbation_get_epsilon_upperbounds(original_region.perturbation),
                    *epsilon2_l = perturbation_get_epsilon_lowerbounds(max_region.perturbation),
                    *epsilon2_u = perturbation_get_epsilon_upperbounds(max_region.perturbation);
+(void) epsilon_l;
+(void) epsilon2_l;
 
         outer_sample[i] = original_region.sample[i] + 0.5 * (epsilon_u[i] + epsilon2_u[i]);
         perturbation_get_epsilon_lowerbounds(outer_perturbation)[i] = 0.5 * (epsilon_u[i] - epsilon2_u[i]);

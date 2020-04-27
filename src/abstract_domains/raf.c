@@ -8,7 +8,7 @@
 #include "../geometry/point2d.h"
 
 #ifndef RAF_MUL_ALGO
-#define RAF_MUL_ALGO raf_mul_algo4
+#define RAF_MUL_ALGO raf_mul_algo3
 #endif
 
 #define RAF_DENSE -1
@@ -70,122 +70,6 @@ static int algo3_cmp(const void *x, const void *y) {
 }
 
 void raf_mul_algo3(Raf *r, const Raf x, const Raf y) {
-    unsigned int i, j, m = 0, has_double_min = 0, has_double_max = 0;
-    const unsigned int n = x.size;
-    Real R_min, R_max, x_norm_one = 0.0, sgn_x_y = 0.0, obj_min, obj_max;
-    Real *X = (Real *) malloc((n + 2) * sizeof(Real)),
-         *Y = (Real *) malloc((n + 2) * sizeof(Real));
-    Point2D w, w_acc, w_min1, w_min2 = {0, 0}, w_max1, w_max2 = {0, 0}, *h;
-
-    /* Computes R_min and R_max */
-    for (i = 0; i < n; ++i) {
-        X[i] = x.noise[i];
-        Y[i] = x.noise[i] != 0 ? y.noise[i] : fabs(y.noise[i]);
-        x_norm_one += fabs(X[i]);
-        sgn_x_y += (X[i] >= 0.0 ? Y[i] : -Y[i]);
-        m += X[i] != 0.0;
-    }
-    X[n] = x.delta;
-    Y[n] = 0.0;
-    x_norm_one += fabs(X[n]);
-    m += X[n] != 0.0;
-    X[n + 1] = 0.0;
-    Y[n + 1] = fabs(y.delta);
-
-    h = (Point2D *) malloc(m * sizeof(Point2D));
-    for (i = 0, j = 0; i < n + 2; ++i) {
-        if (X[i] == 0.0) {
-            continue;
-        }
-
-        h[j].x = fabs(X[i]);
-        h[j].y = X[i] > 0.0 ? Y[i] : -Y[i];
-        ++j;
-    }
-
-    qsort(h, m, sizeof(Point2D), algo3_cmp);
-
-    w.x = x_norm_one;
-    w.y = sgn_x_y;
-    point2d_copy(&w_acc, w);
-    point2d_copy(&w_min1, w);
-    obj_min = w_min1.x * w_min1.y;
-    point2d_copy(&w_max1, w);
-    obj_max = w_max1.x * w_max1.y;
-    for (i = 0; i < m; ++i) {
-        Real obj;
-
-        point2d_fma(&w_acc, -2.0, h[i], w_acc);
-        obj = w_acc.x * w_acc.y;
-
-        if (obj > obj_max) {
-            obj_max = obj;
-            point2d_copy(&w_max1, w_acc);
-            has_double_max = 0;
-        }
-        else if (obj == obj_max) {
-            point2d_copy(&w_max2, w_acc);
-            has_double_max = 1;
-        }
-
-        if (obj < obj_min) {
-            obj_min = obj;
-            point2d_copy(&w_min1, w_acc);
-            has_double_min = 0;
-        }
-        else if (obj == obj_min) {
-            point2d_copy(&w_min2, w_acc);
-            has_double_min = 1;
-        }
-    }
-
-    if (!has_double_max) {
-        R_max = obj_max;
-    }
-    else {
-        Real m, q, p_x;
-        point2d_find_line(&m, &q, w_max1, w_max2);
-        p_x = -0.5 * q / m;
-        if (min(w_max1.x, w_max2.x) < p_x && p_x < max(w_max1.x, w_max2.x)) {
-            R_max = max(obj_max, -0.25 * q * q / m);
-        }
-        else {
-            R_max = obj_max;
-        }
-    }
-
-    if (!has_double_min) {
-        R_min = obj_min;
-    }
-    else {
-        Real m, q, p_x;
-        point2d_find_line(&m, &q, w_min1, w_min2);
-        p_x = -0.5 * q / m;
-        if (min(w_max1.x, w_max2.x) < p_x && p_x < max(w_max1.x, w_max2.x)) {
-            R_min = min(obj_min, -0.25 * q * q / m);
-        }
-        else {
-            R_min = obj_min;
-        }
-    }
-
-    free(X);
-    free(Y);
-    free(h);
-
-
-    /* Computes result */
-    r->c = x.c * y.c + 0.5 * (R_min + R_max);
-    for (i = 0; i < n; ++i) {
-        r->noise[i] = y.c * x.noise[i] + x.c * y.noise[i];
-    }
-    r->delta = fabs(y.c) * x.delta
-             + fabs(x.c) * y.delta
-             + 0.5 * (R_max - R_min);
-}
-
-
-void raf_mul_algo4(Raf *r, const Raf x, const Raf y) {
     unsigned int i, j, m = 0, has_double_min = 0, has_double_max = 0;
     const unsigned int n = x.size;
     Real R_min, R_max, x_norm_one = 0.0, sgn_x_y = 0.0, obj_min, obj_max;
@@ -418,6 +302,14 @@ void raf_add_in_place(Raf *r, const Raf x) {
 
 
 
+void raf_add_sparse_in_place(Raf *r, const Raf x_sparse) {
+    r->c += x_sparse.c;
+    r->noise[x_sparse.index] += x_sparse.noise[0];
+    r->delta += x_sparse.delta;
+}
+
+
+
 void raf_sub(Raf *r, const Raf x, const Raf y) {
     unsigned int i;
     const unsigned int size = min(r->size, min(x.size, y.size));
@@ -456,8 +348,9 @@ void raf_pow(Raf *r, const Raf x, const unsigned int d) {
 void raf_sqr(Raf *r, const Raf x) {
     if (x.index >= 0) {
         r->c = x.c * x.c;
-        r->noise[0] = 2 * x.c * x.noise[0];
         r->delta = x.noise[0] * x.noise[0];
+        r->noise[0] = 2 * x.c * x.noise[0];
+        r->index = x.index;
         return;
     }
 
@@ -602,4 +495,23 @@ void raf_fma_in_place(Raf *r, const Real alpha, const Raf x) {
     for (i = 0; i < x.size; ++i) {
         r->noise[i] += alpha * x.noise[i];
     }
+}
+
+
+
+void raf_print(FILE *fp, const Raf r) {
+    unsigned int i;
+
+    fprintf(fp, "%.2g", r.c);
+
+    if (r.index >= 0) {
+        fprintf(fp, " + %.2g*e_%u", r.noise[0], r.index);
+    }
+    else {
+        for (i = 0; i < r.size; ++i) {
+            fprintf(fp, " + %.2g*e_%u", r.noise[i], i);
+        }
+    }
+
+    fprintf(fp, " + %.2g*e_r", r.delta);
 }
