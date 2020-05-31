@@ -1,5 +1,6 @@
 #include "perturbation.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -31,6 +32,10 @@ struct perturbation {
             Real *l;          /**< Array of lowerbounds. */
             Real *u;          /**< Array of upperbounds. */
         } clipped_hyperrectangle;
+        /* Structure of a hyperrectangle perturbation read from file. */
+        struct {
+            FILE *fh;  /**< File descriptor. */
+        } from_file;
     } perturbation_data;
 };
 
@@ -78,6 +83,20 @@ void perturbation_create_clipped_hyper_rectangle(
         (*perturbation)->perturbation_data.clipped_hyperrectangle.l[i] = 0.0;
         (*perturbation)->perturbation_data.clipped_hyperrectangle.u[i] = 0.0;
     }
+}
+
+
+
+void perturbation_create_from_file(
+    Perturbation *perturbation,
+    const unsigned int space_size,
+    FILE *fh
+) {
+    *perturbation = (Perturbation) malloc(sizeof(struct perturbation));
+    (*perturbation)->type = PERTURBATION_FROM_FILE;
+    (*perturbation)->magnitude = 0.0;
+    (*perturbation)->space_size = space_size;
+    (*perturbation)->perturbation_data.from_file.fh = fh;
 }
 
 
@@ -149,6 +168,17 @@ void perturbation_read(
         fclose(perturbation_file);
     }
 
+    else if (strcmp(perturbation_name, "from_file") == 0 && argc > 1) {
+        FILE *perturbation_file = fopen(argv[1], "r");
+
+        if (!perturbation_file) {
+            fprintf(stderr, "[%s: %d] Cannot open perturbation file \"%s\"\n", __FILE__, __LINE__, argv[1]);
+            abort();
+        }
+
+        perturbation_create_from_file(perturbation, space_size, perturbation_file);
+    }
+
     else {
         fprintf(stderr, "Unrecognized perturbation or wrong number of parameters.\n");
         exit(EXIT_FAILURE);
@@ -167,6 +197,9 @@ void perturbation_delete(Perturbation *perturbation) {
         free((*perturbation)->perturbation_data.clipped_hyperrectangle.epsilon_u);
         free((*perturbation)->perturbation_data.clipped_hyperrectangle.l);
         free((*perturbation)->perturbation_data.clipped_hyperrectangle.u);
+    }
+    else if ((*perturbation)->type == PERTURBATION_FROM_FILE) {
+        fclose((*perturbation)->perturbation_data.from_file.fh);
     }
 
     free(*perturbation);
@@ -260,6 +293,11 @@ Real perturbation_get_frame_height(const Perturbation perturbation) {
 }
 
 
+FILE *perturbation_get_file_stream(const Perturbation perturbation) {
+    return perturbation->perturbation_data.from_file.fh;
+}
+
+
 
 void perturbation_set_magnitude(Perturbation perturbation, const Real magnitude) {
     perturbation->magnitude = magnitude;
@@ -287,6 +325,10 @@ void perturbation_print(const Perturbation perturbation, FILE *stream) {
 
         case PERTURBATION_CLIPPED_HYPERRECTANGLE:
             fprintf(stream, "Clipped hyper rectangle perturbation\n");
+            return;
+
+        case PERTURBATION_FROM_FILE:
+            fprintf(stream, "Hyperrectangles read from file\n");
             return;
 
         default:

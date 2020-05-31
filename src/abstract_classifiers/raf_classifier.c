@@ -75,6 +75,7 @@ static void overapproximate(
                        image_height = perturbation_get_image_height(perturbation),
                        frame_width = perturbation_get_frame_width(perturbation),
                        frame_height = perturbation_get_frame_height(perturbation);
+    FILE *stream = perturbation_get_file_stream(perturbation);
     unsigned int i, j;
 
     switch (perturbation_get_type(perturbation)) {
@@ -121,6 +122,18 @@ static void overapproximate(
                 }
             }
             break;
+
+        case PERTURBATION_FROM_FILE:
+            for (i = 0; i < space_size; ++i) {
+                double l, u;
+                fscanf(stream, "%lf %lf", &l, &u);
+                raf_create(abstract_sample + i, 1);
+                abstract_sample[i].c = 0.5 * (l + u);
+                abstract_sample[i].noise[0] = 0.5 * (l + u);
+                abstract_sample[i].index = i;
+            }
+            break;
+
         default:
             report_error("Unrecognized type of adversarial region.");
     }

@@ -36,7 +36,8 @@ typedef enum {
     PERTURBATION_HYPER_RECTANGLE, /**< Hyper rectangle: 
                                        \f$P_\epsilon(p) = \{x \in \mathbb{R}^n ~|~ p - \epsilon_l \leq x \leq p + e_u\}\f$. */
     PERTURBATION_FRAME,           /**< Occlusive fame around an image */
-    PERTURBATION_CLIPPED_HYPERRECTANGLE
+    PERTURBATION_CLIPPED_HYPERRECTANGLE,
+    PERTURBATION_FROM_FILE        /**< Reads hyperrectangles from file. */
 } PerturbationType;
 
 
@@ -60,6 +61,21 @@ typedef struct perturbation *Perturbation;
 void perturbation_create_hyper_rectangle(
     Perturbation *perturbation,
     const unsigned int space_size
+);
+
+
+/**
+ * Creates a hyper-rectangle perturbation read from file.
+ *
+ * @param[out] perturbation Perturbation
+ * @param[in] space_size Space size
+ * @param[in] fh File handler
+ * @note #perturbation_delete should be called to ensure proper memory deallocation.
+ */
+void perturbation_create_from_file(
+    Perturbation *perturbation,
+    const unsigned int space_size,
+    FILE *fh
 );
 
 
@@ -180,6 +196,15 @@ Real perturbation_get_frame_width(const Perturbation perturbation);
  * @return Frame height
  */
 Real perturbation_get_frame_height(const Perturbation perturbation);
+
+
+/**
+ * Returns file stream of given perturbation.
+ *
+ * @param[in] perturbation Perturbation
+ * @return File stream
+ */
+FILE *perturbation_get_file_stream(const Perturbation perturbation);
 
 
 /**

@@ -41,8 +41,8 @@ Where
  - *path to classifier*: path to classifier file; must be in the appropriate format (see below)
  - *path to dataset*: path to dataset; must be in the appropriate format (see below)
  - *abstraction*: optional, tells which abstract domain to use for analysis; must be one of *interval*, *raf*, *hybrid* (default: *hybrid*)
- - *perturbation*: optional, type of perturbation; must be one of *l_inf*, *frame* (default: *frame*)
- - *perturbation parameters*: list of parameter specific for the type of perturbation; all perturbation have at least the magnitude parameter
+ - *perturbation*: optional, type of perturbation; must be one of *l_inf*, *frame*, *from_file* (default: *l_inf*)
+ - *perturbation parameters*: list of parameter specific for the type of perturbation
 
 You can find data sets and trained SVM classifiers in our [data-collection repository](https://github.com/svm-abstract-verifier/data-collection/).
 
@@ -116,3 +116,12 @@ In particular, every SVM trained with `scikit-learn` and `libsvm` is compatible 
 
 ## Data set format
 See [dedicated section on our data-collection repository](https://github.com/svm-abstract-verifier/data-collection#dataset-format), from which you can also download some ready-to-use [datasets](https://github.com/svm-abstract-verifier/data-collection/tree/master/datasets) and [models](https://github.com/svm-abstract-verifier/data-collection/tree/master/models).
+
+## Perturbations
+SAVer supports hyperrectangle perturbations read from a text file. Each line of the file will be matched with the corresponding sample in the dataset, i.e. i-esim sample will be tesed using i-esim row, every row describing a hyperrectangle through pairs of lower and upper bounds, one pair for each component. For example, a perturbation file for *N* samples in a space size of *K* will look like:
+
+    sample1_l1 sample1_u1 sample1_l2 sample1_u2 ... sample1_lK sample1_uK
+    sample2_l1 sample2_u1 sample2_l2 sample2_u2 ... sample2_lK sample2_uK
+    ...
+    sampleN_l1 sampleN_u1 sampleN_l2 sampleN_u2 ... sampleN_lK sampleN_uK
+Note that a hyperrectangle region defined in this way does not need to contain the sample it is associated to.

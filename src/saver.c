@@ -75,7 +75,7 @@ static void display_help(const int argc, const char *argv[]) {
     fprintf(stderr, "\t\t* interval: Runs analysis using the interval abstract domain\n");
     fprintf(stderr, "\t\t* raf: Runs analysis using the Reduced Affine Forms (RAF)  abstract domain\n");
     fprintf(stderr, "\t\t* hybrid: Runs analysis using a mix of interval and RAF\n");
-    fprintf(stderr, "\t- <perturbation>: Perturbation to use [l_inf|frame] (default: %s)\n", DEFAULT_PERTURBATION);
+    fprintf(stderr, "\t- <perturbation>: Perturbation to use [l_inf|frame|from_file] (default: %s)\n", DEFAULT_PERTURBATION);
     fprintf(stderr, "\t- <perturbation parameters>: Additional parameters for the perturbation, depend on the perturbation:\n");
     fprintf(stderr, "\t\t* l_inf\n");
     fprintf(stderr, "\t\t\t- <epsilon>: Magnitude of the perturbation (default: %f)\n", DEFAULT_EPSILON);
@@ -85,6 +85,8 @@ static void display_help(const int argc, const char *argv[]) {
     fprintf(stderr, "\t\t\t- <height>: Image height\n");
     fprintf(stderr, "\t\t\t- <frame width>: Width of the frame\n");
     fprintf(stderr, "\t\t\t- <frame height>: Width of the frame\n");
+    fprintf(stderr, "\t\t* from_file\n");
+    fprintf(stderr, "\t\t\t- <file path>: Perturbation file path\n");
     fprintf(stderr, "\t- --counterexamples_file <path>: If specified, searches counterexamples of non-robust cases and stores them in <path>\n");
     fprintf(stderr, "\t- --debug_output: Enables verbose, debug output\n");
 }
