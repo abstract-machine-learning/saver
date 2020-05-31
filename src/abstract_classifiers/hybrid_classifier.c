@@ -21,8 +21,15 @@ static Interval *hybrid_classifier_ovo_score(
     const HybridClassifier hybrid_classifier,
     const AdversarialRegion adversarial_region
 ) {
-    const Interval *interval_scores = interval_classifier_score(hybrid_classifier->interval_classifier, adversarial_region),
-                   *raf_scores = raf_classifier_score(hybrid_classifier->raf_classifier, adversarial_region);
+    long offset = 0;
+    if (perturbation_get_type(adversarial_region.perturbation) == PERTURBATION_FROM_FILE) {
+        offset = ftell(perturbation_get_file_stream(adversarial_region.perturbation));
+    }
+    const Interval *interval_scores = interval_classifier_score(hybrid_classifier->interval_classifier, adversarial_region);
+    if (perturbation_get_type(adversarial_region.perturbation) == PERTURBATION_FROM_FILE) {
+        fseek(perturbation_get_file_stream(adversarial_region.perturbation), offset, SEEK_SET);
+    }
+    const Interval *raf_scores = raf_classifier_score(hybrid_classifier->raf_classifier, adversarial_region);
     const unsigned int N = classifier_get_n_classes(hybrid_classifier->classifier);
     unsigned int i, j;
 

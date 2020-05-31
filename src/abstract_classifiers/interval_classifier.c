@@ -67,6 +67,7 @@ static void overapproximate(
                        image_height = perturbation_get_image_height(perturbation),
                        frame_width = perturbation_get_frame_width(perturbation),
                        frame_height = perturbation_get_frame_height(perturbation);
+    FILE *stream = perturbation_get_file_stream(perturbation);
     unsigned int i, j;
 
     switch (perturbation_get_type(perturbation)) {
@@ -101,6 +102,12 @@ static void overapproximate(
                         abstract_sample[index].u = sample[index];
                     }
                 }
+            }
+            break;
+
+        case PERTURBATION_FROM_FILE:
+            for (i = 0; i < space_size; ++i) {
+                fscanf(stream, "%lf %lf", &abstract_sample[i].l, &abstract_sample[i].u);
             }
             break;
 
