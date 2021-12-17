@@ -21,6 +21,7 @@
 #include "abstract_classifiers/abstract_classifier.h"
 #include "counterexamples/counterexample_seeker.h"
 
+#define SAVER_VERSION "v1.0"
 
 /**
  * Prints detailed debug information about analysis of a single sample.
@@ -67,6 +68,7 @@ void check_soundness(
 static void display_help(const int argc, const char *argv[]) {
     (void) argc;
 
+    fprintf(stderr, "SAVer %s\n", SAVER_VERSION);
     fprintf(stderr, "Usage: %s <path to classifier> <path to dataset> [abstraction] [perturbation] [perturbation parameters] [--counterexamples_file <path>]\n", argv[0]);
     fprintf(stderr, "Detailed parameter description:\n");
     fprintf(stderr, "\t- <path to classifier>: Relative or absolute path to classifier file\n");
