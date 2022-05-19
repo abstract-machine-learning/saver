@@ -45,7 +45,7 @@ void raf_mul_algo2(Raf *r, const Raf x, const Raf y) {
 
     for (i = 0; i < min(x.size, y.size); ++i) {
         xy += x.noise[i] * y.noise[i];
-        xy_abs += abs(x.noise[i] * y.noise[i]);
+        xy_abs += fabs(x.noise[i] * y.noise[i]);
         x_norm_one += fabs(x.noise[i]);
         y_norm_one += fabs(y.noise[i]);
         r->noise[i] = y.c * x.noise[i] + x.c * y.noise[i];

@@ -126,12 +126,14 @@ static void overapproximate(
         case PERTURBATION_FROM_FILE:
             for (i = 0; i < space_size; ++i) {
                 double l, u;
-                fscanf(stream, "%lf %lf", &l, &u);
+                fscanf(stream, "[%lf;%lf] ", &l, &u);
+                printf("%d : [%lf,%lf]\n",i,l,u);
                 raf_create(abstract_sample + i, 1);
                 abstract_sample[i].c = 0.5 * (l + u);
                 abstract_sample[i].noise[0] = 0.5 * (l + u);
                 abstract_sample[i].index = i;
             }
+            fscanf(stream,"\n");
             break;
 
         default:

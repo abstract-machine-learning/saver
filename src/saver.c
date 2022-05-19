@@ -23,6 +23,7 @@
 
 #define SAVER_VERSION "v1.0"
 
+
 /**
  * Prints detailed debug information about analysis of a single sample.
  * 
@@ -145,11 +146,12 @@ int main(const int argc, const char **argv) {
     classifier_file = fopen(argv[1], "r");
     classifier = classifier_read(classifier_file);
     fclose(classifier_file);
+    
 
     /* Reads dataset */
     dataset_file = fopen(argv[2], "r");
     dataset = dataset_read(dataset_file);
-    fclose(dataset_file);
+    fclose(dataset_file);    
 
     /* Reads perturbation */
     perturbation_read(&perturbation, argc - 4, argv + 4, dataset_get_space_size(dataset));
@@ -218,26 +220,95 @@ int main(const int argc, const char **argv) {
     }
     stopwatch_stop(stopwatch);
 
+    /* Append results to a output file*/
+    FILE *resultFile;
+    resultFile = fopen("result1.txt", "a");
+    fprintf(resultFile,"\n\n\t--------- Begin New Result --------\nArguments:\n");
 
+    char *param_name[] = {"SVM Path","Data Path", "Abstraction", "Perturbation", "Perturbation Value/Path","A","b","c","d"};
+    /*Output the arguments*/
+    printf("\nHERE\n");
+    for(int i = 1; i< argc;i++)
+    {
+        fprintf(resultFile,"%d) %s : %s\n",i,param_name[i-1],argv[i]);
+    }
+    fprintf(resultFile,"\n\n");
+
+    char *row1[] = {"SVM PARAM", "CType", "KType", "Gamma", "Degree", "Coeff.","SpaceSize"};
+    printf("------------------------------------------------------------------------------------------------------------\n");
+    fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");
+
+    printf("| %6s\t|| %6s\t| %6s\t| %6s\t| %6s\t| %6s\t| %8s|\n",row1[0],row1[1],row1[2],row1[3],row1[4],row1[5],row1[6]);
+    fprintf(resultFile,"| %6s\t|| %6s\t| %6s\t| %6s\t| %6s\t| %6s\t| %8s|\n",row1[0],row1[1],row1[2],row1[3],row1[4],row1[5],row1[6]);
+    printf("------------------------------------------------------------------------------------------------------------\n");
+    fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");
+    fprintf(resultFile,"\n");
+    printf(
+        "| %6s\t|| %6s\t| %6s\t| %6f\t| %6d\t| %6f\t| %8d|\n",
+        row1[0],
+        classifierTypeStr(classifier_get_type(classifier)),
+        kernelTypeStr(kernel_get_type(classifier_get_kernel(classifier))),
+        kernel_get_gamma(classifier_get_kernel(classifier)),
+        kernel_get_degree(classifier_get_kernel(classifier)),
+        kernel_get_c(classifier_get_kernel(classifier)),
+        classifier_get_space_size(classifier)
+
+    );
+    fprintf(resultFile,
+        "| %6s\t|| %6s\t| %6s\t| %6f\t| %6d\t| %6f\t| %8d|\n",
+        row1[0],
+        classifierTypeStr(classifier_get_type(classifier)),
+        kernelTypeStr(kernel_get_type(classifier_get_kernel(classifier))),
+        kernel_get_gamma(classifier_get_kernel(classifier)),
+        kernel_get_degree(classifier_get_kernel(classifier)),
+        kernel_get_c(classifier_get_kernel(classifier)),
+        classifier_get_space_size(classifier)
+    );
+    printf("------------------------------------------------------------------------------------------------------------\n");
+    fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");
+
+    fprintf(resultFile,"\n");
+    printf("\n");
     /* Writes summary */
-    printf("[SUMMARY]\tSize\tEpsilon\tAvg. Time (ms)\tCorrect\tRobust\tCond. robust");
+
+    printf("-----------------------------------------------------------------------------\n");
+    fprintf(resultFile,"-----------------------------------------------------------------------------\n");
+    printf("[SUMMARY]\t| Size\t| Epsilon\t| Avg. Time (ms)\t| Correct\t| Robust\t| Cond. robust");
+    fprintf(resultFile,"[SUMMARY]\t| Size\t| Epsilon\t| Avg. Time (ms)\t| Correct\t| Robust\t| Cond. robust");
+    
     if (options.counterexamples_file) {
         printf("\tCounterexamples");
+        fprintf(resultFile,"\tCounterexamples");
     }
     printf("\n");
+    fprintf(resultFile,"\n");
+    double time = stopwatch_get_elapsed_milliseconds(stopwatch) / dataset_get_size(dataset);
     printf(
-        "[SUMMARY]\t%u\t %g\t %f\t %u\t %u\t %u",
+        "[SUMMARY]\t| %u\t|  %g\t|  %f\t|  %u\t|  %u\t|  %u",
         dataset_get_size(dataset),
         epsilon,
-        stopwatch_get_elapsed_milliseconds(stopwatch) / dataset_get_size(dataset),
+        time,
         correct_cases,
         robust_cases,
         conditionally_robust_cases
     );
+    fprintf(resultFile,"[SUMMARY]\t| %u\t|  %g\t|  %f\t|  %u\t|  %u\t|  %u",
+        dataset_get_size(dataset),
+        epsilon,
+        time,
+        correct_cases,
+        robust_cases,
+        conditionally_robust_cases
+    );
+
     if (options.counterexamples_file) {
-        printf("\t %u", counterexamples_found);
+        printf("\t|  %u| ", counterexamples_found);
+        fprintf(resultFile,"\t|  %u| ", counterexamples_found);
     }
     printf("\n");
+    fprintf(resultFile,"\n");
+    printf("-----------------------------------------------------------------------------\n\n\n");
+    fprintf(resultFile,"-----------------------------------------------------------------------------\n\n\n");
 
 
 

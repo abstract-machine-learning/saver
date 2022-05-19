@@ -25,6 +25,11 @@ typedef enum {
     CLASSIFIER_OVO      /**< One-Versus-One classifier. */
 } ClassifierType;
 
+static inline char *classifierTypeStr(ClassifierType k)
+{
+    static const char *strings[] = { "BINARY", "OVR", "OVO"};
+    return strings[k];
+}
 
 /**
  * Type of a classifier.

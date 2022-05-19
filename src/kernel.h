@@ -20,6 +20,11 @@ typedef enum {
     KERNEL_POLYNOMIAL  /**< Polynomial kernel: \f$K(x, y) = (x \cdot y + c)^d\f$. */
 } KernelType;
 
+static inline char *kernelTypeStr(KernelType k)
+{
+    static const char *strings[] = { "LINEAR", "RBF", "POLYNOMIAL"};
+    return strings[k];
+}
 
 /**
  * Type of a kernel.

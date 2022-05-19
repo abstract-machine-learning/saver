@@ -134,6 +134,33 @@ void perturbation_read(
         (*perturbation)->perturbation_data.frame.frame_width = (unsigned int) atoi(argv[4]);
         (*perturbation)->perturbation_data.frame.frame_height = (unsigned int) atoi(argv[5]);
     }
+    else if (strcmp(perturbation_name, "hyper_rectangle") == 0 && argc > 1) {
+        unsigned int i;
+        FILE *perturbation_file = fopen(argv[1], "r");
+        printf("\t\t SPACE SIZE : %d file: %s",space_size,argv[1]);
+
+        perturbation_create_clipped_hyper_rectangle(perturbation, space_size);
+
+        if (!perturbation_file) {
+            fprintf(stderr, "[%s: %d] Cannot open perturbation file \"%s\"\n", __FILE__, __LINE__, argv[1]);
+            abort();
+        }
+        printf("\n");
+        for (i = 0; i < space_size; ++i) {
+            fscanf(perturbation_file, "%lg", (*perturbation)->perturbation_data.hyper_rectangle.epsilon_l + i);
+            //printf("lb%d : %f\n",i,(*perturbation)->perturbation_data.hyper_rectangle.epsilon_l + i);
+        }
+        fscanf(perturbation_file, "\n");
+        printf("\n");
+        for (i = 0; i < space_size; ++i) {
+            fscanf(perturbation_file, "%lg", (*perturbation)->perturbation_data.hyper_rectangle.epsilon_u + i);
+            //printf("ub%d : %f\n",i,(*perturbation)->perturbation_data.hyper_rectangle.epsilon_u + i);
+        }
+
+        fclose(perturbation_file);
+
+        exit(0);
+    }
 
     else if (strcmp(perturbation_name, "clipped_hyperrectangle") == 0 && argc > 1) {
         unsigned int i;

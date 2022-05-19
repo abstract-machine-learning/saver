@@ -13,7 +13,6 @@ struct interval_classifier {
 };
 
 
-
 static void interval_kernel(
     Interval *r,
     const Kernel kernel,
@@ -107,8 +106,10 @@ static void overapproximate(
 
         case PERTURBATION_FROM_FILE:
             for (i = 0; i < space_size; ++i) {
-                fscanf(stream, "%lf %lf", &abstract_sample[i].l, &abstract_sample[i].u);
+                fscanf(stream, "[%lf;%lf] ", &abstract_sample[i].l, &abstract_sample[i].u);
+                //printf("%d : [%lf,%lf]\n",i,abstract_sample[i].l, abstract_sample[i].u);
             }
+            fscanf(stream,"\n");
             break;
 
         default:
@@ -116,6 +117,57 @@ static void overapproximate(
     }
 }
 
+/** [UNDER CONSTRUCTION]
+ * Enforces constraint that a attributes belonging to the same
+ * categorical value must sum up to 1 and be either 0 or 1.
+ *
+ * @param[in] x Decorator to analyse
+ * @param[in] tier Tier information
+ * @param[in] i Index of attribute to check
+ * @param[in] is_active Tells whether feature i was set on or off
+ */
+
+//static void adjust_tier(Interval *abstract_sample, const Tier tier, const unsigned int col_index, const unsigned is_active) {
+//    const unsigned int group = tier.tiers[col_index];
+//
+//    /* Feature is not part of a tier */
+//    if (group == 0) {
+//        return;
+//    }
+//
+//    /* If feature was activated, every feature in the same tier must be turned off */
+//    if (is_active) {
+//        unsigned int j;
+//        abstract_sample[col_index].l = 1.0;
+//        abstract_sample[col_index].u = 1.0;
+//        for (j = 0; j < tier.size; ++j) {
+//            if (j != col_index && tier.tiers[j] == group) {
+//                abstract_sample[j].l = 0.0;
+//                abstract_sample[j].u = 0.0;
+//            }
+//        }
+//    }
+//
+//    /* If feature was turned of, and every other feature but one in the
+//       same tier is off, then the remaining feature must be turned on */
+//    else {
+//        unsigned int j, n_members = 0, n_off = 0, candidate = 0;
+//        abstract_sample[col_index].l = 0.0;
+//        abstract_sample[col_index].u = 0.0;
+//        for (j = 0; j < tier.size; ++j) {
+//            if (tier.tiers[j] == group) {
+//                const unsigned int is_off = abstract_sample[j].l == 0.0 && abstract_sample[j].u == 0.0;
+//                ++n_members;
+//                n_off += is_off;
+//                candidate = j * (1 - is_off);
+//            }
+//            if (n_members == n_off + 1) {
+//                abstract_sample[candidate].l = 1.0;
+//                abstract_sample[candidate].u = 1.0;
+//            }
+//        }
+//    }
+//}
 
 
 static Interval *interval_classifier_ovo_score(
@@ -163,7 +215,6 @@ static Interval *interval_classifier_ovo_score(
         free(abstract_sample);
         return interval_classifier->buffer;
     }
-
 
 
     /* Precomputes kernel matrix */
