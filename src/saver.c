@@ -271,20 +271,23 @@ int main(const int argc, const char **argv) {
     printf("\n");
     /* Writes summary */
 
-    printf("-----------------------------------------------------------------------------\n");
-    fprintf(resultFile,"-----------------------------------------------------------------------------\n");
-    printf("[SUMMARY]\t| Size\t| Epsilon\t| Avg. Time (ms)\t| Correct\t| Robust\t| Cond. robust");
-    fprintf(resultFile,"[SUMMARY]\t| Size\t| Epsilon\t| Avg. Time (ms)\t| Correct\t| Robust\t| Cond. robust");
+    printf("------------------------------------------------------------------------------------------------------------\n");
+    fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");
+    
+    char *row2[] = {"[SUMMARY]", "Size", "Epsilon", "Avg. Time (ms)", "Correct", "Robust","Cond. robust","Counterexamples"};
+    printf("| %6s\t|| %6s\t| %6s\t| %8s\t| %6s\t| %6s\t| %8s\t| ",row2[0],row2[1],row2[2],row2[3],row2[4],row2[5],row2[6]);
+    fprintf(resultFile,"| %6s\t|| %6s\t| %6s\t| %8s\t| %6s\t| %6s\t| %8s\t| ",row2[0],row2[1],row2[2],row2[3],row2[4],row2[5],row1[6]);
     
     if (options.counterexamples_file) {
-        printf("\tCounterexamples");
-        fprintf(resultFile,"\tCounterexamples");
+        printf("%8s\t|",row2[7]);
+        fprintf(resultFile,"%8s\t|",row2[7]);
     }
-    printf("\n");
-    fprintf(resultFile,"\n");
+    printf("\n------------------------------------------------------------------------------------------------------------\n");
+    fprintf(resultFile,"\n------------------------------------------------------------------------------------------------------------\n");
     double time = stopwatch_get_elapsed_milliseconds(stopwatch) / dataset_get_size(dataset);
     printf(
-        "[SUMMARY]\t| %u\t|  %g\t|  %f\t|  %u\t|  %u\t|  %u",
+        "| %6s\t| %6u\t|  %6g\t|  %8f\t|  %6u\t|  %6u\t|  %8u\t|  ",
+        row2[0],
         dataset_get_size(dataset),
         epsilon,
         time,
@@ -292,7 +295,8 @@ int main(const int argc, const char **argv) {
         robust_cases,
         conditionally_robust_cases
     );
-    fprintf(resultFile,"[SUMMARY]\t| %u\t|  %g\t|  %f\t|  %u\t|  %u\t|  %u",
+    fprintf(resultFile,"| %6s\t| %6u\t|  %6g\t|  %8f\t|  %6u\t|  %6u\t|  %8u\t|  ",
+        row2[0],
         dataset_get_size(dataset),
         epsilon,
         time,
@@ -302,13 +306,13 @@ int main(const int argc, const char **argv) {
     );
 
     if (options.counterexamples_file) {
-        printf("\t|  %u| ", counterexamples_found);
-        fprintf(resultFile,"\t|  %u| ", counterexamples_found);
+        printf("%8u\t| ", counterexamples_found);
+        fprintf(resultFile,"%8u\t| ", counterexamples_found);
     }
     printf("\n");
     fprintf(resultFile,"\n");
-    printf("-----------------------------------------------------------------------------\n\n\n");
-    fprintf(resultFile,"-----------------------------------------------------------------------------\n\n\n");
+    printf("------------------------------------------------------------------------------------------------------------\n");
+    fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");
 
 
 
