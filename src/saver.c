@@ -249,16 +249,16 @@ int main(const int argc, const char **argv) {
         is_correct = n_concrete_classes == 1 && strcmp(classes[0], dataset_get_label(dataset, i)) == 0;
         is_robust = n_abstract_classes <= n_concrete_classes;
         
-        if(is_binary)
+        if(is_binary && n_concrete_classes == 1)
         {
-            if(strcmp(dataset_get_label(dataset, labels[0]), dataset_get_label(dataset, i)) == 0)
+            if(strcmp(dataset_get_label(dataset, labels[0]), classes[0]) == 0)
             {
                 if(is_correct)
                     TP++;
                 else
                     FP++;
             }
-            else if(strcmp(dataset_get_label(dataset, labels[1]),dataset_get_label(dataset, i)) == 0)
+            else if(strcmp(dataset_get_label(dataset, labels[1]),classes[0]) == 0)
                 {
                     if(is_correct)
                         TN++;
@@ -295,7 +295,7 @@ int main(const int argc, const char **argv) {
     
     double balanced_accuracy;
     if(is_binary)
-    {balanced_accuracy = (TP/(TP+FN+1)) + (TN/(TN+FP+1));}
+    {balanced_accuracy = 0.5 * ( (TP/(TP+FN+1)) + (TN/(TN+FP+1))) ;}
     
     
     stopwatch_stop(stopwatch);
