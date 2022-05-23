@@ -72,4 +72,6 @@ Real *dataset_get_row(const Dataset dataset, const unsigned int i);
  */
 char *dataset_get_label(const Dataset dataset, const unsigned int i);
 
+int dataset_get_unique_labels(int* unique_labels,const Dataset dataset);
+
 #endif

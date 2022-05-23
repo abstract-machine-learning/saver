@@ -9,10 +9,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "kernel.h"
 #include "classifier.h"
 #include "perturbation.h"
+#include "tier.h"
 #include "stopwatch.h"
 #include "options.h"
 #include "dataset.h"
@@ -112,128 +114,8 @@ static void print_classes(char **classes, const unsigned int n) {
     printf("%s", classes[i]);
 }
 
-
-
-/**
- * Main.
- * 
- * @param[in] argc ARGument Counter
- * @param[in] argv ARGument Vector
- * @return EXIT_SUCCESS in case of success, EXIT_FAILURE otherwise
- */
-int main(const int argc, const char **argv) {
-    FILE *classifier_file, *dataset_file;
-    Classifier classifier;
-    AbstractClassifier abstract_classifier;
-    Dataset dataset;
-    Stopwatch stopwatch;
-    unsigned int i, robust_cases = 0, correct_cases = 0, conditionally_robust_cases = 0, counterexamples_found = 0;
-    Real epsilon = 0.01;
-    char **classes, **abstract_classes;
-    Perturbation perturbation;
-    Options options;
-    CounterexampleSeeker counterexample_seeker;
-    Counterexample counterexample;
-
-
-    /* Input check */
-    if (argc < 3) {
-        display_help(argc, argv);
-        exit(EXIT_FAILURE);
-    }
-
-    /* Reads classifier */
-    classifier_file = fopen(argv[1], "r");
-    classifier = classifier_read(classifier_file);
-    fclose(classifier_file);
-    
-
-    /* Reads dataset */
-    dataset_file = fopen(argv[2], "r");
-    dataset = dataset_read(dataset_file);
-    fclose(dataset_file);    
-
-    /* Reads perturbation */
-    perturbation_read(&perturbation, argc - 4, argv + 4, dataset_get_space_size(dataset));
-    epsilon = perturbation_get_magnitude(perturbation);
-
-    /* Reads additional options. */
-    read_options(&options, argc, argv);
-
-    /* Builds abstract classifier */
-    abstract_classifier = abstract_classifier_read(classifier, argc - 3, argv + 3);
-
-    /* Builds counterexample seeker */
-    counterexample_seeker_create(&counterexample_seeker, abstract_classifier, COUNTEREXAMPLE_ROBUSTNESS);
-    counterexample_create(&counterexample, dataset_get_space_size(dataset), 2);
-
-    /* Allocates memory */
-    classes = (char **) malloc(classifier_get_n_classes(classifier) * sizeof(char *));
-    abstract_classes = (char **) malloc(classifier_get_n_classes(classifier) * sizeof(char *));
-
-
-    /* Prints heading */
-    printf("Classifier\tDtaset\tID\tEpsilon\tLabel\tConcrete\tAbstract");
-    if (options.counterexamples_file) {
-        printf("\tCounterexample");
-    }
-    printf("\n");
-
-    stopwatch = stopwatch_create();
-    stopwatch_start(stopwatch);
-    for (i = 0; i < dataset_get_size(dataset); ++i) {
-        const Real *sample = dataset_get_row(dataset, i);
-        const AdversarialRegion adversarial_region = {sample, perturbation};
-        unsigned int n_concrete_classes, n_abstract_classes, is_correct, is_robust, has_counterexample = 0;
-
-        /* Runs concrete and abstract classifiers */
-        n_concrete_classes = classifier_classify(classifier, sample, classes);
-        n_abstract_classes = abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes);
-
-        /* Compute metrics */
-        is_correct = n_concrete_classes == 1 && strcmp(classes[0], dataset_get_label(dataset, i)) == 0;
-        is_robust = n_abstract_classes <= n_concrete_classes;
-        correct_cases += is_correct;
-        robust_cases += is_robust;
-        conditionally_robust_cases += is_correct && is_robust;
-
-        /* Searches for counterexamples */
-        if (!is_robust && options.counterexamples_file) {
-            has_counterexample = counterexample_seeker_search(counterexample, counterexample_seeker, adversarial_region);
-            counterexamples_found += has_counterexample;
-        }
-
-        /* Prints results */
-        printf("%s\t%s\t%u\t%f\t%s\t", argv[1], argv[2], i, epsilon, dataset_get_label(dataset, i));
-        print_classes(classes, n_concrete_classes);
-        printf("\t");
-        print_classes(abstract_classes, n_abstract_classes);
-        if (options.counterexamples_file) {
-            printf("\t%s", is_robust ? "NONE" : (has_counterexample ? "FOUND" : "NOT-FOUND"));
-        }
-        printf("\n");
-
-        /* Debug information */
-        if (options.debug_output) {
-            check_soundness(classifier, abstract_classifier, sample, adversarial_region);
-        }
-    }
-    stopwatch_stop(stopwatch);
-
-    /* Append results to a output file*/
-    FILE *resultFile;
-    resultFile = fopen("result1.txt", "a");
-    fprintf(resultFile,"\n\n\t--------- Begin New Result --------\nArguments:\n");
-
-    char *param_name[] = {"SVM Path","Data Path", "Abstraction", "Perturbation", "Perturbation Value/Path","A","b","c","d"};
-    /*Output the arguments*/
-    printf("\nHERE\n");
-    for(int i = 1; i< argc;i++)
-    {
-        fprintf(resultFile,"%d) %s : %s\n",i,param_name[i-1],argv[i]);
-    }
-    fprintf(resultFile,"\n\n");
-
+void print_classifier(const Classifier classifier,FILE *resultFile)
+{
     char *row1[] = {"SVM PARAM", "CType", "KType", "Gamma", "Degree", "Coeff.","SpaceSize"};
     printf("------------------------------------------------------------------------------------------------------------\n");
     fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");
@@ -267,20 +149,194 @@ int main(const int argc, const char **argv) {
     printf("------------------------------------------------------------------------------------------------------------\n");
     fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");
 
+}
+
+
+
+/**
+ * Main.
+ * 
+ * @param[in] argc ARGument Counter
+ * @param[in] argv ARGument Vector
+ * @return EXIT_SUCCESS in case of success, EXIT_FAILURE otherwise
+ */
+int main(const int argc, const char **argv) {
+    FILE *classifier_file, *dataset_file;
+    Classifier classifier;
+    AbstractClassifier abstract_classifier;
+    Dataset dataset;
+    Stopwatch stopwatch;
+    unsigned int i, robust_cases = 0, correct_cases = 0, conditionally_robust_cases = 0, counterexamples_found = 0;
+    Real epsilon = 0.01;
+    char **classes, **abstract_classes;
+    Perturbation perturbation;
+    Tier tier;
+    Options options;
+    CounterexampleSeeker counterexample_seeker;
+    Counterexample counterexample;
+
+
+    /* Input check */
+    if (argc < 3) {
+        display_help(argc, argv);
+        exit(EXIT_FAILURE);
+    }
+
+    /* Reads classifier */
+    classifier_file = fopen(argv[1], "r");
+    classifier = classifier_read(classifier_file);
+    fclose(classifier_file);
+    
+
+    /* Reads dataset */
+    dataset_file = fopen(argv[2], "r");
+    dataset = dataset_read(dataset_file);
+    fclose(dataset_file); 
+
+    /* Reads Tier */
+    //tier_create(&tier, dataset_get_space_size(dataset));
+    tier_read(&tier, argv[6], dataset_get_space_size(dataset));
+
+    /* Reads perturbation */
+    perturbation_read(&perturbation, argc - 4, argv + 4, dataset_get_space_size(dataset));
+    epsilon = perturbation_get_magnitude(perturbation);
+
+    /* Reads additional options. */
+    read_options(&options, argc, argv);
+
+    /* Builds abstract classifier */
+    abstract_classifier = abstract_classifier_read(classifier, argc - 3, argv + 3);
+
+    /* Builds counterexample seeker */
+    counterexample_seeker_create(&counterexample_seeker, abstract_classifier, COUNTEREXAMPLE_ROBUSTNESS);
+    counterexample_create(&counterexample, dataset_get_space_size(dataset), 2);
+
+    /* Allocates memory */
+    classes = (char **) malloc(classifier_get_n_classes(classifier) * sizeof(char *));
+    abstract_classes = (char **) malloc(classifier_get_n_classes(classifier) * sizeof(char *));
+
+    /* if binary classier then calculate confusion matrix */
+    bool is_binary = (atoi(argv[7]) == 1);
+
+    
+    /* Prints heading */
+    printf("Classifier\tDtaset\tID\tEpsilon\tLabel\tConcrete\tAbstract");
+    if (options.counterexamples_file) {
+        printf("\tCounterexample");
+    }
+    printf("\n");
+
+    stopwatch = stopwatch_create();
+    stopwatch_start(stopwatch);
+    
+    /*variables for confusion matrix*/
+    int TP = 0,FP = 0,TN = 0,FN = 0;    
+    int* labels = malloc(2*sizeof(int));
+    if(is_binary)
+        dataset_get_unique_labels(labels,dataset);
+
+    
+    for (i = 0; i < dataset_get_size(dataset); ++i) {
+        const Real *sample = dataset_get_row(dataset, i);
+        const AdversarialRegion adversarial_region = {sample, perturbation};
+        unsigned int n_concrete_classes, n_abstract_classes, is_correct, is_robust, has_counterexample = 0;
+
+        /* Runs concrete and abstract classifiers */
+        n_concrete_classes = classifier_classify(classifier, sample, classes);
+        n_abstract_classes = abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes);
+
+        /* Compute metrics */
+        is_correct = n_concrete_classes == 1 && strcmp(classes[0], dataset_get_label(dataset, i)) == 0;
+        is_robust = n_abstract_classes <= n_concrete_classes;
+        
+        if(is_binary)
+        {
+            if(strcmp(dataset_get_label(dataset, labels[0]), dataset_get_label(dataset, i)) == 0)
+            {
+                if(is_correct)
+                    TP++;
+                else
+                    FP++;
+            }
+            else if(strcmp(dataset_get_label(dataset, labels[1]),dataset_get_label(dataset, i)) == 0)
+                {
+                    if(is_correct)
+                        TN++;
+                    else
+                        FN++;
+                }
+
+        }
+        correct_cases += is_correct;
+        robust_cases += is_robust;
+        conditionally_robust_cases += is_correct && is_robust;
+
+        /* Searches for counterexamples */
+        if (!is_robust && options.counterexamples_file) {
+            has_counterexample = counterexample_seeker_search(counterexample, counterexample_seeker, adversarial_region);
+            counterexamples_found += has_counterexample;
+        }
+
+        /* Prints results */
+        //printf("%s\t%s\t%u\t%f\t%s\t", argv[1], argv[2], i, epsilon, dataset_get_label(dataset, i));
+        //print_classes(classes, n_concrete_classes);
+        //printf("\t");
+        //print_classes(abstract_classes, n_abstract_classes);
+        if (options.counterexamples_file) {
+            //printf("\t%s", is_robust ? "NONE" : (has_counterexample ? "FOUND" : "NOT-FOUND"));
+        }
+        //printf("\n");
+
+        /* Debug information */
+        if (options.debug_output) {
+            check_soundness(classifier, abstract_classifier, sample, adversarial_region);
+        }
+    }
+    
+    double balanced_accuracy;
+    if(is_binary)
+    {balanced_accuracy = (TP/(TP+FN+1)) + (TN/(TN+FP+1));}
+    
+    
+    stopwatch_stop(stopwatch);
+
+    /* Append results to a output file*/
+    FILE *resultFile;
+    resultFile = fopen("result1.txt", "a");
+    fprintf(resultFile,"\n\n\t--------- Begin New Result --------\nArguments:\n");
+
+    char *param_name[] = {"SVM Path","Data Path", "Abstraction", "Perturbation", "Perturbation Value/Path", "Tier Path", "Is binary"};
+    /*Output the arguments*/
+
+    for(int i = 1; i< argc;i++)
+    {
+        fprintf(resultFile,"%d) %s : %s\n",i,param_name[i-1],argv[i]);
+    }
+    fprintf(resultFile,"\n\n");
+
     fprintf(resultFile,"\n");
     printf("\n");
+
+    print_classifier(classifier,resultFile);
+
     /* Writes summary */
+    printf("\nTP: %d; TN: %d; FP: %d; FN: %d -> Bal. Acc.: %f\n\n",TP,TN,FP,FN,balanced_accuracy);
+    fprintf(resultFile,"\nTP: %d; TN: %d; FP: %d; FN: %d -> Bal. Acc.: %f\n\n",TP,TN,FP,FN,balanced_accuracy);
 
     printf("------------------------------------------------------------------------------------------------------------\n");
     fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");
     
-    char *row2[] = {"[SUMMARY]", "Size", "Epsilon", "Avg. Time (ms)", "Correct", "Robust","Cond. robust","Counterexamples"};
+    char *row2[] = {"[SUMMARY]", "Size", "Epsilon", "Avg. Time (ms)", "Correct", "Robust","Cond. robust","Bal. Acc.","Counterexamples"};
     printf("| %6s\t|| %6s\t| %6s\t| %8s\t| %6s\t| %6s\t| %8s\t| ",row2[0],row2[1],row2[2],row2[3],row2[4],row2[5],row2[6]);
-    fprintf(resultFile,"| %6s\t|| %6s\t| %6s\t| %8s\t| %6s\t| %6s\t| %8s\t| ",row2[0],row2[1],row2[2],row2[3],row2[4],row2[5],row1[6]);
+    fprintf(resultFile,"| %6s\t|| %6s\t| %6s\t| %8s\t| %6s\t| %6s\t| %8s\t| ",row2[0],row2[1],row2[2],row2[3],row2[4],row2[5],row2[6]);
     
-    if (options.counterexamples_file) {
+    if (is_binary) {
         printf("%8s\t|",row2[7]);
         fprintf(resultFile,"%8s\t|",row2[7]);
+    }
+    if (options.counterexamples_file) {
+        printf("%8s\t|",row2[8]);
+        fprintf(resultFile,"%8s\t|",row2[8]);
     }
     printf("\n------------------------------------------------------------------------------------------------------------\n");
     fprintf(resultFile,"\n------------------------------------------------------------------------------------------------------------\n");
@@ -305,6 +361,10 @@ int main(const int argc, const char **argv) {
         conditionally_robust_cases
     );
 
+    if (is_binary) {
+        printf("%8f\t|",balanced_accuracy);
+        fprintf(resultFile,"%8f\t|",balanced_accuracy);
+    }
     if (options.counterexamples_file) {
         printf("%8u\t| ", counterexamples_found);
         fprintf(resultFile,"%8u\t| ", counterexamples_found);

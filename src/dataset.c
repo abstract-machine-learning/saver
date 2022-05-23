@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <malloc.h>
+#include<string.h>
 
 #include "report_error.h"
 
@@ -89,4 +90,31 @@ Real *dataset_get_row(const Dataset dataset, const unsigned int i) {
 
 char *dataset_get_label(const Dataset dataset, const unsigned int i) {
     return dataset->labels + i * LABEL_BUFFER_SIZE;
+}
+
+int dataset_get_unique_labels(int* unique_labels,const Dataset dataset)
+{
+    int c = 0;
+    for (unsigned int i=0 ; i < dataset->size;i++)
+    {
+        unsigned int j = 0;
+        for(;j<dataset->size;j++)
+        {
+            if(strcmp(dataset_get_label(dataset,i),dataset_get_label(dataset,j)) == 0)
+                break;
+        }
+        if( i == j)
+        {
+            unique_labels[c] = i;
+            c++;
+            if(c>2)
+            {
+                perror("Not Binary");
+                exit(EXIT_FAILURE);
+                //Use realloc to extend to muti-class
+            }
+
+        }
+    }
+    return c;
 }

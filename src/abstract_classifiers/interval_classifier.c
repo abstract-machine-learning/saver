@@ -2,7 +2,7 @@
 
 #include <malloc.h>
 #include "../report_error.h"
-
+#include "../tier.h"
 
 /**
  * Structure of an interval classifier.
@@ -49,9 +49,83 @@ static void interval_kernel(
         report_error("Unsupported kernel type.");
     }
 }
+/*
+static void interval_kernel2(
+    Interval *r,
+    Tier tier,
+    const Kernel kernel,
+    const Real *x,
+    const Interval *y,
+    const unsigned int space_size
+) {
+    if (kernel_get_type(kernel) == KERNEL_RBF) {
+        Interval exponent = {0.0, 0.0}, product;
+        unsigned int i;
+        Interval *featureInt = (Interval *) calloc(space_size, sizeof(Interval));
+        
+        for (i = 0; i < space_size; ++i) {
+            interval_translate(&product, y[i], -x[i]);
+            interval_pow(featureInt[i], product, 2);
+        }
+        tier_aware_sum(&exponent,tier,featureInt,space_size)
+        interval_scale(&exponent, exponent, -kernel_get_gamma(kernel));
+        interval_exp(r, exponent);
+    }
 
+    else if (kernel_get_type(kernel) == KERNEL_POLYNOMIAL) {
+        unsigned int i;
+        Interval product;
+        product.l = kernel_get_c(kernel);
+        product.u = kernel_get_c(kernel);
 
+        for (i = 0; i < space_size; ++i) {
+            interval_fma(&product, x[i], y[i], product);
+        }
+        interval_pow(r, product, kernel_get_degree(kernel));
+    }
 
+    else {
+        report_error("Unsupported kernel type.");
+    }
+}
+
+static void tier_aware_sum(
+    Interval *r,
+    Tier tier,
+    const Interval *feature,
+    const unsigned int space_size
+)
+{
+    tier_unique_count = get_tier_unique_count(tier);
+    Interval *tierInterval = (Interval *) calloc(tier_unique_count * sizeof(Interval));
+    for(unsigned int i = 0;i < tier_unique_count; i++)
+    {
+        tierInterval[i] = {0.0,0.0};
+    }
+    for(i = 0 ; i < space_size; i++)
+    {
+        tierNum = tier[i];
+        if(tierInterval[tierNum] == {0.0,0.0})
+        {
+            tierInterval[tierNum] = feature[space_size];
+        }
+        else 
+        {
+            if(tierInterval[tierNum].lb > feature[space_size].lb)
+            {
+                tierInterval[tierNum].lb = feature[space_size].lb;
+            }
+            if(tierInterval[tierNum].ub < feature[space_size].ub)
+            {
+                tierInterval[tierNum].ub = feature[space_size].ub;
+            }
+    }
+    for(i = 0;i < tier_unique_count; i++)
+    {
+        interval_add(r, *r, tierInterval[i]);
+    }
+}
+*/
 static void overapproximate(
     Interval *abstract_sample,
     const AdversarialRegion adversarial_region,
@@ -116,58 +190,6 @@ static void overapproximate(
             report_error("Unrecognized type of adversarial region.");
     }
 }
-
-/** [UNDER CONSTRUCTION]
- * Enforces constraint that a attributes belonging to the same
- * categorical value must sum up to 1 and be either 0 or 1.
- *
- * @param[in] x Decorator to analyse
- * @param[in] tier Tier information
- * @param[in] i Index of attribute to check
- * @param[in] is_active Tells whether feature i was set on or off
- */
-
-//static void adjust_tier(Interval *abstract_sample, const Tier tier, const unsigned int col_index, const unsigned is_active) {
-//    const unsigned int group = tier.tiers[col_index];
-//
-//    /* Feature is not part of a tier */
-//    if (group == 0) {
-//        return;
-//    }
-//
-//    /* If feature was activated, every feature in the same tier must be turned off */
-//    if (is_active) {
-//        unsigned int j;
-//        abstract_sample[col_index].l = 1.0;
-//        abstract_sample[col_index].u = 1.0;
-//        for (j = 0; j < tier.size; ++j) {
-//            if (j != col_index && tier.tiers[j] == group) {
-//                abstract_sample[j].l = 0.0;
-//                abstract_sample[j].u = 0.0;
-//            }
-//        }
-//    }
-//
-//    /* If feature was turned of, and every other feature but one in the
-//       same tier is off, then the remaining feature must be turned on */
-//    else {
-//        unsigned int j, n_members = 0, n_off = 0, candidate = 0;
-//        abstract_sample[col_index].l = 0.0;
-//        abstract_sample[col_index].u = 0.0;
-//        for (j = 0; j < tier.size; ++j) {
-//            if (tier.tiers[j] == group) {
-//                const unsigned int is_off = abstract_sample[j].l == 0.0 && abstract_sample[j].u == 0.0;
-//                ++n_members;
-//                n_off += is_off;
-//                candidate = j * (1 - is_off);
-//            }
-//            if (n_members == n_off + 1) {
-//                abstract_sample[candidate].l = 1.0;
-//                abstract_sample[candidate].u = 1.0;
-//            }
-//        }
-//    }
-//}
 
 
 static Interval *interval_classifier_ovo_score(

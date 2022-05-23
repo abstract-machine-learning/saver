@@ -28,6 +28,7 @@ all: $(NAME)
 $(NAME): kernel.o \
         classifier.o \
         perturbation.o \
+        tier.o \
         adversarial_region.o \
         abstract_domains/raf.o \
         abstract_classifiers/abstract_classifier.o \

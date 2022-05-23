@@ -4,6 +4,7 @@
 void tier_create(Tier *tier, const unsigned int size) {
     tier->size = size;
     tier->tiers = (unsigned int *) calloc(size, sizeof(unsigned int));
+    tier->unique_count = 0;
 }
 
 void tier_delete(Tier *tier) {
@@ -35,3 +36,34 @@ void tier_print(const Tier tier, FILE *stream) {
     }
 }
 
+void tier_read(
+    Tier *tier,
+    const char *path,
+    const unsigned int space_size
+)
+{
+    tier_create(tier, space_size);
+    FILE *tiers_file = fopen(path, "r");
+
+    if (!tiers_file) {
+        fprintf(stderr, "[%s: %d] Cannot open tier file \"%s\"\n", __FILE__, __LINE__, path);
+        abort();
+    }
+
+    for (unsigned int i = 0; i < space_size; ++i) 
+    {
+        fscanf(tiers_file, "%u ", &tier->tiers[i]);
+        //printf("%d : %u\n",i,tier->tiers[i]);
+        
+        if(tier->tiers[i] > tier->unique_count)
+        {
+            tier->unique_count = tier->tiers[i];
+        }
+    }
+
+}
+
+unsigned int get_tier_unique_count(const Tier tier)
+{
+    return tier.unique_count;
+}
