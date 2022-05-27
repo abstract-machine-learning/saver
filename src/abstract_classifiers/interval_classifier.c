@@ -5,7 +5,7 @@
 #include "../tier.h"
 #include "../abstract_domains/one_hot_interval.h"
 
-//#define ONE_HOT_ON
+#define ONE_HOT_ON
 
 /**
  * Structure of an interval classifier.
@@ -101,22 +101,23 @@ static void interval_kernel2(
     fill_isOneHot(isOneHot,tier);
     interval_to_ohint(isOneHot,origins,y,space_size);
     if (kernel_get_type(kernel) == KERNEL_RBF) {
-        Interval exponent = {0.0, 0.0}, product;
+        Interval exponent = {0.0, 0.0};
         unsigned int i;
         Interval *featureInt = (Interval *) calloc(space_size, sizeof(Interval));
         for (i = 0; i < space_size; ++i) {
             if(isOneHot[i]) {
-                ohint_translate(&product, y[i], -x[i]);
-                ohint_pow(&featureInt[i], product, 2);
+                ohint_translate(&featureInt[i], y[i], -x[i]);
+                ohint_pow(&featureInt[i], featureInt[i], 2);
             }
             else {
-                interval_translate(&product, y[i], -x[i]);
-                interval_pow(&featureInt[i], product, 2);
+                interval_translate(&featureInt[i], y[i], -x[i]);
+                interval_pow(&featureInt[i], featureInt[i], 2);
             }
         }
         tier_aware_sum(&exponent,isOneHot,tier,featureInt,origins,space_size);
         interval_scale(&exponent, exponent, -kernel_get_gamma(kernel));
         interval_exp(r, exponent);
+        free(featureInt);
 
     }
 
@@ -134,6 +135,7 @@ static void interval_kernel2(
         }
         tier_aware_sum(&product,isOneHot,tier,featureInt,origins,space_size);
         interval_pow(r, product, kernel_get_degree(kernel));
+        free(featureInt);
     }
 
     else {
@@ -239,11 +241,11 @@ static Interval *interval_classifier_ovo_score(
             short* origins = (short*)calloc(space_size,sizeof(short));
             fill_isOneHot(isOneHot,adversarial_region.tier);
             interval_to_ohint(isOneHot,origins,abstract_sample,space_size);
+            Interval *featureInt = (Interval *) calloc(space_size, sizeof(Interval));
             for (i = 0; i < N; ++i) {
                 for (j = i + 1; j < N; ++j) {
                     const unsigned int index = i * (N - 1) - (i * (i + 1)) / 2 + j - 1;
                     Interval sum = {bias[index],bias[index]};
-                    Interval *featureInt = (Interval *) calloc(space_size, sizeof(Interval));
                     for (k = 0; k < space_size; ++k) {
                         if(isOneHot[k])
                             ohint_scale(&featureInt[i],abstract_sample[k],coefficients[index * space_size + k]);
@@ -255,6 +257,7 @@ static Interval *interval_classifier_ovo_score(
                 }
             }
             free(abstract_sample);
+            free(featureInt);
             return interval_classifier->buffer;
         }
 
