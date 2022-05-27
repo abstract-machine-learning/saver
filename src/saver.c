@@ -238,7 +238,7 @@ int main(const int argc, const char **argv) {
     
     for (i = 0; i < dataset_get_size(dataset); ++i) {
         const Real *sample = dataset_get_row(dataset, i);
-        const AdversarialRegion adversarial_region = {sample, perturbation};
+        const AdversarialRegion adversarial_region = {sample, perturbation,tier};
         unsigned int n_concrete_classes, n_abstract_classes, is_correct, is_robust, has_counterexample = 0;
 
         /* Runs concrete and abstract classifiers */
@@ -295,7 +295,7 @@ int main(const int argc, const char **argv) {
     
     double balanced_accuracy;
     if(is_binary)
-    {balanced_accuracy = 0.5 * ( (TP/(TP+FN+1)) + (TN/(TN+FP+1))) ;}
+    {balanced_accuracy = 0.5 * ( ( (TP*1.0)/(TP+FN) ) + ( (TN*1.0)/(TN+FP) )) ;}
     
     
     stopwatch_stop(stopwatch);
@@ -303,6 +303,8 @@ int main(const int argc, const char **argv) {
     /* Append results to a output file*/
     FILE *resultFile;
     resultFile = fopen("result1.txt", "a");
+    FILE *resultRawFile;
+    resultRawFile = fopen("result_raw.txt", "a");
     fprintf(resultFile,"\n\n\t--------- Begin New Result --------\nArguments:\n");
 
     char *param_name[] = {"SVM Path","Data Path", "Abstraction", "Perturbation", "Perturbation Value/Path", "Tier Path", "Is binary"};
@@ -360,6 +362,9 @@ int main(const int argc, const char **argv) {
         robust_cases,
         conditionally_robust_cases
     );
+    int dataset_size = dataset_get_size(dataset);
+    
+    fprintf(resultRawFile,"%f %f %f\n",(correct_cases*1.0/dataset_size),balanced_accuracy,(robust_cases*1.0/dataset_size));
 
     if (is_binary) {
         printf("%8f\t|",balanced_accuracy);

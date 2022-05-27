@@ -27,7 +27,7 @@ typedef enum {
 
 static inline char *classifierTypeStr(ClassifierType k)
 {
-    static const char *strings[] = { "BINARY", "OVR", "OVO"};
+    static char *strings[] = { "BINARY", "OVR", "OVO"};
     return strings[k];
 }
 

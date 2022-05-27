@@ -222,7 +222,7 @@ printf("not robust!\n");
     Perturbation max_perturbation;
     perturbation_create_hyper_rectangle(&max_perturbation, space_size);
     perturbation_copy(max_perturbation, original_region.perturbation);
-    AdversarialRegion max_region = {original_region.sample, max_perturbation};
+    AdversarialRegion max_region = {original_region.sample, max_perturbation,original_region.tier};
     find_max_hyper_rectangle(&max_region, abstract_classifier, abstract_classes);
 
 
@@ -250,7 +250,7 @@ printf("examining region %u\n", i);
 
         outer_sample[i] = original_region.sample[i] + 0.5 * (epsilon_u[i] + epsilon2_u[i]);
         perturbation_get_epsilon_lowerbounds(outer_perturbation)[i] = 0.5 * (epsilon_u[i] - epsilon2_u[i]);
-        AdversarialRegion upper_region = {outer_sample, outer_perturbation};
+        AdversarialRegion upper_region = {outer_sample, outer_perturbation,original_region.tier};
 
         switch (analyze_region(counterexample, abstract_classifier, upper_region, (const char **) concrete_classes, n_concrete_classes)) {
             case COUNTEREXAMPLE_SEEKER_ROBUST:
@@ -321,7 +321,7 @@ unsigned int robustness_divide_et_impera(
 
 
     // Builds original adversarial region (as hyper rectangle)
-    const AdversarialRegion original_region = {adversarial_region.sample, original_perturbation};
+    const AdversarialRegion original_region = {adversarial_region.sample, original_perturbation,adversarial_region.tier};
 
 
     // Starts the actual procedure

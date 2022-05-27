@@ -3,6 +3,9 @@
 #include <malloc.h>
 #include "../report_error.h"
 #include "../tier.h"
+#include "../abstract_domains/one_hot_interval.h"
+
+#define ONE_HOT_ON
 
 /**
  * Structure of an interval classifier.
@@ -11,6 +14,38 @@ struct interval_classifier {
     Classifier classifier;  /**< Concrete classifier. */
     Interval *buffer;       /**< Internal buffer. */
 };
+
+/*
+* Assumption: Features of a tier are present one after the other
+*/
+static void tier_aware_sum(
+    Interval *r,
+    const bool *isOneHot,
+    const Tier tier,
+    const Interval *feature,
+    const short* origins,
+    const unsigned int space_size
+)
+{
+    Interval tierInterval = {0.0,0.0};//(Interval *) malloc(sizeof(Interval));
+    for(unsigned int i = 0;i < space_size; i++){
+        if(isOneHot[i]){
+            unsigned int j;
+            for(j = i;j <space_size;j++){
+                if(tier.tiers[i] != tier.tiers[j])
+                    break;
+            }
+            ohint_intervalize(&tierInterval,&feature[i] ,&origins[i], (j-i));
+            interval_add(r, *r, tierInterval);
+            i = j-1;
+        }
+        else
+        {
+            interval_add(r, *r, feature[i]);
+        }
+    }
+
+}
 
 
 static void interval_kernel(
@@ -31,6 +66,7 @@ static void interval_kernel(
         }
         interval_scale(&exponent, exponent, -kernel_get_gamma(kernel));
         interval_exp(r, exponent);
+
     }
 
     else if (kernel_get_type(kernel) == KERNEL_POLYNOMIAL) {
@@ -43,13 +79,14 @@ static void interval_kernel(
             interval_fma(&product, x[i], y[i], product);
         }
         interval_pow(r, product, kernel_get_degree(kernel));
+        
     }
 
     else {
         report_error("Unsupported kernel type.");
     }
 }
-/*
+
 static void interval_kernel2(
     Interval *r,
     Tier tier,
@@ -57,19 +94,30 @@ static void interval_kernel2(
     const Real *x,
     const Interval *y,
     const unsigned int space_size
-) {
+) 
+{
+    bool* isOneHot = (bool*)malloc(space_size*sizeof(bool));
+    short* origins = (short*)calloc(space_size,sizeof(short));
+    fill_isOneHot(isOneHot,tier);
+    interval_to_ohint(isOneHot,origins,y,space_size);
     if (kernel_get_type(kernel) == KERNEL_RBF) {
         Interval exponent = {0.0, 0.0}, product;
         unsigned int i;
         Interval *featureInt = (Interval *) calloc(space_size, sizeof(Interval));
-        
         for (i = 0; i < space_size; ++i) {
-            interval_translate(&product, y[i], -x[i]);
-            interval_pow(featureInt[i], product, 2);
+            if(isOneHot[i]) {
+                ohint_translate(&product, y[i], -x[i]);
+                ohint_pow(&featureInt[i], product, 2);
+            }
+            else {
+                interval_translate(&product, y[i], -x[i]);
+                interval_pow(&featureInt[i], product, 2);
+            }
         }
-        tier_aware_sum(&exponent,tier,featureInt,space_size)
+        tier_aware_sum(&exponent,isOneHot,tier,featureInt,origins,space_size);
         interval_scale(&exponent, exponent, -kernel_get_gamma(kernel));
         interval_exp(r, exponent);
+
     }
 
     else if (kernel_get_type(kernel) == KERNEL_POLYNOMIAL) {
@@ -77,55 +125,24 @@ static void interval_kernel2(
         Interval product;
         product.l = kernel_get_c(kernel);
         product.u = kernel_get_c(kernel);
-
+        Interval *featureInt = (Interval *) calloc(space_size, sizeof(Interval));
         for (i = 0; i < space_size; ++i) {
-            interval_fma(&product, x[i], y[i], product);
+            if(isOneHot[i])
+                ohint_scale(&featureInt[i],y[i],x[i]);
+            else
+                interval_scale(&featureInt[i],y[i],x[i]);
         }
+        tier_aware_sum(&product,isOneHot,tier,featureInt,origins,space_size);
         interval_pow(r, product, kernel_get_degree(kernel));
     }
 
     else {
         report_error("Unsupported kernel type.");
     }
+    
 }
 
-static void tier_aware_sum(
-    Interval *r,
-    Tier tier,
-    const Interval *feature,
-    const unsigned int space_size
-)
-{
-    tier_unique_count = get_tier_unique_count(tier);
-    Interval *tierInterval = (Interval *) calloc(tier_unique_count * sizeof(Interval));
-    for(unsigned int i = 0;i < tier_unique_count; i++)
-    {
-        tierInterval[i] = {0.0,0.0};
-    }
-    for(i = 0 ; i < space_size; i++)
-    {
-        tierNum = tier[i];
-        if(tierInterval[tierNum] == {0.0,0.0})
-        {
-            tierInterval[tierNum] = feature[space_size];
-        }
-        else 
-        {
-            if(tierInterval[tierNum].lb > feature[space_size].lb)
-            {
-                tierInterval[tierNum].lb = feature[space_size].lb;
-            }
-            if(tierInterval[tierNum].ub < feature[space_size].ub)
-            {
-                tierInterval[tierNum].ub = feature[space_size].ub;
-            }
-    }
-    for(i = 0;i < tier_unique_count; i++)
-    {
-        interval_add(r, *r, tierInterval[i]);
-    }
-}
-*/
+
 static void overapproximate(
     Interval *abstract_sample,
     const AdversarialRegion adversarial_region,
@@ -205,6 +222,7 @@ static Interval *interval_classifier_ovo_score(
     const Kernel kernel = classifier_get_kernel(interval_classifier->classifier);
     unsigned int i, j, k, support_vectors_i_offset = 0, total_support_vectors = 0;
     Interval *abstract_sample, *K;
+    
 
     /* Overapproximates abstract sample with an interval */
     abstract_sample = (Interval *) malloc(space_size * sizeof(Interval));
@@ -237,19 +255,33 @@ static Interval *interval_classifier_ovo_score(
         free(abstract_sample);
         return interval_classifier->buffer;
     }
-
-
-    /* Precomputes kernel matrix */
-    K = (Interval *) malloc(total_support_vectors * sizeof(Interval));
-    for (i = 0; i < total_support_vectors; ++i) {
-        interval_kernel(
-            K + i,
-            kernel,
-            support_vectors + i * space_size,
-            abstract_sample,
-            space_size
-        );
-    }
+    #ifdef ONE_HOT_ON
+        K = (Interval *) malloc(total_support_vectors * sizeof(Interval));
+        /* Precomputes kernel matrix */
+        for (i = 0; i < total_support_vectors; ++i) {
+            interval_kernel2(
+                K+i,
+                adversarial_region.tier,
+                kernel,
+                support_vectors + i * space_size,
+                abstract_sample,
+                space_size
+            ); 
+        }
+        
+    #else
+        K = (Interval *) malloc(total_support_vectors * sizeof(Interval));
+        /* Precomputes kernel matrix */
+        for (i = 0; i < total_support_vectors; ++i) {
+            interval_kernel(
+                K + i,
+                kernel,
+                support_vectors + i * space_size,
+                abstract_sample,
+                space_size
+            );
+        }        
+    #endif
 
     /* Computes scores */
     for (i = 0; i < N; ++i) {
@@ -426,6 +458,7 @@ void interval_classifier_delete(IntervalClassifier *interval_classifier) {
 Interval *interval_classifier_score(
     const IntervalClassifier interval_classifier,
     const AdversarialRegion adversarial_region
+
 ) {
     switch (classifier_get_type(interval_classifier->classifier)) {
         case CLASSIFIER_OVO:

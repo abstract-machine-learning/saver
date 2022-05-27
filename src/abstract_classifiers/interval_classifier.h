@@ -12,6 +12,7 @@
 #include "abstract_classifier.h"
 #include "../abstract_domains/interval.h"
 #include "../classifier.h"
+#include "../tier.h"
  
 /** Type of an interval classifier. */
 typedef struct interval_classifier *IntervalClassifier;

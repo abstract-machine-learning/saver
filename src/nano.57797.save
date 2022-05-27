@@ -1,0 +1,13 @@
+Creating SVM: ./german/svm/german-svm_linear_g1_d1_c0_C1.dat
+Accuracy: 0.79
+Balanced Accuracy: 0.7081379973554514
+Creating SVM: ./german/svm/german-svm_poly_g1_d3_c0_C1.dat
+Accuracy: 0.745
+Balanced Accuracy: 0.7205793965620868
+Creating SVM: ./german/svm/german-svm_poly_g1_d9_c0_C1.dat
+Accuracy: 0.77
+Balanced Accuracy: 0.664382738309893
+Creating SVM: ./german/svm/german-svm_rbf_g3_d1_c0_C1.dat
+Accuracy: 0.705
+Balanced Accuracy: 0.5
+Creating SVM: ./germa

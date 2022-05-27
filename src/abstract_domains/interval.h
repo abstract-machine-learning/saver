@@ -179,6 +179,7 @@ static inline void interval_pow(Interval *r, const Interval x, const unsigned in
     for (i = 1; i < degree; ++i) {
         interval_mul(r, *r, x);
     }
+//printf("POW [%f,%f] --> [%f,%f] \n",x.l,x.u,r->l,r->u);
 }
 
 

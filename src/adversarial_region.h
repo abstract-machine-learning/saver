@@ -13,7 +13,7 @@
 
 #include "type.h"
 #include "perturbation.h"
-
+#include "tier.h"
 
 /**
  * Structure of an adversarial region.
@@ -21,6 +21,7 @@
 struct adversarial_region {
     const Real *sample;               /**< Originator of the region. */
     const Perturbation perturbation;  /**< Perturbation function. */
+    const Tier tier;
 };
 
 

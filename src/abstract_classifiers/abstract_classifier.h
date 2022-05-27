@@ -13,6 +13,7 @@
 #include "../adversarial_region.h"
 #include "../abstract_domains/abstract_domain.h"
 #include "../perturbation.h"
+#include "../tier.h"
 
 
 /** Default abstraction name. */

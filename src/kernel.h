@@ -22,7 +22,7 @@ typedef enum {
 
 static inline char *kernelTypeStr(KernelType k)
 {
-    static const char *strings[] = { "LINEAR", "RBF", "POLYNOMIAL"};
+    static char *strings[] = { "LINEAR", "RBF", "POLYNOMIAL"};
     return strings[k];
 }
 

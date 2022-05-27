@@ -1,6 +1,7 @@
 #include "tier.h"
 #include <stdlib.h>
 
+
 void tier_create(Tier *tier, const unsigned int size) {
     tier->size = size;
     tier->tiers = (unsigned int *) calloc(size, sizeof(unsigned int));
@@ -66,4 +67,21 @@ void tier_read(
 unsigned int get_tier_unique_count(const Tier tier)
 {
     return tier.unique_count;
+}
+
+void fill_isOneHot(bool* isOneHot, const Tier tier)
+{
+    for(unsigned int i = 0; i<tier.size;i++)
+    {
+        isOneHot[i] = false;
+        for(unsigned int j = 0; j<tier.size;j++)
+        {
+            if((i != j) && (tier.tiers[i] == tier.tiers[j]))
+            {
+                isOneHot[i] = true;
+                break;
+            }
+        }
+
+    }
 }
