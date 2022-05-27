@@ -295,7 +295,9 @@ int main(const int argc, const char **argv) {
     
     double balanced_accuracy;
     if(is_binary)
-    {balanced_accuracy = 0.5 * ( ( (TP*1.0)/(TP+FN) ) + ( (TN*1.0)/(TN+FP) )) ;}
+    {balanced_accuracy = 50 * ( ( (TP*1.0)/(TP+FN) ) + ( (TN*1.0)/(TN+FP) )) ;}
+    double accuracy = correct_cases*100.0/dataset_get_size(dataset);
+    double robust_percent = robust_cases*100.0/dataset_get_size(dataset);
     
     
     stopwatch_stop(stopwatch);
@@ -322,8 +324,8 @@ int main(const int argc, const char **argv) {
     print_classifier(classifier,resultFile);
 
     /* Writes summary */
-    printf("\nTP: %d; TN: %d; FP: %d; FN: %d -> Bal. Acc.: %f\n\n",TP,TN,FP,FN,balanced_accuracy);
-    fprintf(resultFile,"\nTP: %d; TN: %d; FP: %d; FN: %d -> Bal. Acc.: %f\n\n",TP,TN,FP,FN,balanced_accuracy);
+    printf("Bal. Acc.: %f; Acc: %f; Robust: %f\n\n",balanced_accuracy,accuracy,robust_percent);
+    fprintf(resultFile,"Bal. Acc.: %f; Acc: %f; Robust: %f \n\n",balanced_accuracy,accuracy,robust_percent);
 
     printf("------------------------------------------------------------------------------------------------------------\n");
     fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");
@@ -364,7 +366,7 @@ int main(const int argc, const char **argv) {
     );
     int dataset_size = dataset_get_size(dataset);
     
-    fprintf(resultRawFile,"%f %f %f\n",(correct_cases*1.0/dataset_size),balanced_accuracy,(robust_cases*1.0/dataset_size));
+    fprintf(resultRawFile,"%f %f %f\n",(correct_cases*100.0/dataset_size),balanced_accuracy,(robust_cases*100.0/dataset_size));
 
     if (is_binary) {
         printf("%8f\t|",balanced_accuracy);

@@ -2,6 +2,10 @@
 
 #include <malloc.h>
 #include "../report_error.h"
+#include "../tier.h"
+#include "../abstract_domains/one_hot_raf.h"
+
+//#define ONE_HOT_ON
 
 /**
  * Structure of a RAF classifier.
@@ -11,7 +15,35 @@ struct raf_classifier {
     Interval *buffer;       /**< Internal buffer. */
 };
 
+static void tier_aware_sum(
+    Raf *r,
+    const bool *isOneHot,
+    const Tier tier,
+    const Raf *feature,
+    const short* origins,
+    const unsigned int space_size
+)
+{
+    Raf *tierRaf = (Raf *)malloc(sizeof(Raf));
+    raf_create(tierRaf, feature[0].size);
+    for(unsigned int i = 0;i < space_size; i++){
+        if(isOneHot[i]){
+            unsigned int j;
+            for(j = i;j <space_size;j++){
+                if(tier.tiers[i] != tier.tiers[j])
+                    break;
+            }
+            ohraf_Rafize(tierRaf,&feature[i] ,&origins[i], (j-i));
+            raf_add(r, *r, *tierRaf);
+            i = j-1;
+        }
+        else
+        {
+            raf_add(r, *r, feature[i]);
+        }
+    }
 
+}
 
 static void raf_kernel(
     Raf *r,
@@ -59,6 +91,77 @@ static void raf_kernel(
     }
 }
 
+static void raf_kernel2(
+    Raf *r,
+    Tier tier,
+    const Kernel kernel,
+    const Real *x,
+    const Raf *y,
+    const unsigned int space_size
+) {
+    bool* isOneHot = (bool*)malloc(space_size*sizeof(bool));
+    short* origins = (short*)calloc(space_size,sizeof(short));
+    Raf* featureRaf = (Raf*) calloc(space_size, sizeof(Raf));
+    for (unsigned int i = 0; i < space_size; ++i) {
+        raf_create(&featureRaf[i], y[0].size);
+    }
+
+    fill_isOneHot(isOneHot,tier);
+    Raf_sanityCheck(isOneHot,origins,y,space_size);
+
+    if (kernel_get_type(kernel) == KERNEL_RBF) {
+        Raf exponent;
+        //Raf product;
+        unsigned int i;
+
+        raf_create(&exponent, space_size);
+        //raf_create(&product, y[0].size);
+        for (i = 0; i < space_size; ++i) {
+            if(isOneHot[i])
+            {
+                ohraf_translate(&featureRaf[i], y[i], -x[i]);
+                ohraf_pow(&featureRaf[i], featureRaf[i], 2);
+            }
+            else
+            {
+                raf_translate(&featureRaf[i], y[i], -x[i]);
+                raf_sqr(&featureRaf[i], featureRaf[i]);
+            }
+        }
+
+        tier_aware_sum(&exponent,isOneHot,tier,featureRaf,origins,space_size);
+        raf_scale(&exponent, exponent, -kernel_get_gamma(kernel));
+        raf_exp(r, exponent);
+        raf_delete(&exponent);
+        //raf_delete(&product);
+    }
+
+    else if (kernel_get_type(kernel) == KERNEL_POLYNOMIAL) {
+        unsigned int i;
+        Raf product;
+
+        raf_create(&product, space_size);
+        raf_translate_in_place(&product, kernel_get_c(kernel));
+
+        for (i = 0; i < space_size; ++i) {
+            if(isOneHot[i])
+                ohraf_scale(&featureRaf[i],y[i],x[i]);
+            else
+                raf_scale(&featureRaf[i],y[i],x[i]);
+
+        }
+        tier_aware_sum(&product,isOneHot,tier,featureRaf,origins,space_size);
+        raf_pow(r, product, kernel_get_degree(kernel));
+        raf_delete(&product);
+    }
+
+    else {
+        report_error("Unsupported kernel type.");
+    }
+    free(featureRaf);
+    free(origins);
+    free(isOneHot);
+}
 
 
 static void overapproximate(
@@ -129,7 +232,7 @@ static void overapproximate(
                 fscanf(stream, "[%lf;%lf] ", &l, &u);
                 raf_create(abstract_sample + i, 1);
                 abstract_sample[i].c = 0.5 * (l + u);
-                abstract_sample[i].noise[0] = 0.5 * (l + u);
+                abstract_sample[i].noise[0] = 0.5 * (u - l);
                 abstract_sample[i].index = i;
             }
             fscanf(stream,"\n");
@@ -168,48 +271,95 @@ static Interval *raf_classifier_ovo_score(
     }
 
 
-    /* Computes a complete version if kernel is linear */
-    if (kernel_get_type(kernel) == KERNEL_LINEAR) {
-        const Real *coefficients = classifier_get_coefficients(raf_classifier->classifier);
-        Raf sum;
 
-        raf_create(&sum, space_size);
-        for (i = 0; i < N; ++i) {
-            for (j = i + 1; j < N; ++j) {
-                const unsigned int index = i * (N - 1) - (i * (i + 1)) / 2 + j - 1;
+    #ifdef ONE_HOT_ON
+        /* Computes a complete version if kernel is linear */
+        if (kernel_get_type(kernel) == KERNEL_LINEAR) {
+            const Real *coefficients = classifier_get_coefficients(raf_classifier->classifier);
+            bool* isOneHot = (bool*)malloc(space_size*sizeof(bool));
+            short* origins = (short*)calloc(space_size,sizeof(short));
+            fill_isOneHot(isOneHot,adversarial_region.tier);
+            Raf_sanityCheck(isOneHot,origins,abstract_sample,space_size);
 
-                raf_singleton(&sum, bias[index]);
-
-                for (k = 0; k < space_size; ++k) {
-                    raf_fma_in_place(&sum, coefficients[index * space_size + k], abstract_sample[k]);
-                }
-
-                raf_to_interval(raf_classifier->buffer + index, sum);
+            Raf* featureRaf = (Raf*) calloc(space_size, sizeof(Raf));
+            for (unsigned int i = 0; i < space_size; ++i) {
+                raf_create(&featureRaf[i], abstract_sample[0].size);
             }
+
+            Raf sum;
+            raf_create(&sum, space_size);
+            for (i = 0; i < N; ++i) {
+                for (j = i + 1; j < N; ++j) {
+                    const unsigned int index = i * (N - 1) - (i * (i + 1)) / 2 + j - 1;
+                    raf_singleton(&sum, bias[index]);
+                    for (k = 0; k < space_size; ++k) {
+                        if(isOneHot[k])
+                            ohraf_scale(&featureRaf[k], abstract_sample[k], coefficients[index * space_size + k]);
+                        else
+                            raf_scale(&featureRaf[k], abstract_sample[k], coefficients[index * space_size + k]);
+                        
+                    }
+                    tier_aware_sum(&sum,isOneHot,adversarial_region.tier,featureRaf,origins,space_size);
+                    raf_to_interval(raf_classifier->buffer + index, sum);
+                }
+            }
+            raf_delete(&sum);
+            for (i = 0; i < space_size; ++i) {
+                raf_delete(abstract_sample + i);
+            }
+            free(abstract_sample);
+            return raf_classifier->buffer;
         }
-        raf_delete(&sum);
-        for (i = 0; i < space_size; ++i) {
-            raf_delete(abstract_sample + i);
+        /* Precomputes kernel matrix. */
+        K = (Raf *) malloc(total_support_vectors * sizeof(Raf));
+
+        for (i = 0; i < total_support_vectors; ++i) {
+            raf_create(K + i, space_size);
+            raf_kernel2(
+                K + i,
+                adversarial_region.tier,
+                kernel,
+                support_vectors + i * space_size,
+                abstract_sample,
+                space_size
+            );
         }
-        free(abstract_sample);
-
-        return raf_classifier->buffer;
-    }
-
-
-    /* Precomputes kernel matrix. */
-    K = (Raf *) malloc(total_support_vectors * sizeof(Raf));
-    for (i = 0; i < total_support_vectors; ++i) {
-        raf_create(K + i, space_size);
-        raf_kernel(
-            K + i,
-            kernel,
-            support_vectors + i * space_size,
-            abstract_sample,
-            space_size
-        );
-    }
-
+    #else
+        /* Computes a complete version if kernel is linear */
+        if (kernel_get_type(kernel) == KERNEL_LINEAR) {
+            const Real *coefficients = classifier_get_coefficients(raf_classifier->classifier);
+            Raf sum;
+            raf_create(&sum, space_size);
+            for (i = 0; i < N; ++i) {
+                for (j = i + 1; j < N; ++j) {
+                    const unsigned int index = i * (N - 1) - (i * (i + 1)) / 2 + j - 1;
+                    raf_singleton(&sum, bias[index]);
+                    for (k = 0; k < space_size; ++k) {
+                        raf_fma_in_place(&sum, coefficients[index * space_size + k], abstract_sample[k]);
+                    }
+                    raf_to_interval(raf_classifier->buffer + index, sum);
+                }
+            }
+            raf_delete(&sum);
+            for (i = 0; i < space_size; ++i) {
+                raf_delete(abstract_sample + i);
+            }
+            free(abstract_sample);
+            return raf_classifier->buffer;
+        }
+        /* Precomputes kernel matrix. */
+        K = (Raf *) malloc(total_support_vectors * sizeof(Raf));
+        for (i = 0; i < total_support_vectors; ++i) {
+            raf_create(K + i, space_size);
+            raf_kernel(
+                K + i,
+                kernel,
+                support_vectors + i * space_size,
+                abstract_sample,
+                space_size
+            );
+        }
+    #endif
 
     /* Computes scores */
     for (i = 0; i < N; ++i) {

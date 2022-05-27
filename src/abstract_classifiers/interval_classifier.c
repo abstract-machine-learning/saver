@@ -5,7 +5,7 @@
 #include "../tier.h"
 #include "../abstract_domains/one_hot_interval.h"
 
-#define ONE_HOT_ON
+//#define ONE_HOT_ON
 
 /**
  * Structure of an interval classifier.
@@ -198,7 +198,6 @@ static void overapproximate(
         case PERTURBATION_FROM_FILE:
             for (i = 0; i < space_size; ++i) {
                 fscanf(stream, "[%lf;%lf] ", &abstract_sample[i].l, &abstract_sample[i].u);
-                //printf("%d : [%lf,%lf]\n",i,abstract_sample[i].l, abstract_sample[i].u);
             }
             fscanf(stream,"\n");
             break;
@@ -233,29 +232,32 @@ static Interval *interval_classifier_ovo_score(
         total_support_vectors += n_support_vectors[i];
     }
 
-
-    /* Computes a complete version if kernel is linear */
-    if (kernel_get_type(kernel) == KERNEL_LINEAR) {
-        const Real *coefficients = classifier_get_coefficients(interval_classifier->classifier);
-        for (i = 0; i < N; ++i) {
-            for (j = i + 1; j < N; ++j) {
-                const unsigned int index = i * (N - 1) - (i * (i + 1)) / 2 + j - 1;
-
-                Interval sum;
-                sum.l = bias[index];
-                sum.u = bias[index];
-                for (k = 0; k < space_size; ++k) {
-                    interval_fma(&sum, coefficients[index * space_size + k], abstract_sample[k], sum);
+    #ifdef ONE_HOT_ON
+        if (kernel_get_type(kernel) == KERNEL_LINEAR) {
+            const Real *coefficients = classifier_get_coefficients(interval_classifier->classifier);
+            bool* isOneHot = (bool*)malloc(space_size*sizeof(bool));
+            short* origins = (short*)calloc(space_size,sizeof(short));
+            fill_isOneHot(isOneHot,adversarial_region.tier);
+            interval_to_ohint(isOneHot,origins,abstract_sample,space_size);
+            for (i = 0; i < N; ++i) {
+                for (j = i + 1; j < N; ++j) {
+                    const unsigned int index = i * (N - 1) - (i * (i + 1)) / 2 + j - 1;
+                    Interval sum = {bias[index],bias[index]};
+                    Interval *featureInt = (Interval *) calloc(space_size, sizeof(Interval));
+                    for (k = 0; k < space_size; ++k) {
+                        if(isOneHot[k])
+                            ohint_scale(&featureInt[i],abstract_sample[k],coefficients[index * space_size + k]);
+                        else
+                            interval_scale(&featureInt[i],abstract_sample[k],coefficients[index * space_size + k]);
+                    }
+                    tier_aware_sum(&sum,isOneHot,adversarial_region.tier,featureInt,origins,space_size);
+                    interval_classifier->buffer[index] = sum;
                 }
-
-                interval_classifier->buffer[index] = sum;
             }
+            free(abstract_sample);
+            return interval_classifier->buffer;
         }
 
-        free(abstract_sample);
-        return interval_classifier->buffer;
-    }
-    #ifdef ONE_HOT_ON
         K = (Interval *) malloc(total_support_vectors * sizeof(Interval));
         /* Precomputes kernel matrix */
         for (i = 0; i < total_support_vectors; ++i) {
@@ -270,6 +272,25 @@ static Interval *interval_classifier_ovo_score(
         }
         
     #else
+            /* Computes a complete version if kernel is linear */
+        if (kernel_get_type(kernel) == KERNEL_LINEAR) {
+            const Real *coefficients = classifier_get_coefficients(interval_classifier->classifier);
+            for (i = 0; i < N; ++i) {
+                for (j = i + 1; j < N; ++j) {
+                    const unsigned int index = i * (N - 1) - (i * (i + 1)) / 2 + j - 1;
+                    Interval sum;
+                    sum.l = bias[index];
+                    sum.u = bias[index];
+                    for (k = 0; k < space_size; ++k) {
+                        interval_fma(&sum, coefficients[index * space_size + k], abstract_sample[k], sum);
+                    }
+                    interval_classifier->buffer[index] = sum;
+                }
+            }
+            free(abstract_sample);
+            return interval_classifier->buffer;
+        }
+
         K = (Interval *) malloc(total_support_vectors * sizeof(Interval));
         /* Precomputes kernel matrix */
         for (i = 0; i < total_support_vectors; ++i) {

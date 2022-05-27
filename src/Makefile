@@ -30,6 +30,7 @@ $(NAME): kernel.o \
         perturbation.o \
         tier.o \
         abstract_domains/one_hot_interval.o \
+        abstract_domains/one_hot_raf.o \
         adversarial_region.o \
         abstract_domains/raf.o \
         abstract_classifiers/abstract_classifier.o \

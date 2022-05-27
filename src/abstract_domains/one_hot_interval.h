@@ -14,13 +14,13 @@
 
 #include "interval.h"
 
-/** RAF abstract value. */
+/** OHInt abstract value. */
 typedef struct ohint OHInt;
 
 /**
- * Structure of a RAF.
+ * Structure of a OHInt.
  *
- * One Hot Interval Abstraction (RAF) allows to maintain the constrains of 
+ * One Hot Interval Abstraction (OHInt) allows to maintain the constrains of 
  * one-hot encoding while using Interval abstraction in general. In one-hot encoding
  * in a tier only one of the values can be 1 and rest 0.
  * 
