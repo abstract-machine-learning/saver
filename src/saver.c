@@ -235,7 +235,7 @@ int main(const int argc, const char **argv) {
     if(is_binary)
         dataset_get_unique_labels(labels,dataset);
 
-    
+    //#pragma omp parallel for
     for (i = 0; i < dataset_get_size(dataset); ++i) {
         const Real *sample = dataset_get_row(dataset, i);
         const AdversarialRegion adversarial_region = {sample, perturbation,tier};
@@ -278,21 +278,20 @@ int main(const int argc, const char **argv) {
         }
 
         /* Prints results */
-        //printf("%s\t%s\t%u\t%f\t%s\t", argv[1], argv[2], i, epsilon, dataset_get_label(dataset, i));
-        //print_classes(classes, n_concrete_classes);
-        //printf("\t");
-        //print_classes(abstract_classes, n_abstract_classes);
+        /*printf("%s\t%s\t%u\t%f\t%s\t", argv[1], argv[2], i, epsilon, dataset_get_label(dataset, i));
+        print_classes(classes, n_concrete_classes);
+        printf("\t");
+        print_classes(abstract_classes, n_abstract_classes);
         if (options.counterexamples_file) {
-            //printf("\t%s", is_robust ? "NONE" : (has_counterexample ? "FOUND" : "NOT-FOUND"));
+            printf("\t%s", is_robust ? "NONE" : (has_counterexample ? "FOUND" : "NOT-FOUND"));
         }
-        //printf("\n");
-
+        printf(".");*/
         /* Debug information */
         if (options.debug_output) {
             check_soundness(classifier, abstract_classifier, sample, adversarial_region);
         }
     }
-    
+    printf("\n");
     double balanced_accuracy;
     if(is_binary)
     {balanced_accuracy = 50 * ( ( (TP*1.0)/(TP+FN) ) + ( (TN*1.0)/(TN+FP) )) ;}

@@ -2,12 +2,12 @@
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
+1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-cat-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -16,26 +16,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
+Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  11.797779	|     319	|     128	|       119	|  0.799613	|
+| [SUMMARY]	|  15060	|       0	|  0.019804	|   12642	|   15060	|     12642	|  77.119837	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
+1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noisecat-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -44,26 +43,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
+Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  11.866353	|     319	|       4	|         2	|  0.799613	|
+| [SUMMARY]	|  15060	|       0	|  0.022194	|   12642	|   15060	|     12642	|  77.119837	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
+1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noise-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noise-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -72,26 +70,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
+Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  10.456256	|     319	|       4	|         2	|  0.799613	|
+| [SUMMARY]	|  15060	|       0	|  0.022318	|   12642	|   15060	|     12642	|  77.119837	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
+1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
+3) Abstraction : raf
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-cat-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -100,26 +97,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.001000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 157; FP: 39; FN: 42 -> Bal. Acc.: 0.797062
+Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 95.066401 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  11.821444	|     318	|     278	|       249	|  0.797062	|
+| [SUMMARY]	|  15060	|       0	|  0.025716	|   12642	|   14317	|     12241	|  77.119837	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
+1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
+3) Abstraction : raf
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noisecat-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -128,26 +124,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
+Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 63.645418 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  11.744932	|     319	|     128	|       119	|  0.799613	|
+| [SUMMARY]	|  15060	|       0	|  0.025823	|   12642	|    9585	|      9038	|  77.119837	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
+1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
+3) Abstraction : raf
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noise-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -156,26 +151,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
+Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 67.762284 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  11.937521	|     319	|       4	|         2	|  0.799613	|
+| [SUMMARY]	|  15060	|       0	|  0.025912	|   12642	|   10205	|      9514	|  77.119837	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
+1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
+3) Abstraction : hybrid
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noise-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-cat-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -184,26 +178,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
+Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  10.429970	|     319	|       4	|         2	|  0.799613	|
+| [SUMMARY]	|  15060	|       0	|  0.044206	|   12642	|   15060	|     12642	|  77.119837	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
+1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
+3) Abstraction : hybrid
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noisecat-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -212,26 +205,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.001000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 157; FP: 39; FN: 42 -> Bal. Acc.: 0.797062
+Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  11.835113	|     318	|     278	|       249	|  0.797062	|
+| [SUMMARY]	|  15060	|       0	|  0.044510	|   12642	|   15060	|     12642	|  77.119837	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
+1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
+3) Abstraction : hybrid
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noise-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -240,26 +232,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.001000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 157; FP: 39; FN: 42 -> Bal. Acc.: 0.797062
+Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  12.075930	|     318	|       0	|         0	|  0.797062	|
+| [SUMMARY]	|  15060	|       0	|  0.044716	|   12642	|   15060	|     12642	|  77.119837	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
+1) SVM Path : ../Data/./adult/svm/adult-svm_rbf_g0.01_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noise-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-cat-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -268,26 +259,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.001000	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 157; FP: 39; FN: 42 -> Bal. Acc.: 0.797062
+Bal. Acc.: 75.305267; Acc: 84.780876; Robust: 0.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  10.632714	|     318	|       0	|         0	|  0.797062	|
+| [SUMMARY]	|  15060	|       0	|  73.044120	|   12768	|       0	|         0	|  75.305267	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.0001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
+1) SVM Path : ../Data/./adult/svm/adult-svm_rbf_g0.01_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noisecat-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -296,26 +286,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.000100	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 157; TN: 153; FP: 43; FN: 46 -> Bal. Acc.: 0.777006
+Bal. Acc.: 75.305267; Acc: 84.780876; Robust: 0.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  17.224341	|     310	|     369	|       297	|  0.777006	|
+| [SUMMARY]	|  15060	|       0	|  73.917992	|   12768	|       0	|         0	|  75.305267	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.0001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
+1) SVM Path : ../Data/./adult/svm/adult-svm_rbf_g0.01_d1_c0_C1.dat
+2) Data Path : ../Data/adult/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
+5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noise-adversarial-region.dat
+6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
 7) Is binary : 1
 
 
@@ -324,517 +313,12 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.000100	|      0	| 0.000000	|      147|
+| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      103|
 ------------------------------------------------------------------------------------------------------------
-
-TP: 157; TN: 153; FP: 43; FN: 46 -> Bal. Acc.: 0.777006
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  17.144368	|     310	|       2	|         2	|  0.777006	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.0001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noise-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.000100	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 157; TN: 153; FP: 43; FN: 46 -> Bal. Acc.: 0.777006
+Bal. Acc.: 75.305267; Acc: 84.780876; Robust: 0.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  31.984401	|     310	|       3	|         3	|  0.777006	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g1e-05_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.000010	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 124; TN: 174; FP: 22; FN: 79 -> Bal. Acc.: 0.749296
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  31.969892	|     298	|     390	|       295	|  0.749296	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  15.790198	|     319	|     128	|       119	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  18.072504	|     319	|       4	|         2	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noise-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  15.693995	|     319	|       4	|         2	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  16.157356	|     319	|     128	|       119	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  0.602213	|     319	|       4	|         2	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  0.689346	|     319	|       4	|         2	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noise-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  0.664699	|     319	|       4	|         2	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.001000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 157; FP: 39; FN: 42 -> Bal. Acc.: 0.797062
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  0.588494	|     318	|       0	|         0	|  0.797062	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.001000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 157; FP: 39; FN: 42 -> Bal. Acc.: 0.797062
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  0.668283	|     318	|       0	|         0	|  0.797062	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noise-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.001000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 157; FP: 39; FN: 42 -> Bal. Acc.: 0.797062
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  0.648932	|     318	|       0	|         0	|  0.797062	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  0.691797	|     319	|       4	|         2	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  0.685263	|     319	|       4	|         2	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noise-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  0.671143	|     319	|       4	|         2	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.001_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.001000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 157; FP: 39; FN: 42 -> Bal. Acc.: 0.797062
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  11.868398	|     318	|     278	|       249	|  0.797062	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-cat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  11.870105	|     319	|     128	|       119	|  0.799613	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./crime/svm/crime-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/crime/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/crime/perturbation/crime-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/crime/perturbation/crime-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      147|
-------------------------------------------------------------------------------------------------------------
-
-TP: 161; TN: 158; FP: 38; FN: 42 -> Bal. Acc.: 0.799613
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|    399	|       0	|  11.844429	|     319	|       4	|         2	|  0.799613	|
+| [SUMMARY]	|  15060	|       0	|  75.214610	|   12768	|       0	|         0	|  75.305267	|
 ------------------------------------------------------------------------------------------------------------

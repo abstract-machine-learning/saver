@@ -104,6 +104,7 @@ static void raf_kernel2(
     bool* isOneHot = (bool*)malloc(space_size*sizeof(bool));
     short* origins = (short*)calloc(space_size,sizeof(short));
     Raf* featureRaf = (Raf*) calloc(space_size, sizeof(Raf));
+    
     for (unsigned int i = 0; i < space_size; ++i) {
         raf_create(&featureRaf[i], y[0].size);
     }
@@ -159,6 +160,9 @@ static void raf_kernel2(
 
     else {
         report_error("Unsupported kernel type.");
+    }
+    for (unsigned int i = 0; i < space_size; ++i) {
+        raf_delete(&featureRaf[i]);
     }
     free(featureRaf);
     free(origins);
