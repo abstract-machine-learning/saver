@@ -42,6 +42,8 @@ static void tier_aware_sum(
             raf_add(r, *r, feature[i]);
         }
     }
+    raf_delete(tierRaf);
+    free(tierRaf);
 
 }
 
@@ -308,6 +310,12 @@ static Interval *raf_classifier_ovo_score(
                 raf_delete(abstract_sample + i);
             }
             free(abstract_sample);
+            free(isOneHot);
+            free(origins);
+            for (unsigned int i = 0; i < space_size; ++i) {
+                raf_delete(&featureRaf[i]);
+            }
+            free(featureRaf);
             return raf_classifier->buffer;
         }
         /* Precomputes kernel matrix. */

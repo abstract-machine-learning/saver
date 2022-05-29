@@ -391,6 +391,8 @@ int main(const int argc, const char **argv) {
     abstract_classifier_delete(&abstract_classifier);
     free(classes);
     free(abstract_classes);
+    free(labels);
+    tier_delete(&tier);
     counterexample_seeker_delete(&counterexample_seeker);
     counterexample_delete(&counterexample);
 

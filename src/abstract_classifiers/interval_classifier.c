@@ -141,7 +141,8 @@ static void interval_kernel2(
     else {
         report_error("Unsupported kernel type.");
     }
-    
+    free(isOneHot);
+    free(origins);
 }
 
 
@@ -258,6 +259,8 @@ static Interval *interval_classifier_ovo_score(
             }
             free(abstract_sample);
             free(featureInt);
+            free(isOneHot);
+            free(origins);
             return interval_classifier->buffer;
         }
 
