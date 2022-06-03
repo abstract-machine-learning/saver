@@ -5,7 +5,7 @@
 #include "../tier.h"
 #include "../abstract_domains/one_hot_raf.h"
 
-#define ONE_HOT_ON
+//#define ONE_HOT_ON
 
 /**
  * Structure of a RAF classifier.
@@ -34,12 +34,12 @@ static void tier_aware_sum(
                     break;
             }
             ohraf_Rafize(tierRaf,&feature[i] ,&origins[i], (j-i));
-            raf_add(r, *r, *tierRaf);
+            raf_fma_in_place(r, 1, *tierRaf);
             i = j-1;
         }
         else
         {
-            raf_add(r, *r, feature[i]);
+            raf_fma_in_place(r, 1, feature[i]);
         }
     }
     raf_delete(tierRaf);
@@ -64,11 +64,11 @@ static void raf_kernel(
         for (i = 0; i < space_size; ++i) {
             raf_translate(&product, y[i], -x[i]);
             raf_sqr(&product, product);
+
             raf_add_sparse_in_place(&exponent, product);
         }
         raf_scale(&exponent, exponent, -kernel_get_gamma(kernel));
         raf_exp(r, exponent);
-
         raf_delete(&exponent);
         raf_delete(&product);
     }
@@ -82,8 +82,13 @@ static void raf_kernel(
 
         for (i = 0; i < space_size; ++i) {
             raf_fma_in_place(&product, x[i], y[i]);
-
         }
+    /*
+    printf("SUM) -> (%f + ",product.c);
+    for(unsigned int i = 0; i< product.size;i++)
+        printf("%fe +",product.noise[i]);
+    printf(")\n");
+    */
         raf_pow(r, product, kernel_get_degree(kernel));
         raf_delete(&product);
     }
@@ -130,13 +135,14 @@ static void raf_kernel2(
                 raf_translate(&featureRaf[i], y[i], -x[i]);
                 raf_sqr(&featureRaf[i], featureRaf[i]);
             }
+
         }
 
         tier_aware_sum(&exponent,isOneHot,tier,featureRaf,origins,space_size);
         raf_scale(&exponent, exponent, -kernel_get_gamma(kernel));
         raf_exp(r, exponent);
         raf_delete(&exponent);
-        //raf_delete(&product);
+
     }
 
     else if (kernel_get_type(kernel) == KERNEL_POLYNOMIAL) {
@@ -303,7 +309,6 @@ static Interval *raf_classifier_ovo_score(
                             ohraf_scale(&featureRaf[k], abstract_sample[k], coefficients[index * space_size + k]);
                         else
                             raf_scale(&featureRaf[k], abstract_sample[k], coefficients[index * space_size + k]);
-                        
                     }
                     tier_aware_sum(&sum,isOneHot,adversarial_region.tier,featureRaf,origins,space_size);
                     raf_to_interval(raf_classifier->buffer + index, sum);
@@ -347,8 +352,11 @@ static Interval *raf_classifier_ovo_score(
                     const unsigned int index = i * (N - 1) - (i * (i + 1)) / 2 + j - 1;
                     raf_singleton(&sum, bias[index]);
                     for (k = 0; k < space_size; ++k) {
+
                         raf_fma_in_place(&sum, coefficients[index * space_size + k], abstract_sample[k]);
-                    }
+
+                    } 
+
                     raf_to_interval(raf_classifier->buffer + index, sum);
                 }
             }

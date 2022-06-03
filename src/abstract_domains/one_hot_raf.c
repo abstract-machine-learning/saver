@@ -57,8 +57,8 @@ void ohraf_exponent(Raf *r, const Raf x)
 {
 	Real zero = x.c - x.noise[0];
 	Real one = x.c + x.noise[0];
-	zero = exp(x.c);
-	one = exp(x.c);
+	zero = exp(zero);
+	one = exp(one);
 	r->c = 0.5 * (one + zero);
 	r->noise[0] = 0.5*(one - zero);
 	r->index = x.index;
@@ -69,8 +69,8 @@ void ohraf_pow(Raf *r, const Raf x, const unsigned int degree)
 {
 	Real zero = x.c - x.noise[0];
 	Real one = x.c + x.noise[0];
-	zero = pow(x.c,degree);
-	one = pow(x.c,degree);
+	zero = pow(zero,degree);
+	one = pow(one,degree);
 	r->c = 0.5 * (one + zero);
 	r->noise[0] = 0.5*(one - zero);
 	r->index = x.index;
@@ -108,6 +108,6 @@ void ohraf_Rafize(Raf *r,const Raf* x,const short* origin,const unsigned int tie
             min = val;
     }
     r->c = 0.5 * (min + max);
-    r->noise[0] = 0.5 * (min - max);
+    r->noise[0] = 0.5 * (max - min);
     r->index = x[0].index;
 }

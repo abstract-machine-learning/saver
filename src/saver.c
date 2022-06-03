@@ -323,8 +323,8 @@ int main(const int argc, const char **argv) {
     print_classifier(classifier,resultFile);
 
     /* Writes summary */
-    printf("Bal. Acc.: %f; Acc: %f; Robust: %f\n\n",balanced_accuracy,accuracy,robust_percent);
-    fprintf(resultFile,"Bal. Acc.: %f; Acc: %f; Robust: %f \n\n",balanced_accuracy,accuracy,robust_percent);
+    printf("WITHOUT OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f\n\n",balanced_accuracy,accuracy,robust_percent);
+    fprintf(resultFile,"WITHOUT OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f \n\n",balanced_accuracy,accuracy,robust_percent);
 
     printf("------------------------------------------------------------------------------------------------------------\n");
     fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");

@@ -14,7 +14,7 @@ else
 endif
 
 CC = gcc
-CCOPT = -Wall -Wextra -pedantic -Og -std=c99 -g -DPRECISION_$(PRECISION) $(ENFORCE_SOUNDNESS)
+CCOPT = -Wall -Wextra -pedantic -O2 -std=c99 -g -DPRECISION_$(PRECISION) $(ENFORCE_SOUNDNESS)
 LDOPT = -lm
 NAME = saver
 INSTALL_FOLDER = ../bin

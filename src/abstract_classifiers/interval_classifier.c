@@ -5,7 +5,7 @@
 #include "../tier.h"
 #include "../abstract_domains/one_hot_interval.h"
 
-#define ONE_HOT_ON
+//#define ONE_HOT_ON
 
 /**
  * Structure of an interval classifier.
@@ -249,12 +249,13 @@ static Interval *interval_classifier_ovo_score(
                     Interval sum = {bias[index],bias[index]};
                     for (k = 0; k < space_size; ++k) {
                         if(isOneHot[k])
-                            ohint_scale(&featureInt[i],abstract_sample[k],coefficients[index * space_size + k]);
+                            ohint_scale(&featureInt[k],abstract_sample[k],coefficients[index * space_size + k]);
                         else
-                            interval_scale(&featureInt[i],abstract_sample[k],coefficients[index * space_size + k]);
+                            interval_scale(&featureInt[k],abstract_sample[k],coefficients[index * space_size + k]);
                     }
                     tier_aware_sum(&sum,isOneHot,adversarial_region.tier,featureInt,origins,space_size);
                     interval_classifier->buffer[index] = sum;
+//printf("SUM()-> [%f,%f]\n",sum.l,sum.u);
                 }
             }
             free(abstract_sample);
@@ -291,6 +292,7 @@ static Interval *interval_classifier_ovo_score(
                         interval_fma(&sum, coefficients[index * space_size + k], abstract_sample[k], sum);
                     }
                     interval_classifier->buffer[index] = sum;
+//printf("SUM()-> [%f,%f]\n",sum.l,sum.u);
                 }
             }
             free(abstract_sample);

@@ -2,12 +2,12 @@
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
+1) SVM Path : ../Data/./compas/svm/compas-svm_rbf_g0.01_d1_c0.01_C30.dat
+2) Data Path : ../Data/compas/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-cat-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
+5) Perturbation Value/Path : ../Data/compas/perturbation/compas-cat-adversarial-region.dat
+6) Tier Path : ../Data/compas/perturbation/compas-tier.dat
 7) Is binary : 1
 
 
@@ -16,25 +16,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
+| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      371|
 ------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
+WITHOUT OH epsilon: 0.05; Bal. Acc.: 66.774194; Acc: 67.424242; Robust: 0.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  0.019804	|   12642	|   15060	|     12642	|  77.119837	|
+| [SUMMARY]	|   1056	|       0	|  3.626796	|     712	|       0	|         0	|  66.774194	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
+1) SVM Path : ../Data/./compas/svm/compas-svm_rbf_g0.01_d1_c0.01_C30.dat
+2) Data Path : ../Data/compas/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
+5) Perturbation Value/Path : ../Data/compas/perturbation/compas-noisecat-adversarial-region.dat
+6) Tier Path : ../Data/compas/perturbation/compas-tier.dat
 7) Is binary : 1
 
 
@@ -43,25 +43,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
+| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      371|
 ------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
+WITHOUT OH epsilon: 0.05; Bal. Acc.: 66.774194; Acc: 67.424242; Robust: 0.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  0.022194	|   12642	|   15060	|     12642	|  77.119837	|
+| [SUMMARY]	|   1056	|       0	|  3.709399	|     712	|       0	|         0	|  66.774194	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
+1) SVM Path : ../Data/./compas/svm/compas-svm_rbf_g0.01_d1_c0.01_C30.dat
+2) Data Path : ../Data/compas/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noise-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
+5) Perturbation Value/Path : ../Data/compas/perturbation/compas-noise-adversarial-region.dat
+6) Tier Path : ../Data/compas/perturbation/compas-tier.dat
 7) Is binary : 1
 
 
@@ -70,25 +70,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
+| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      371|
 ------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
+WITHOUT OH epsilon: 0.05; Bal. Acc.: 66.774194; Acc: 67.424242; Robust: 0.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  0.022318	|   12642	|   15060	|     12642	|  77.119837	|
+| [SUMMARY]	|   1056	|       0	|  3.689292	|     712	|       0	|         0	|  66.774194	|
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
+1) SVM Path : ../Data/./compas/svm/compas-svm_rbf_g0.01_d1_c0.01_C30.dat
+2) Data Path : ../Data/compas/dataset/test-set.csv
 3) Abstraction : raf
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-cat-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
+5) Perturbation Value/Path : ../Data/compas/perturbation/compas-cat-adversarial-region.dat
+6) Tier Path : ../Data/compas/perturbation/compas-tier.dat
 7) Is binary : 1
 
 
@@ -97,228 +97,12 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
+| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      371|
 ------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 95.066401 
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  0.025716	|   12642	|   14317	|     12241	|  77.119837	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
-3) Abstraction : raf
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
-------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 63.645418 
+WITHOUT OH epsilon: 0.05; Bal. Acc.: 66.774194; Acc: 67.424242; Robust: 0.000000 
 
 ------------------------------------------------------------------------------------------------------------
 | [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  0.025823	|   12642	|    9585	|      9038	|  77.119837	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
-3) Abstraction : raf
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noise-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
-------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 67.762284 
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  0.025912	|   12642	|   10205	|      9514	|  77.119837	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
-3) Abstraction : hybrid
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-cat-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
-------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  0.044206	|   12642	|   15060	|     12642	|  77.119837	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
-3) Abstraction : hybrid
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
-------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  0.044510	|   12642	|   15060	|     12642	|  77.119837	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_linear_g1_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
-3) Abstraction : hybrid
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noise-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	| LINEAR	| 0.000000	|      0	| 0.000000	|      103|
-------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 77.119837; Acc: 83.944223; Robust: 100.000000 
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  0.044716	|   12642	|   15060	|     12642	|  77.119837	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-cat-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      103|
-------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 75.305267; Acc: 84.780876; Robust: 0.000000 
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  73.044120	|   12768	|       0	|         0	|  75.305267	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      103|
-------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 75.305267; Acc: 84.780876; Robust: 0.000000 
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  73.917992	|   12768	|       0	|         0	|  75.305267	|
-------------------------------------------------------------------------------------------------------------
-
-
-	--------- Begin New Result --------
-Arguments:
-1) SVM Path : ../Data/./adult/svm/adult-svm_rbf_g0.01_d1_c0_C1.dat
-2) Data Path : ../Data/adult/dataset/test-set.csv
-3) Abstraction : interval
-4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/adult/perturbation/adult-noise-adversarial-region.dat
-6) Tier Path : ../Data/adult/perturbation/adult-tier.dat
-7) Is binary : 1
-
-
-
-------------------------------------------------------------------------------------------------------------
-| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
-------------------------------------------------------------------------------------------------------------
-
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      103|
-------------------------------------------------------------------------------------------------------------
-Bal. Acc.: 75.305267; Acc: 84.780876; Robust: 0.000000 
-
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
-------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|  15060	|       0	|  75.214610	|   12768	|       0	|         0	|  75.305267	|
+| [SUMMARY]	|   1056	|       0	|  37.476730	|     712	|       0	|         0	|  66.774194	|
 ------------------------------------------------------------------------------------------------------------
