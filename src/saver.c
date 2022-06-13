@@ -151,8 +151,6 @@ void print_classifier(const Classifier classifier,FILE *resultFile)
 
 }
 
-
-
 /**
  * Main.
  * 
@@ -218,23 +216,41 @@ int main(const int argc, const char **argv) {
     /* if binary classier then calculate confusion matrix */
     bool is_binary = (atoi(argv[7]) == 1);
 
-    
+    /*Top region for finding the weights for each feature*/
+    bool only_top = (atoi(argv[8]) == 1);
+    if(only_top)
+    {
+        if(strcmp(argv[3], "raf") != 0)
+        {
+            printf("Feature analysis requires RAF\n");
+            exit(0);
+        }
+        if(!is_binary)
+        {
+            printf("Non Implemented for Muticlass classifier, yet.\n");
+            exit(0);
+        }
+        const Real *sample = dataset_get_row(dataset, i);
+        const AdversarialRegion adversarial_region = {sample, perturbation,tier};
+        abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,only_top);
+        return 0;
+    }
+
+
     /* Prints heading */
-    printf("Classifier\tDtaset\tID\tEpsilon\tLabel\tConcrete\tAbstract");
+    printf("Classifier\tDtaset\tID\tEpsilon\tLabel\tConcrete\tAbstract\n");
     if (options.counterexamples_file) {
         printf("\tCounterexample");
     }
-    printf("\n");
 
     stopwatch = stopwatch_create();
     stopwatch_start(stopwatch);
-    
+  
     /*variables for confusion matrix*/
     int TP = 0,FP = 0,TN = 0,FN = 0;    
     int* labels = malloc(2*sizeof(int));
     if(is_binary)
         dataset_get_unique_labels(labels,dataset);
-
     //#pragma omp parallel for
     for (i = 0; i < dataset_get_size(dataset); ++i) {
         const Real *sample = dataset_get_row(dataset, i);
@@ -243,7 +259,7 @@ int main(const int argc, const char **argv) {
 
         /* Runs concrete and abstract classifiers */
         n_concrete_classes = classifier_classify(classifier, sample, classes);
-        n_abstract_classes = abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes);
+        n_abstract_classes = abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,only_top);
 
         /* Compute metrics */
         is_correct = n_concrete_classes == 1 && strcmp(classes[0], dataset_get_label(dataset, i)) == 0;
@@ -277,16 +293,6 @@ int main(const int argc, const char **argv) {
             counterexamples_found += has_counterexample;
         }
 
-        /* Prints results */
-        /*printf("%s\t%s\t%u\t%f\t%s\t", argv[1], argv[2], i, epsilon, dataset_get_label(dataset, i));
-        print_classes(classes, n_concrete_classes);
-        printf("\t");
-        print_classes(abstract_classes, n_abstract_classes);
-        if (options.counterexamples_file) {
-            printf("\t%s", is_robust ? "NONE" : (has_counterexample ? "FOUND" : "NOT-FOUND"));
-        }
-        printf(".");*/
-        /* Debug information */
         if (options.debug_output) {
             check_soundness(classifier, abstract_classifier, sample, adversarial_region);
         }
@@ -298,7 +304,6 @@ int main(const int argc, const char **argv) {
     double accuracy = correct_cases*100.0/dataset_get_size(dataset);
     double robust_percent = robust_cases*100.0/dataset_get_size(dataset);
     
-    
     stopwatch_stop(stopwatch);
 
     /* Append results to a output file*/
@@ -307,11 +312,10 @@ int main(const int argc, const char **argv) {
     FILE *resultRawFile;
     resultRawFile = fopen("result_raw.txt", "a");
     fprintf(resultFile,"\n\n\t--------- Begin New Result --------\nArguments:\n");
-
     char *param_name[] = {"SVM Path","Data Path", "Abstraction", "Perturbation", "Perturbation Value/Path", "Tier Path", "Is binary"};
     /*Output the arguments*/
 
-    for(int i = 1; i< argc;i++)
+    for(int i = 1; i< argc-1;i++)
     {
         fprintf(resultFile,"%d) %s : %s\n",i,param_name[i-1],argv[i]);
     }
@@ -323,8 +327,8 @@ int main(const int argc, const char **argv) {
     print_classifier(classifier,resultFile);
 
     /* Writes summary */
-    printf("WITHOUT OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f\n\n",balanced_accuracy,accuracy,robust_percent);
-    fprintf(resultFile,"WITHOUT OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f \n\n",balanced_accuracy,accuracy,robust_percent);
+    printf("WITH OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f\n\n",balanced_accuracy,accuracy,robust_percent);
+    fprintf(resultFile,"WITH OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f \n\n",balanced_accuracy,accuracy,robust_percent);
 
     printf("------------------------------------------------------------------------------------------------------------\n");
     fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");

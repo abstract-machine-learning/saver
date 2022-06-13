@@ -136,7 +136,8 @@ void *abstract_classifier_score(
 unsigned int abstract_classifier_classify(
     const AbstractClassifier abstract_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool is_top
 ) {
     switch (abstract_classifier->abstract_domain) {
         case ABSTRACT_DOMAIN_INTERVAL:
@@ -149,7 +150,8 @@ unsigned int abstract_classifier_classify(
             return raf_classifier_classify(
                 (RafClassifier) abstract_classifier->abstract_classifier,
                 adversarial_region,
-                classes
+                classes,
+                is_top
             );
         case ABSTRACT_DOMAIN_HYBRID:
             return hybrid_classifier_classify(

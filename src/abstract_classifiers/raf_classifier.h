@@ -60,7 +60,8 @@ Interval *raf_classifier_score(
 unsigned int raf_classifier_classify(
     const RafClassifier raf_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool isTop
 );
 
 #endif

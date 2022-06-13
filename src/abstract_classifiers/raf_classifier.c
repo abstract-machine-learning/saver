@@ -5,7 +5,7 @@
 #include "../tier.h"
 #include "../abstract_domains/one_hot_raf.h"
 
-//#define ONE_HOT_ON
+#define ONE_HOT_ON
 
 /**
  * Structure of a RAF classifier.
@@ -260,7 +260,8 @@ static void overapproximate(
 
 static Interval *raf_classifier_ovo_score(
     const RafClassifier raf_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool isTop
 ) {
     const Classifier classifier = raf_classifier->classifier;
     const Real *alpha = classifier_get_alpha(classifier);
@@ -272,6 +273,7 @@ static Interval *raf_classifier_ovo_score(
     const Kernel kernel = classifier_get_kernel(classifier);
     unsigned int i, j, k, support_vectors_i_offset = 0, total_support_vectors = 0;
     Raf *K, *abstract_sample;
+    FILE *featureRawFile;
 
     /* Overapproximates adversarial region with a RAF */
     abstract_sample = (Raf *) malloc(space_size * sizeof(Raf));
@@ -281,8 +283,9 @@ static Interval *raf_classifier_ovo_score(
     for (i = 0; i < N; ++i) {
         total_support_vectors += n_support_vectors[i];
     }
-
-
+    if(isTop){
+        featureRawFile = fopen("feature_score_raw.txt", "a");
+    }
 
     #ifdef ONE_HOT_ON
         /* Computes a complete version if kernel is linear */
@@ -312,7 +315,18 @@ static Interval *raf_classifier_ovo_score(
                     }
                     tier_aware_sum(&sum,isOneHot,adversarial_region.tier,featureRaf,origins,space_size);
                     raf_to_interval(raf_classifier->buffer + index, sum);
-                }
+                    if(isTop)
+                    {
+                        printf("SVM (%d,%d) -> %f",i,j,sum.c);
+                        fprintf(featureRawFile,"%f ",sum.c);
+                        for (int l = 0; l<sum.size; l++)
+                        {
+                            printf("+ %f e%d ",sum.noise[l], l);
+                            fprintf(featureRawFile,"%f ",sum.noise[l]);
+                        }
+                        fprintf(featureRawFile,"\n");
+                    }
+                    }
             }
             raf_delete(&sum);
             for (i = 0; i < space_size; ++i) {
@@ -358,6 +372,17 @@ static Interval *raf_classifier_ovo_score(
                     } 
 
                     raf_to_interval(raf_classifier->buffer + index, sum);
+                    if(isTop)
+                    {
+                        printf("SVM (%d,%d) -> %f",i,j,sum.c);
+                        fprintf(featureRawFile,"%f ",sum.c);
+                        for (int l = 0; l<sum.size; l++)
+                        {
+                            printf("+ %f e%d ",sum.noise[l], l);
+                            fprintf(featureRawFile,"%f ",sum.noise[l]);
+                        }
+                        fprintf(featureRawFile,"\n");
+                    }
                 }
             }
             raf_delete(&sum);
@@ -411,7 +436,17 @@ static Interval *raf_classifier_ovo_score(
                     K[support_vectors_j_offset + k]
                 );
             }
-
+            if(isTop)
+            {
+                printf("SVM (%d,%d) -> %f",i,j,sum.c);
+                fprintf(featureRawFile,"%f ",sum.c);
+                for (int l = 0; l<sum.size; l++)
+                {
+                    printf("+ %f e%d ",sum.noise[l], l);
+                    fprintf(featureRawFile,"%f ",sum.noise[l]);
+                }
+                fprintf(featureRawFile,"\n");
+            }
             raf_to_interval(raf_classifier->buffer + index, sum);
             raf_delete(&sum);
         }
@@ -434,9 +469,10 @@ static Interval *raf_classifier_ovo_score(
 static unsigned int raf_classifier_ovo_classify(
     const RafClassifier raf_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool isTop
 ) {
-    const Interval *scores = raf_classifier_ovo_score(raf_classifier, adversarial_region);
+    const Interval *scores = raf_classifier_ovo_score(raf_classifier, adversarial_region, isTop);
     Interval *votes;
     unsigned int i, j, winning_classes = 0;
     const unsigned int N = classifier_get_n_classes(raf_classifier->classifier);
@@ -566,7 +602,7 @@ Interval *raf_classifier_score(
 ) {
     switch (classifier_get_type(raf_classifier->classifier)) {
         case CLASSIFIER_OVO:
-            return raf_classifier_ovo_score(raf_classifier, adversarial_region);
+            return raf_classifier_ovo_score(raf_classifier, adversarial_region,false);
         default:
             report_error("Unsupported classifier type.");
     }
@@ -577,11 +613,12 @@ Interval *raf_classifier_score(
 unsigned int raf_classifier_classify(
     const RafClassifier raf_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool isTop
 ) {
     switch (classifier_get_type(raf_classifier->classifier)) {
         case CLASSIFIER_OVO:
-            return raf_classifier_ovo_classify(raf_classifier, adversarial_region, classes);
+            return raf_classifier_ovo_classify(raf_classifier, adversarial_region, classes,isTop);
         default:
             report_error("Unsupported classifier.");
     }

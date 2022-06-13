@@ -110,7 +110,8 @@ void *abstract_classifier_score(
 unsigned int abstract_classifier_classify(
     const AbstractClassifier abstract_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool isTop
 );
 
 

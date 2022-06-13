@@ -5,7 +5,7 @@
 #include "../tier.h"
 #include "../abstract_domains/one_hot_interval.h"
 
-//#define ONE_HOT_ON
+#define ONE_HOT_ON
 
 /**
  * Structure of an interval classifier.
