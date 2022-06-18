@@ -61,7 +61,8 @@ unsigned int raf_classifier_classify(
     const RafClassifier raf_classifier,
     const AdversarialRegion adversarial_region,
     char **classes,
-    bool isTop
+    bool isTop,
+    unsigned int* has_counterexample
 );
 
 #endif

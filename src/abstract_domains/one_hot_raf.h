@@ -13,6 +13,8 @@
 #include <stdbool.h>
 
 #include "raf.h"
+#include "../tier.h"
+#include "../classifier.h"
 
 /** OHRAF abstract value. */
 
@@ -75,5 +77,11 @@ void ohraf_pow(Raf *r, const Raf x, const unsigned int degree);
  * Obtain An Raf by merging all the one hot Raf in current tier.
  */
 void ohraf_Rafize(Raf *r,const Raf* x,const short* origin,const unsigned int tier_size);
+
+void tierize_raf(Raf *r,const bool *isOneHot,const Tier tier,const short* origins,const unsigned int space_size,bool* maxExample,bool* minExample);
+
+void tierize_raf_helper(Raf *r,unsigned int f1,unsigned int fn,const short* origin, unsigned int* pos);
+
+int rafOH_has_counterexample(const Classifier classifier, const Raf* abstract_samples,bool* maxExample,bool* minExample,const unsigned int space_size);
 
 #endif

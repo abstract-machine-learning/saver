@@ -475,22 +475,18 @@ void raf_fma(Raf *r, const Real alpha, const Raf x, const Raf y) {
 
 void raf_fma_in_place(Raf *r, const Real alpha, const Raf x) {
     unsigned int i;
-    
     /* Avoids computation if alpha is 0 */
     if (alpha == 0.0) {
         return;
     }
 
-
     r->c += alpha * x.c;
     r->delta += fabs(alpha * x.delta);
-
     /* Computes a single noise if x has a single noise */
     if (x.index >= 0) {
         r->noise[x.index] += alpha * x.noise[0];
         return;
     }
-
     /* Computes every noise otherwise */
     for (i = 0; i < x.size; ++i) {
         r->noise[i] += alpha * x.noise[i];

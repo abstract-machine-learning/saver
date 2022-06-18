@@ -107,7 +107,6 @@ static Real* classifier_ovo_score(const Classifier classifier, const Real *sampl
             for (k = 0; k < classifier->n_support_vectors[j]; ++k) {
                 sum += classifier->alpha[i * total_support_vectors + support_vectors_j_offset + k] * K[support_vectors_j_offset + k];
             }
-
             classifier->buffer[index] = sum;
         }
     }
@@ -152,6 +151,7 @@ static unsigned int classifier_ovo_classify(
             ++winning_classes;
         }
     }
+
 
     free(votes);
 

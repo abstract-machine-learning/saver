@@ -232,7 +232,8 @@ int main(const int argc, const char **argv) {
         }
         const Real *sample = dataset_get_row(dataset, i);
         const AdversarialRegion adversarial_region = {sample, perturbation,tier};
-        abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,only_top);
+        unsigned int dummy = 0;
+        abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,only_top,&dummy);
         return 0;
     }
 
@@ -259,8 +260,7 @@ int main(const int argc, const char **argv) {
 
         /* Runs concrete and abstract classifiers */
         n_concrete_classes = classifier_classify(classifier, sample, classes);
-        n_abstract_classes = abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,only_top);
-
+        n_abstract_classes = abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,only_top,&has_counterexample);
         /* Compute metrics */
         is_correct = n_concrete_classes == 1 && strcmp(classes[0], dataset_get_label(dataset, i)) == 0;
         is_robust = n_abstract_classes <= n_concrete_classes;
@@ -287,11 +287,13 @@ int main(const int argc, const char **argv) {
         robust_cases += is_robust;
         conditionally_robust_cases += is_correct && is_robust;
 
-        /* Searches for counterexamples */
+        /* Searches for counterexamples
         if (!is_robust && options.counterexamples_file) {
             has_counterexample = counterexample_seeker_search(counterexample, counterexample_seeker, adversarial_region);
             counterexamples_found += has_counterexample;
-        }
+        } */
+
+        counterexamples_found += has_counterexample;
 
         if (options.debug_output) {
             check_soundness(classifier, abstract_classifier, sample, adversarial_region);
@@ -341,7 +343,7 @@ int main(const int argc, const char **argv) {
         printf("%8s\t|",row2[7]);
         fprintf(resultFile,"%8s\t|",row2[7]);
     }
-    if (options.counterexamples_file) {
+    if (true) {
         printf("%8s\t|",row2[8]);
         fprintf(resultFile,"%8s\t|",row2[8]);
     }
@@ -375,7 +377,7 @@ int main(const int argc, const char **argv) {
         printf("%8f\t|",balanced_accuracy);
         fprintf(resultFile,"%8f\t|",balanced_accuracy);
     }
-    if (options.counterexamples_file) {
+    if (true) {
         printf("%8u\t| ", counterexamples_found);
         fprintf(resultFile,"%8u\t| ", counterexamples_found);
     }
