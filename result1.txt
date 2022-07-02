@@ -2,12 +2,12 @@
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./compas/svm/compas-svm_rbf_g0.01_d1_c0.01_C30.dat
-2) Data Path : ../Data/compas/dataset/test-set.csv
+1) SVM Path : ../Data/./health/svm/health-svm_poly_g1_d6_c0.01_C0.1.dat
+2) Data Path : ../Data/health/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/compas/perturbation/compas-cat-adversarial-region.dat
-6) Tier Path : ../Data/compas/perturbation/compas-tier.dat
+5) Perturbation Value/Path : ../Data/health/perturbation/health-cat-adversarial-region.dat
+6) Tier Path : ../Data/health/perturbation/health-tier.dat
 7) Is binary : 1
 
 
@@ -16,25 +16,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      371|
+| SVM PARAM	||    OVO	| POLYNOMIAL	| 0.000000	|      6	| 0.010000	|      110|
 ------------------------------------------------------------------------------------------------------------
-WITHOUT OH epsilon: 0.05; Bal. Acc.: 66.774194; Acc: 67.424242; Robust: 0.000000 
+WITH OH epsilon: 0.05; Bal. Acc.: 51.789019; Acc: 65.229036; Robust: 4.610489 
 
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
+| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|Counterexamples	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|   1056	|       0	|  3.626796	|     712	|       0	|         0	|  66.774194	|
+| [SUMMARY]	|  43683	|       0	|  105.563520	|   28494	|    2014	|      1189	|  51.789019	|       0	| 
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./compas/svm/compas-svm_rbf_g0.01_d1_c0.01_C30.dat
-2) Data Path : ../Data/compas/dataset/test-set.csv
+1) SVM Path : ../Data/./health/svm/health-svm_poly_g1_d3_c0.01_C0.1.dat
+2) Data Path : ../Data/health/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/compas/perturbation/compas-noisecat-adversarial-region.dat
-6) Tier Path : ../Data/compas/perturbation/compas-tier.dat
+5) Perturbation Value/Path : ../Data/health/perturbation/health-cat-adversarial-region.dat
+6) Tier Path : ../Data/health/perturbation/health-tier.dat
 7) Is binary : 1
 
 
@@ -43,25 +43,25 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      371|
+| SVM PARAM	||    OVO	| POLYNOMIAL	| 0.000000	|      3	| 0.010000	|      110|
 ------------------------------------------------------------------------------------------------------------
-WITHOUT OH epsilon: 0.05; Bal. Acc.: 66.774194; Acc: 67.424242; Robust: 0.000000 
+WITH OH epsilon: 0.05; Bal. Acc.: 60.987342; Acc: 71.013896; Robust: 0.000000 
 
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
+| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|Counterexamples	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|   1056	|       0	|  3.709399	|     712	|       0	|         0	|  66.774194	|
+| [SUMMARY]	|  43683	|       0	|  192.133604	|   31021	|       0	|         0	|  60.987342	|       0	| 
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./compas/svm/compas-svm_rbf_g0.01_d1_c0.01_C30.dat
-2) Data Path : ../Data/compas/dataset/test-set.csv
+1) SVM Path : ../Data/./health/svm/health-svm_poly_g1_d6_c0.01_C0.1.dat
+2) Data Path : ../Data/health/dataset/test-set.csv
 3) Abstraction : interval
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/compas/perturbation/compas-noise-adversarial-region.dat
-6) Tier Path : ../Data/compas/perturbation/compas-tier.dat
+5) Perturbation Value/Path : ../Data/health/perturbation/health-noisecat-adversarial-region.dat
+6) Tier Path : ../Data/health/perturbation/health-tier.dat
 7) Is binary : 1
 
 
@@ -70,25 +70,79 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      371|
+| SVM PARAM	||    OVO	| POLYNOMIAL	| 0.000000	|      6	| 0.010000	|      110|
 ------------------------------------------------------------------------------------------------------------
-WITHOUT OH epsilon: 0.05; Bal. Acc.: 66.774194; Acc: 67.424242; Robust: 0.000000 
+WITH OH epsilon: 0.05; Bal. Acc.: 51.789019; Acc: 65.229036; Robust: 3.095026 
 
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
+| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|Counterexamples	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|   1056	|       0	|  3.689292	|     712	|       0	|         0	|  66.774194	|
+| [SUMMARY]	|  43683	|       0	|  114.690874	|   28494	|    1352	|       806	|  51.789019	|       0	| 
 ------------------------------------------------------------------------------------------------------------
 
 
 	--------- Begin New Result --------
 Arguments:
-1) SVM Path : ../Data/./compas/svm/compas-svm_rbf_g0.01_d1_c0.01_C30.dat
-2) Data Path : ../Data/compas/dataset/test-set.csv
+1) SVM Path : ../Data/./health/svm/health-svm_poly_g1_d6_c0.01_C0.1.dat
+2) Data Path : ../Data/health/dataset/test-set.csv
+3) Abstraction : interval
+4) Perturbation : from_file
+5) Perturbation Value/Path : ../Data/health/perturbation/health-noise-adversarial-region.dat
+6) Tier Path : ../Data/health/perturbation/health-tier.dat
+7) Is binary : 1
+
+
+
+------------------------------------------------------------------------------------------------------------
+| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
+------------------------------------------------------------------------------------------------------------
+
+| SVM PARAM	||    OVO	| POLYNOMIAL	| 0.000000	|      6	| 0.010000	|      110|
+------------------------------------------------------------------------------------------------------------
+WITH OH epsilon: 0.05; Bal. Acc.: 51.789019; Acc: 65.229036; Robust: 6.711993 
+
+------------------------------------------------------------------------------------------------------------
+| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|Counterexamples	|
+------------------------------------------------------------------------------------------------------------
+| [SUMMARY]	|  43683	|       0	|  112.481799	|   28494	|    2932	|      1754	|  51.789019	|       0	| 
+------------------------------------------------------------------------------------------------------------
+
+
+	--------- Begin New Result --------
+Arguments:
+1) SVM Path : ../Data/./health/svm/health-svm_poly_g1_d3_c0.01_C0.1.dat
+2) Data Path : ../Data/health/dataset/test-set.csv
+3) Abstraction : interval
+4) Perturbation : from_file
+5) Perturbation Value/Path : ../Data/health/perturbation/health-noisecat-adversarial-region.dat
+6) Tier Path : ../Data/health/perturbation/health-tier.dat
+7) Is binary : 1
+
+
+
+------------------------------------------------------------------------------------------------------------
+| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
+------------------------------------------------------------------------------------------------------------
+
+| SVM PARAM	||    OVO	| POLYNOMIAL	| 0.000000	|      3	| 0.010000	|      110|
+------------------------------------------------------------------------------------------------------------
+WITH OH epsilon: 0.05; Bal. Acc.: 60.987342; Acc: 71.013896; Robust: 0.000000 
+
+------------------------------------------------------------------------------------------------------------
+| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|Counterexamples	|
+------------------------------------------------------------------------------------------------------------
+| [SUMMARY]	|  43683	|       0	|  205.838937	|   31021	|       0	|         0	|  60.987342	|       0	| 
+------------------------------------------------------------------------------------------------------------
+
+
+	--------- Begin New Result --------
+Arguments:
+1) SVM Path : ../Data/./health/svm/health-svm_poly_g1_d6_c0.01_C0.1.dat
+2) Data Path : ../Data/health/dataset/test-set.csv
 3) Abstraction : raf
 4) Perturbation : from_file
-5) Perturbation Value/Path : ../Data/compas/perturbation/compas-cat-adversarial-region.dat
-6) Tier Path : ../Data/compas/perturbation/compas-tier.dat
+5) Perturbation Value/Path : ../Data/health/perturbation/health-cat-adversarial-region.dat
+6) Tier Path : ../Data/health/perturbation/health-tier.dat
 7) Is binary : 1
 
 
@@ -97,12 +151,39 @@ Arguments:
 | SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
 ------------------------------------------------------------------------------------------------------------
 
-| SVM PARAM	||    OVO	|    RBF	| 0.010000	|      0	| 0.000000	|      371|
+| SVM PARAM	||    OVO	| POLYNOMIAL	| 0.000000	|      6	| 0.010000	|      110|
 ------------------------------------------------------------------------------------------------------------
-WITHOUT OH epsilon: 0.05; Bal. Acc.: 66.774194; Acc: 67.424242; Robust: 0.000000 
+WITH OH epsilon: 0.05; Bal. Acc.: 51.789019; Acc: 65.229036; Robust: 7.886363 
 
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|
+| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|Counterexamples	|
 ------------------------------------------------------------------------------------------------------------
-| [SUMMARY]	|   1056	|       0	|  37.476730	|     712	|       0	|         0	|  66.774194	|
+| [SUMMARY]	|  43683	|       0	|  186.030226	|   28494	|    3445	|      2050	|  51.789019	|      44	| 
+------------------------------------------------------------------------------------------------------------
+
+
+	--------- Begin New Result --------
+Arguments:
+1) SVM Path : ../Data/./health/svm/health-svm_poly_g1_d3_c0.01_C0.1.dat
+2) Data Path : ../Data/health/dataset/test-set.csv
+3) Abstraction : interval
+4) Perturbation : from_file
+5) Perturbation Value/Path : ../Data/health/perturbation/health-noise-adversarial-region.dat
+6) Tier Path : ../Data/health/perturbation/health-tier.dat
+7) Is binary : 1
+
+
+
+------------------------------------------------------------------------------------------------------------
+| SVM PARAM	||  CType	|  KType	|  Gamma	| Degree	| Coeff.	| SpaceSize|
+------------------------------------------------------------------------------------------------------------
+
+| SVM PARAM	||    OVO	| POLYNOMIAL	| 0.000000	|      3	| 0.010000	|      110|
+------------------------------------------------------------------------------------------------------------
+WITH OH epsilon: 0.05; Bal. Acc.: 60.987342; Acc: 71.013896; Robust: 0.004578 
+
+------------------------------------------------------------------------------------------------------------
+| [SUMMARY]	||   Size	| Epsilon	| Avg. Time (ms)	| Correct	| Robust	| Cond. robust	| Bal. Acc.	|Counterexamples	|
+------------------------------------------------------------------------------------------------------------
+| [SUMMARY]	|  43683	|       0	|  182.301952	|   31021	|       2	|         2	|  60.987342	|       0	| 
 ------------------------------------------------------------------------------------------------------------

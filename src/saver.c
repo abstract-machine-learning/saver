@@ -295,6 +295,12 @@ int main(const int argc, const char **argv) {
 
         counterexamples_found += has_counterexample;
 
+        if(is_robust && has_counterexample)
+        {
+            printf("\n\n\n\n There must never be a counterexample for robust perturbations \n\n\n\n");
+            exit(0);
+        }
+
         if (options.debug_output) {
             check_soundness(classifier, abstract_classifier, sample, adversarial_region);
         }

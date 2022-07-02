@@ -6,7 +6,7 @@
 #include "../abstract_domains/one_hot_raf.h"
 
 #define ONE_HOT_ON
-#define OH_AT_LAST
+//#define OH_AT_LAST
 /**
  * Structure of a RAF classifier.
  */
@@ -138,12 +138,19 @@ static void raf_kernel2(
     else if (kernel_get_type(kernel) == KERNEL_POLYNOMIAL) {
         unsigned int i;
         Raf product;
+        Raf scaled;
 
         raf_create(&product, space_size);
         raf_translate_in_place(&product, kernel_get_c(kernel));
+        raf_create(&scaled, space_size);
 
         for (i = 0; i < space_size; ++i) {
-            raf_fma_in_place(&product, x[i], y[i]);
+            if(isOneHot[i])
+                ohraf_scale(&scaled,y[i],x[i]);
+            else
+                raf_scale(&scaled,y[i],x[i]);
+            
+            raf_fma_in_place(&product, 1, scaled);
         }
     /*
     printf("SUM) -> (%f + ",product.c);
@@ -153,6 +160,7 @@ static void raf_kernel2(
     */
         raf_pow(r, product, kernel_get_degree(kernel));
         raf_delete(&product);
+        raf_delete(&scaled);
     }
 
     else {
@@ -389,10 +397,14 @@ static Interval *raf_classifier_ovo_score(
                             printf("+ %f e%d ",sum.noise[l], l);
                             fprintf(featureRawFile,"%f ",sum.noise[l]);
                         }
-                        fprintf(featureRawFile,"\n");
+                        fprintf(featureRawFile,"%f\n");
                     }
                     }
             }
+            bool* maxExample = malloc(sizeof(bool)*space_size);
+            bool* minExample = malloc(sizeof(bool)*space_size);
+            tierize_raf(&sum,isOneHot,adversarial_region.tier,origins,space_size,maxExample,minExample);
+            *has_counterexample = rafOH_has_counterexample(classifier,abstract_sample,maxExample,minExample,space_size);
             raf_delete(&sum);
             for (i = 0; i < space_size; ++i) {
                 raf_delete(abstract_sample + i);
@@ -509,7 +521,6 @@ static Interval *raf_classifier_ovo_score(
             bool* maxExample = malloc(sizeof(bool)*space_size);
             bool* minExample = malloc(sizeof(bool)*space_size);
             tierize_raf(&sum,isOneHot,adversarial_region.tier,origins,space_size,maxExample,minExample);
-            //printf("%u --> %d",has_counterexample, *has_counterexample);
             *has_counterexample = rafOH_has_counterexample(classifier,abstract_sample,maxExample,minExample,space_size);
             #endif
             if(isTop)
@@ -521,6 +532,7 @@ static Interval *raf_classifier_ovo_score(
                     printf("+ %f e%d ",sum.noise[l], l);
                     fprintf(featureRawFile,"%f ",sum.noise[l]);
                 }
+                printf("+ %f delta ",sum.delta);
                 fprintf(featureRawFile,"\n");
             }
             raf_to_interval(raf_classifier->buffer + index, sum);
