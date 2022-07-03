@@ -5,7 +5,8 @@
 #include <string.h>
 #include <math.h>
 #include "../report_error.h"
-
+#define eps 0.0000001
+#define MIN_PART 6.0
 
 void Raf_sanityCheck(const bool* isOneHot,short* origin,const Raf *y, const unsigned int space_size)
 {
@@ -18,15 +19,16 @@ void Raf_sanityCheck(const bool* isOneHot,short* origin,const Raf *y, const unsi
         		printf("Initial one hot encoded RAF (%d) has multiple noise",i);
                 exit(0);
         	}
-            if(y[i].noise[0] == 0 && y[i].c == 0)
+            if( fabs(y[i].noise[0] - 0.0) < eps && fabs(y[i].c - 0.0)< eps)
                 origin[i] = 0; 
-            else if(y[i].noise[0] == 0 && y[i].c == 1)
+            else if(fabs(y[i].noise[0] - 0.0) < eps && fabs(y[i].c - 1.0)< eps)
                 origin[i] = 1;
-            else if(y[i].noise[0] == 0.5 && y[i].c == 0.5)
+            else if(fabs(y[i].noise[0] - 0.5) < eps && fabs(y[i].c - 0.5) < eps)
                 origin[i] = 2;
             else{
-            	printf("Initial RAF %d : [%f + %fe] doesn't satisfy one hot constrain",i,y[i].c,y[i].noise[0]);
-                exit(0);}        
+            	printf("\nA Initial RAF %d : [%.30f + %.30fe] doesn't satisfy one hot constrain\n",i,y[i].c,y[i].noise[0]);
+                exit(0);
+            }        
         }
         else
             origin[i] = 2;
@@ -137,6 +139,7 @@ void tierize_raf(Raf *r,const bool *isOneHot,const Tier tier,const short* origin
                     maxExample[k] = true;
             }
             i = j-1;
+            free(pos);
         }
         else
         {
@@ -246,5 +249,142 @@ int rafOH_has_counterexample(const Classifier classifier, const Raf* abstract_sa
 
     //printf("--->\nmax-> %c ; min -> %c\n ---> %d",maxSampleClass,minSampleClass,maxSampleClass != minSampleClass);
     free(classes);
+    free(maxSample);
+    free(minSample);
     return (maxSampleClass != minSampleClass);
+}
+
+void partitionRaf(Raf score)
+{
+for (unsigned int l = 0; l<score.size; l++)
+{
+            printf("+ %f ",score.noise[l]);
+           
+}
+    float* regionSize = malloc(2*sizeof(float));
+    labelSize(score,regionSize,100.0);
+    printf("LR: %f RR: %f",regionSize[0],regionSize[1]);
+    free(regionSize);
+
+}
+
+void partitionRerun(Raf score, Raf * abstract_sample, float percent, 
+    const RafClassifier raf_classifier,
+    const AdversarialRegion adversarial_region,
+    bool isTop,
+    unsigned int* has_counterexample,float* RegSize, Tier tiers)
+{
+    Interval* intScr = malloc(sizeof(Interval));
+    raf_to_interval(intScr, score);
+    printf("%f -> [%f,%f]\n",percent,intScr->l,intScr->u);
+    
+    for(unsigned int i = 0; i< score.size;i++)
+    {
+        printf("+ %f e_%d ",score.noise[i],i);
+    }
+    printf("\n");
+
+    if(intScr->l >= 0 && intScr->u >= 0)
+    {
+        RegSize[1] += percent;
+    }
+    else if(intScr->l < 0 && intScr->u < 0)
+    {
+        RegSize[0] += percent; 
+    }
+    else if(percent < MIN_PART){}
+    else
+    {
+        unsigned int pos = 0;
+        Real maxW = fabs(score.noise[0]);
+        for (unsigned int l = 0; l<score.size; l++)
+        {
+            if(fabs(score.noise[l]) > maxW)
+            {
+                if((tiers.tiers[l] == tiers.tiers[l+1]) || (tiers.tiers[l] == tiers.tiers[l-1]))
+                {
+                    printf("Most Influential Feature cant be partitioned as OH");
+                    continue;
+                }
+                pos = l;
+                maxW = fabs(score.noise[l]);
+            }
+        }
+        printf("POS: {%d} -> {%d}\n",pos,tiers.tiers[pos]);
+        Interval* intInput = malloc(sizeof(Interval));
+        raf_to_interval(intInput, abstract_sample[pos]);
+        Real store_c = abstract_sample[pos].c;
+        Real store_noise = abstract_sample[pos].noise[0];
+        
+        Real mid = (intInput->l + intInput->u)/2;
+        abstract_sample[pos].c = (intInput->l + mid)/2;
+        abstract_sample[pos].noise[0] = (mid - intInput->l)/2;
+
+        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,has_counterexample,abstract_sample,percent/2,RegSize);
+
+        mid = (intInput->l + intInput->u)/2;
+        abstract_sample[pos].c = (intInput->u + mid)/2;
+        abstract_sample[pos].noise[0] = (intInput->u - mid)/2;
+        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,has_counterexample,abstract_sample,percent/2,RegSize);
+
+        abstract_sample[pos].c = store_c;
+        abstract_sample[pos].noise[0] = store_noise;
+
+        free(intInput);
+    }
+    free(intScr);
+
+}
+void labelSize(Raf score, float * regionSize, float percent)
+{
+    Interval* intScr = malloc(sizeof(Interval));
+    raf_to_interval(intScr, score);
+printf("%f -> [%f,%f]",percent,intScr->l,intScr->u);
+    if(intScr->l >= 0 && intScr->u >= 0)
+    {
+        regionSize[1] += percent; 
+    }
+    else if(intScr->l < 0 && intScr->u < 0)
+    {
+        regionSize[0] += percent; 
+    }
+    else if(percent < 6.0f){}
+    else
+    {
+        unsigned int pos = 0;
+        Real maxW = score.noise[0];
+        for (unsigned int l = 0; l<score.size; l++)
+        {
+            if(score.noise[l] > maxW)
+            {
+                pos = l;
+                maxW = score.noise[l];
+            }
+        }
+        Raf *lowerRaf = (Raf *)malloc(sizeof(Raf));
+        raf_create(lowerRaf, score.size);
+        Raf *upperRaf = (Raf *)malloc(sizeof(Raf));
+        raf_create(upperRaf, score.size);
+        raf_copy(lowerRaf,score);
+        raf_copy(upperRaf,score);
+        lowerRaf->c -= maxW/2;
+        lowerRaf->noise[pos] = maxW/2;
+        upperRaf->c += maxW/2;
+        upperRaf->noise[pos] = maxW/2;
+
+        Interval* intScr1 = malloc(sizeof(Interval));
+        raf_to_interval(intScr1, *lowerRaf);
+        printf("-> [%f,%f]",intScr1->l,intScr1->u);
+
+        Interval* intScr2 = malloc(sizeof(Interval));
+        raf_to_interval(intScr2, *upperRaf);
+        printf("; [%f,%f]\n",intScr2->l,intScr2->u);
+
+        labelSize(*lowerRaf,regionSize, percent/2);
+        labelSize(*upperRaf,regionSize, percent/2);
+        free(lowerRaf);
+        free(upperRaf);
+    }
+    free(intScr);
+    return;
 }

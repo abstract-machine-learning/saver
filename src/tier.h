@@ -8,6 +8,7 @@ typedef struct tier Tier;
 
 struct tier {
     unsigned int *tiers;
+    unsigned bool *isOH;
     unsigned int size;
     unsigned int unique_count;
 };

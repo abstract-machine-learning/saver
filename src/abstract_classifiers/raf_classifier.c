@@ -7,6 +7,7 @@
 
 #define ONE_HOT_ON
 //#define OH_AT_LAST
+#define RUN_PARTITION true
 /**
  * Structure of a RAF classifier.
  */
@@ -330,11 +331,14 @@ static void overapproximate(
 
 
 
-static Interval *raf_classifier_ovo_score(
+Interval *raf_classifier_ovo_score_helper(
     const RafClassifier raf_classifier,
     const AdversarialRegion adversarial_region,
     bool isTop,
-    unsigned int* has_counterexample
+    unsigned int* has_counterexample,
+    Raf *abstract_sample,
+    float percent,
+    float* RegSize
 ) {
     const Classifier classifier = raf_classifier->classifier;
     const Real *alpha = classifier_get_alpha(classifier);
@@ -345,11 +349,10 @@ static Interval *raf_classifier_ovo_score(
     const unsigned int *n_support_vectors = classifier_get_n_support_vectors(classifier);
     const Kernel kernel = classifier_get_kernel(classifier);
     unsigned int i, j, k, support_vectors_i_offset = 0, total_support_vectors = 0;
-    Raf *K, *abstract_sample;
+    Raf *K;
     FILE *featureRawFile;
     /* Overapproximates adversarial region with a RAF */
-    abstract_sample = (Raf *) malloc(space_size * sizeof(Raf));
-    overapproximate(abstract_sample, adversarial_region, space_size);
+    
 
     /* Computes total number of support vectors */
     for (i = 0; i < N; ++i) {
@@ -387,7 +390,9 @@ static Interval *raf_classifier_ovo_score(
                             raf_scale(&featureRaf[k], abstract_sample[k], coefficients[index * space_size + k]);
                     }
                     tier_aware_sum(&sum,isOneHot,adversarial_region.tier,featureRaf,origins,space_size);
-                    raf_to_interval(raf_classifier->buffer + index, sum);
+                    if(percent == 100.0f)
+                        raf_to_interval(raf_classifier->buffer + index, sum);
+                    printf("BUFFER : [%f,%f]\n",(raf_classifier->buffer + index)->l,(raf_classifier->buffer + index)->u);
                     if(isTop)
                     {
                         printf("SVM (%d,%d) -> %f",i,j,sum.c);
@@ -405,11 +410,12 @@ static Interval *raf_classifier_ovo_score(
             bool* minExample = malloc(sizeof(bool)*space_size);
             tierize_raf(&sum,isOneHot,adversarial_region.tier,origins,space_size,maxExample,minExample);
             *has_counterexample = rafOH_has_counterexample(classifier,abstract_sample,maxExample,minExample,space_size);
+            if( RUN_PARTITION && !isTop)
+                partitionRerun(sum, abstract_sample, percent, raf_classifier, adversarial_region,isTop,has_counterexample,RegSize,adversarial_region.tier);
             raf_delete(&sum);
-            for (i = 0; i < space_size; ++i) {
-                raf_delete(abstract_sample + i);
-            }
-            free(abstract_sample);
+            free(maxExample);
+            free(minExample);
+            
             free(isOneHot);
             free(origins);
             for (unsigned int i = 0; i < space_size; ++i) {
@@ -447,8 +453,8 @@ static Interval *raf_classifier_ovo_score(
                         raf_fma_in_place(&sum, coefficients[index * space_size + k], abstract_sample[k]);
 
                     } 
-
-                    raf_to_interval(raf_classifier->buffer + index, sum);
+                    if(percent == 100.0f)
+                        raf_to_interval(raf_classifier->buffer + index, sum);
                     if(isTop)
                     {
                         printf("SVM (%d,%d) -> %f",i,j,sum.c);
@@ -463,10 +469,6 @@ static Interval *raf_classifier_ovo_score(
                 }
             }
             raf_delete(&sum);
-            for (i = 0; i < space_size; ++i) {
-                raf_delete(abstract_sample + i);
-            }
-            free(abstract_sample);
             return raf_classifier->buffer;
         }
         /* Precomputes kernel matrix. */
@@ -522,6 +524,7 @@ static Interval *raf_classifier_ovo_score(
             bool* minExample = malloc(sizeof(bool)*space_size);
             tierize_raf(&sum,isOneHot,adversarial_region.tier,origins,space_size,maxExample,minExample);
             *has_counterexample = rafOH_has_counterexample(classifier,abstract_sample,maxExample,minExample,space_size);
+            partitionRerun(sum, abstract_sample, percent, raf_classifier, adversarial_region,isTop,has_counterexample,RegSize,adversarial_region.tier);
             #endif
             if(isTop)
             {
@@ -535,7 +538,8 @@ static Interval *raf_classifier_ovo_score(
                 printf("+ %f delta ",sum.delta);
                 fprintf(featureRawFile,"\n");
             }
-            raf_to_interval(raf_classifier->buffer + index, sum);
+            if(percent == 100.0f)
+                raf_to_interval(raf_classifier->buffer + index, sum);
             raf_delete(&sum);
         }
     }
@@ -544,14 +548,34 @@ static Interval *raf_classifier_ovo_score(
     }
     free(K);
 
-    for (i = 0; i < space_size; ++i) {
-        raf_delete(abstract_sample + i);
-    }
-    free(abstract_sample);
 
     return raf_classifier->buffer;
 }
 
+static Interval *raf_classifier_ovo_score(
+    const RafClassifier raf_classifier,
+    const AdversarialRegion adversarial_region,
+    bool isTop,
+    unsigned int* has_counterexample
+)
+{
+    const Classifier classifier = raf_classifier->classifier;
+    const unsigned int space_size = classifier_get_space_size(classifier);
+    Raf *abstract_sample;
+    abstract_sample = (Raf *) malloc(space_size * sizeof(Raf));
+    overapproximate(abstract_sample, adversarial_region, space_size);
+    float* RegSize = (float *)malloc(2*sizeof(float));
+    RegSize[0] = 0.0;
+    RegSize[1] = 0.0;
+    Interval* ans = raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,has_counterexample,abstract_sample,100.0f,RegSize);
+    printf("-ve Region: %f, +ve region: %f\n",RegSize[0],RegSize[1]);
+    for (unsigned i = 0; i < space_size; ++i) {
+        raf_delete(abstract_sample + i);
+    }
+    free(abstract_sample);
+    free(RegSize);
+    return ans;
+}
 
 
 static unsigned int raf_classifier_ovo_classify(
@@ -565,6 +589,7 @@ static unsigned int raf_classifier_ovo_classify(
     Interval *votes;
     unsigned int i, j, winning_classes = 0;
     const unsigned int N = classifier_get_n_classes(raf_classifier->classifier);
+    printf("Score : [%f,%f]\n",scores[0].l,scores[0].u);
 
     votes = (Interval *) malloc(N * sizeof(Interval));
     for (i = 0; i < N; ++i) {

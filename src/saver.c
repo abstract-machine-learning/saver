@@ -287,6 +287,8 @@ int main(const int argc, const char **argv) {
         robust_cases += is_robust;
         conditionally_robust_cases += is_correct && is_robust;
 
+        if(is_robust)
+            printf("Robust\n");
         /* Searches for counterexamples
         if (!is_robust && options.counterexamples_file) {
             has_counterexample = counterexample_seeker_search(counterexample, counterexample_seeker, adversarial_region);

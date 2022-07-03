@@ -15,6 +15,9 @@
 #include "raf.h"
 #include "../tier.h"
 #include "../classifier.h"
+#include "../abstract_classifiers/abstract_classifier.h"
+#include "../abstract_classifiers/raf_classifier.h"
+#include "../abstract_domains/raf.h"
 
 /** OHRAF abstract value. */
 
@@ -84,4 +87,15 @@ void tierize_raf_helper(Raf *r,unsigned int f1,unsigned int fn,const short* orig
 
 int rafOH_has_counterexample(const Classifier classifier, const Raf* abstract_samples,bool* maxExample,bool* minExample,const unsigned int space_size);
 
+void partitionRaf(Raf score);
+
+void partitionRerun(Raf score, Raf * abstract_sample, float percent,
+    const RafClassifier raf_classifier,
+    const AdversarialRegion adversarial_region,
+    bool isTop,
+    unsigned int* has_counterexample,
+    float* RegSize,
+    Tier tiers);
+
+void labelSize(Raf score, float * regionSize, float percent);
 #endif

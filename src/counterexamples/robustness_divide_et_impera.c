@@ -77,7 +77,8 @@ static void find_max_hyper_rectangle(
     const AbstractClassifier abstract_classifier,
     char **classes_buffer
 ) {
-    const unsigned int n_classes = abstract_classifier_classify(abstract_classifier, *dst, classes_buffer);
+    unsigned int dummy = 0;
+    const unsigned int n_classes = abstract_classifier_classify(abstract_classifier, *dst, classes_buffer, false, &dummy);
 
     if (n_classes == 1) {
         return;
@@ -120,10 +121,13 @@ static CounterExampleSeekerOutput analyze_region(
 
 
     n_concrete_classes = classifier_classify(classifier, region.sample, concrete_classes);
+    unsigned int dummy = 0;
     n_abstract_classes = abstract_classifier_classify(
         abstract_classifier,
         region,
-        abstract_classes
+        abstract_classes,
+        false,
+        &dummy
     );
 
 printf("\nSubregion analysis.\n");
@@ -205,8 +209,9 @@ static unsigned int divide_et_impera(
 
 printf("\n---recursion\n");
     // Terminates if manages to prove robustness
-    n_concrete_classes = classifier_classify(classifier, original_region.sample, concrete_classes),
-    n_abstract_classes = abstract_classifier_classify(abstract_classifier, original_region, abstract_classes);
+    n_concrete_classes = classifier_classify(classifier, original_region.sample, concrete_classes);
+    unsigned int dummy = 0;
+    n_abstract_classes = abstract_classifier_classify(abstract_classifier, original_region, abstract_classes,false,dummy);
     if (n_concrete_classes == n_abstract_classes) {
 printf("robust!\n\n");
 exit(0);

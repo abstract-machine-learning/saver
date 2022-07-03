@@ -35,6 +35,15 @@ RafClassifier raf_classifier_create(const Classifier classifier);
  */
 void raf_classifier_delete(RafClassifier *raf_classifier);
 
+Interval *raf_classifier_ovo_score_helper(
+    const RafClassifier raf_classifier,
+    const AdversarialRegion adversarial_region,
+    bool isTop,
+    unsigned int* has_counterexample,
+    Raf *abstract_sample,
+    float percent,
+    float* RegSize
+);
 
 /**
  * Computes scores on an adversarial_region.
