@@ -127,6 +127,7 @@ static unsigned int classifier_ovo_classify(
     unsigned int *votes, i, j, max_class = 0, winning_classes = 0;
     const unsigned int N = classifier->n_classes;
     classifier_ovo_score(classifier, sample);
+    //printf("Score Conc: %f",classifier->buffer[0]);
 
     votes = (unsigned int *) calloc(N * (N + 1) / 2, sizeof(unsigned int));
     if (votes == NULL) {

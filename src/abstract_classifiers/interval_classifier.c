@@ -29,15 +29,26 @@ static void tier_aware_sum(
 {
     Interval tierInterval = {0.0,0.0};//(Interval *) malloc(sizeof(Interval));
     for(unsigned int i = 0;i < space_size; i++){
+        //printf("%d -> [%f,%f]\n",i,feature[i].l,feature[i].u);
         if(isOneHot[i]){
             unsigned int j;
             for(j = i;j <space_size;j++){
                 if(tier.tiers[i] != tier.tiers[j])
                     break;
             }
-            ohint_intervalize(&tierInterval,&feature[i] ,&origins[i], (j-i));
-            interval_add(r, *r, tierInterval);
-            i = j-1;
+            if(j==i+1){
+                Real min = min(feature[i].l,feature[i].u);
+                Real max = max(feature[i].l,feature[i].u);
+                tierInterval.l = min;
+                tierInterval.u = max;
+                interval_add(r, *r, tierInterval);
+            }
+            else{
+            
+                ohint_intervalize(&tierInterval,&feature[i] ,&origins[i], (j-i));
+                interval_add(r, *r, tierInterval);
+                i = j-1;
+            }
         }
         else
         {

@@ -287,8 +287,6 @@ int main(const int argc, const char **argv) {
         robust_cases += is_robust;
         conditionally_robust_cases += is_correct && is_robust;
 
-        if(is_robust)
-            printf("Robust\n");
         /* Searches for counterexamples
         if (!is_robust && options.counterexamples_file) {
             has_counterexample = counterexample_seeker_search(counterexample, counterexample_seeker, adversarial_region);
@@ -335,10 +333,11 @@ int main(const int argc, const char **argv) {
     printf("\n");
 
     print_classifier(classifier,resultFile);
+    float ce = (dataset_get_size(dataset)*1.0 - counterexamples_found*1.0)/dataset_get_size(dataset)*100.0;
 
     /* Writes summary */
-    printf("WITH OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f\n\n",balanced_accuracy,accuracy,robust_percent);
-    fprintf(resultFile,"WITH OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f \n\n",balanced_accuracy,accuracy,robust_percent);
+    printf("WITH OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f CE: %f \n\n",balanced_accuracy,accuracy,robust_percent,ce);
+    fprintf(resultFile,"WITH OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f CE: %f \n\n",balanced_accuracy,accuracy,robust_percent,ce);
 
     printf("------------------------------------------------------------------------------------------------------------\n");
     fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");

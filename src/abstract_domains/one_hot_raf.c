@@ -130,16 +130,27 @@ void tierize_raf(Raf *r,const bool *isOneHot,const Tier tier,const short* origin
                 if(tier.tiers[i] != tier.tiers[j])
                     break;
             }
-            unsigned int* pos = malloc(sizeof(int)*2);
-            tierize_raf_helper(r,i,j,origins,pos);
-            for(unsigned int k = i;k < j;k++){
-                if(k == pos[0])
-                    minExample[k] = true;
-                if(k == pos[1])
-                    maxExample[k] = true;
+            if(j == i + 1)
+            {
+                if(r->noise[i] > 0)
+                    maxExample[i] = true;
+                else
+                    minExample[i] = true;
             }
-            i = j-1;
-            free(pos);
+            else{
+                unsigned int* pos = malloc(sizeof(int)*2);
+                tierize_raf_helper(r,i,j,origins,pos);
+                for(unsigned int k = i;k < j;k++){
+                    if(k == pos[0])
+                        minExample[k] = true;
+                    if(k == pos[1])
+                        maxExample[k] = true;
+                i = j-1;
+                
+                }
+                free(pos);
+            }   
+            
         }
         else
         {
@@ -208,7 +219,6 @@ void tierize_raf_helper(Raf *r,unsigned int f1,unsigned int fn,const short* orig
     }
     pos[0] = min_id;
     pos[1] = max_id;
-
 }
 
 int rafOH_has_counterexample(const Classifier classifier, const Raf* abstract_sample,bool* maxExample,bool* minExample,const unsigned int space_size)
@@ -247,7 +257,7 @@ int rafOH_has_counterexample(const Classifier classifier, const Raf* abstract_sa
     classifier_classify(classifier, minSample, classes);
     char minSampleClass = classes[0];
 
-    //printf("--->\nmax-> %c ; min -> %c\n ---> %d",maxSampleClass,minSampleClass,maxSampleClass != minSampleClass);
+    //printf("--->\nmax-> %c ; min -> %c ---> %d\n",maxSampleClass,minSampleClass,maxSampleClass != minSampleClass);
     free(classes);
     free(maxSample);
     free(minSample);
@@ -263,7 +273,7 @@ for (unsigned int l = 0; l<score.size; l++)
 }
     float* regionSize = malloc(2*sizeof(float));
     labelSize(score,regionSize,100.0);
-    printf("LR: %f RR: %f",regionSize[0],regionSize[1]);
+    //printf("LR: %f RR: %f",regionSize[0],regionSize[1]);
     free(regionSize);
 
 }
@@ -276,13 +286,13 @@ void partitionRerun(Raf score, Raf * abstract_sample, float percent,
 {
     Interval* intScr = malloc(sizeof(Interval));
     raf_to_interval(intScr, score);
-    printf("%f -> [%f,%f]\n",percent,intScr->l,intScr->u);
+    //printf("%f -> [%f,%f]\n",percent,intScr->l,intScr->u);
     
-    for(unsigned int i = 0; i< score.size;i++)
+    /*for(unsigned int i = 0; i< score.size;i++)
     {
         printf("+ %f e_%d ",score.noise[i],i);
     }
-    printf("\n");
+    printf("\n");*/
 
     if(intScr->l >= 0 && intScr->u >= 0)
     {
@@ -292,7 +302,7 @@ void partitionRerun(Raf score, Raf * abstract_sample, float percent,
     {
         RegSize[0] += percent; 
     }
-    else if(percent < MIN_PART){}
+    else if(percent < MIN_PART || *has_counterexample == 1){}
     else
     {
         unsigned int pos = 0;
@@ -301,16 +311,21 @@ void partitionRerun(Raf score, Raf * abstract_sample, float percent,
         {
             if(fabs(score.noise[l]) > maxW)
             {
-                if((tiers.tiers[l] == tiers.tiers[l+1]) || (tiers.tiers[l] == tiers.tiers[l-1]))
+                /*if((tiers.tiers[l] == tiers.tiers[l+1]) || (tiers.tiers[l] == tiers.tiers[l-1]))
                 {
                     printf("Most Influential Feature cant be partitioned as OH");
+                    continue;
+                }*/
+                if(tiers.tiers[tiers.size+l] == 1)
+                {
+                    //printf("Most Influential Feature cant be partitioned as OH");
                     continue;
                 }
                 pos = l;
                 maxW = fabs(score.noise[l]);
             }
         }
-        printf("POS: {%d} -> {%d}\n",pos,tiers.tiers[pos]);
+        //printf("POS: {%d} -> {%d}\n",pos,tiers.tiers[pos]);
         Interval* intInput = malloc(sizeof(Interval));
         raf_to_interval(intInput, abstract_sample[pos]);
         Real store_c = abstract_sample[pos].c;
@@ -319,14 +334,17 @@ void partitionRerun(Raf score, Raf * abstract_sample, float percent,
         Real mid = (intInput->l + intInput->u)/2;
         abstract_sample[pos].c = (intInput->l + mid)/2;
         abstract_sample[pos].noise[0] = (mid - intInput->l)/2;
-
-        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,has_counterexample,abstract_sample,percent/2,RegSize);
+        unsigned int dummy1 = 0;
+        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,&dummy1,abstract_sample,percent/2,RegSize);
 
         mid = (intInput->l + intInput->u)/2;
         abstract_sample[pos].c = (intInput->u + mid)/2;
         abstract_sample[pos].noise[0] = (intInput->u - mid)/2;
-        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,has_counterexample,abstract_sample,percent/2,RegSize);
+        unsigned int dummy2 = 0;
+        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,&dummy2,abstract_sample,percent/2,RegSize);
 
+        if(dummy2 == 1 || dummy1 == 1)
+            *has_counterexample = 1;
         abstract_sample[pos].c = store_c;
         abstract_sample[pos].noise[0] = store_noise;
 

@@ -6,8 +6,8 @@
 #include "../abstract_domains/one_hot_raf.h"
 
 #define ONE_HOT_ON
-//#define OH_AT_LAST
-#define RUN_PARTITION true
+#define OH_AT_LAST
+#define RUN_PARTITION false
 /**
  * Structure of a RAF classifier.
  */
@@ -35,9 +35,14 @@ static void tier_aware_sum(
                 if(tier.tiers[i] != tier.tiers[j])
                     break;
             }
-            ohraf_Rafize(tierRaf,&feature[i] ,&origins[i], (j-i));
-            raf_fma_in_place(r, 1, *tierRaf);
-            i = j-1;
+            if(j==i+1){
+                raf_fma_in_place(r, 1, feature[i]);
+            }
+            else{
+                ohraf_Rafize(tierRaf,&feature[i] ,&origins[i], (j-i));
+                raf_fma_in_place(r, 1, *tierRaf);
+                i = j-1;
+            }
         }
         else
         {
@@ -392,7 +397,7 @@ Interval *raf_classifier_ovo_score_helper(
                     tier_aware_sum(&sum,isOneHot,adversarial_region.tier,featureRaf,origins,space_size);
                     if(percent == 100.0f)
                         raf_to_interval(raf_classifier->buffer + index, sum);
-                    printf("BUFFER : [%f,%f]\n",(raf_classifier->buffer + index)->l,(raf_classifier->buffer + index)->u);
+                    //printf("BUFFER : [%f,%f]\n",(raf_classifier->buffer + index)->l,(raf_classifier->buffer + index)->u);
                     if(isTop)
                     {
                         printf("SVM (%d,%d) -> %f",i,j,sum.c);
@@ -409,9 +414,12 @@ Interval *raf_classifier_ovo_score_helper(
             bool* maxExample = malloc(sizeof(bool)*space_size);
             bool* minExample = malloc(sizeof(bool)*space_size);
             tierize_raf(&sum,isOneHot,adversarial_region.tier,origins,space_size,maxExample,minExample);
-            *has_counterexample = rafOH_has_counterexample(classifier,abstract_sample,maxExample,minExample,space_size);
+            #ifdef OH_AT_LAST
+                *has_counterexample = rafOH_has_counterexample(classifier,abstract_sample,maxExample,minExample,space_size);
+            #endif
             if( RUN_PARTITION && !isTop)
                 partitionRerun(sum, abstract_sample, percent, raf_classifier, adversarial_region,isTop,has_counterexample,RegSize,adversarial_region.tier);
+            //printf("%f -> CE: %d\n",percent,*has_counterexample);
             raf_delete(&sum);
             free(maxExample);
             free(minExample);
@@ -523,8 +531,12 @@ Interval *raf_classifier_ovo_score_helper(
             bool* maxExample = malloc(sizeof(bool)*space_size);
             bool* minExample = malloc(sizeof(bool)*space_size);
             tierize_raf(&sum,isOneHot,adversarial_region.tier,origins,space_size,maxExample,minExample);
-            *has_counterexample = rafOH_has_counterexample(classifier,abstract_sample,maxExample,minExample,space_size);
-            partitionRerun(sum, abstract_sample, percent, raf_classifier, adversarial_region,isTop,has_counterexample,RegSize,adversarial_region.tier);
+            #ifdef OH_AT_LAST
+                *has_counterexample = rafOH_has_counterexample(classifier,abstract_sample,maxExample,minExample,space_size);
+            #endif
+            if( RUN_PARTITION && !isTop)
+                partitionRerun(sum, abstract_sample, percent, raf_classifier, adversarial_region,isTop,has_counterexample,RegSize,adversarial_region.tier);
+            //printf("%f -> CE: %d\n",percent,*has_counterexample);
             #endif
             if(isTop)
             {
@@ -568,7 +580,7 @@ static Interval *raf_classifier_ovo_score(
     RegSize[0] = 0.0;
     RegSize[1] = 0.0;
     Interval* ans = raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,has_counterexample,abstract_sample,100.0f,RegSize);
-    printf("-ve Region: %f, +ve region: %f\n",RegSize[0],RegSize[1]);
+    //printf("-ve Region: %f, +ve region: %f\n",RegSize[0],RegSize[1]);
     for (unsigned i = 0; i < space_size; ++i) {
         raf_delete(abstract_sample + i);
     }
@@ -586,10 +598,10 @@ static unsigned int raf_classifier_ovo_classify(
     unsigned int* has_counterexample
 ) {
     const Interval *scores = raf_classifier_ovo_score(raf_classifier, adversarial_region, isTop,has_counterexample);
+    //printf("SCORE: [%f,%f]\n", scores[0].l,scores[0].u);
     Interval *votes;
     unsigned int i, j, winning_classes = 0;
     const unsigned int N = classifier_get_n_classes(raf_classifier->classifier);
-    printf("Score : [%f,%f]\n",scores[0].l,scores[0].u);
 
     votes = (Interval *) malloc(N * sizeof(Interval));
     for (i = 0; i < N; ++i) {
