@@ -6,7 +6,7 @@
 #include "../abstract_domains/one_hot_raf.h"
 
 #define ONE_HOT_ON
-#define OH_AT_LAST
+//#define OH_AT_LAST
 #define RUN_PARTITION false
 /**
  * Structure of a RAF classifier.
