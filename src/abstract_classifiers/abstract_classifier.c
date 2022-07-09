@@ -137,7 +137,7 @@ unsigned int abstract_classifier_classify(
     const AbstractClassifier abstract_classifier,
     const AdversarialRegion adversarial_region,
     char **classes,
-    bool is_top,
+    bool* fair_opt,
     unsigned int* has_counterexample
 ) {
     switch (abstract_classifier->abstract_domain) {
@@ -145,14 +145,15 @@ unsigned int abstract_classifier_classify(
             return interval_classifier_classify(
                 (IntervalClassifier) abstract_classifier->abstract_classifier,
                 adversarial_region,
-                classes
+                classes,
+                fair_opt
             );
         case ABSTRACT_DOMAIN_RAF:
             return raf_classifier_classify(
                 (RafClassifier) abstract_classifier->abstract_classifier,
                 adversarial_region,
                 classes,
-                is_top,
+                fair_opt,
                 has_counterexample
             );
         case ABSTRACT_DOMAIN_HYBRID:

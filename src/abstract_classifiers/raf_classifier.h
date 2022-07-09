@@ -38,7 +38,7 @@ void raf_classifier_delete(RafClassifier *raf_classifier);
 Interval *raf_classifier_ovo_score_helper(
     const RafClassifier raf_classifier,
     const AdversarialRegion adversarial_region,
-    bool isTop,
+    bool* fair_opt,
     unsigned int* has_counterexample,
     Raf *abstract_sample,
     float percent,
@@ -70,7 +70,7 @@ unsigned int raf_classifier_classify(
     const RafClassifier raf_classifier,
     const AdversarialRegion adversarial_region,
     char **classes,
-    bool isTop,
+    bool* fair_opt,
     unsigned int* has_counterexample
 );
 

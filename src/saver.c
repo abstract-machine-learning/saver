@@ -164,7 +164,7 @@ int main(const int argc, const char **argv) {
     AbstractClassifier abstract_classifier;
     Dataset dataset;
     Stopwatch stopwatch;
-    unsigned int i, robust_cases = 0, correct_cases = 0, conditionally_robust_cases = 0, counterexamples_found = 0;
+    unsigned int i, robust_cases = 0, correct_cases = 0, conditionally_robust_cases = 0, counterexamples_found = 0, counterRegion_found = 0;
     Real epsilon = 0.01;
     char **classes, **abstract_classes;
     Perturbation perturbation;
@@ -216,9 +216,21 @@ int main(const int argc, const char **argv) {
     /* if binary classier then calculate confusion matrix */
     bool is_binary = (atoi(argv[7]) == 1);
 
+    bool* fair_opt = (bool*)malloc(4*sizeof(bool));
+
     /*Top region for finding the weights for each feature*/
-    bool only_top = (atoi(argv[8]) == 1);
-    if(only_top)
+    fair_opt[0] = (atoi(argv[8]) == 1);    // is Top
+
+    /*Use OH abstraction for OH encoded features*/
+    fair_opt[1] = (atoi(argv[9]) == 1);    // if OH
+
+    /*Alternative implementation of RAF OH to get counter example*/
+    fair_opt[2] = (atoi(argv[10]) == 1);   // if get CE
+
+    /*If to paritition input space to get additional counterexample and subregion*/
+    fair_opt[3] = (atoi(argv[11]) == 1);       // if paratition
+
+    if(fair_opt[0])
     {
         if(strcmp(argv[3], "raf") != 0)
         {
@@ -233,7 +245,7 @@ int main(const int argc, const char **argv) {
         const Real *sample = dataset_get_row(dataset, i);
         const AdversarialRegion adversarial_region = {sample, perturbation,tier};
         unsigned int dummy = 0;
-        abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,only_top,&dummy);
+        abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,fair_opt,&dummy);
         return 0;
     }
 
@@ -256,11 +268,12 @@ int main(const int argc, const char **argv) {
     for (i = 0; i < dataset_get_size(dataset); ++i) {
         const Real *sample = dataset_get_row(dataset, i);
         const AdversarialRegion adversarial_region = {sample, perturbation,tier};
-        unsigned int n_concrete_classes, n_abstract_classes, is_correct, is_robust, has_counterexample = 0;
+        unsigned int n_concrete_classes, n_abstract_classes, is_correct, is_robust;
+        unsigned int *has_counterexample = (unsigned int *)calloc(2,sizeof(unsigned int));
 
         /* Runs concrete and abstract classifiers */
         n_concrete_classes = classifier_classify(classifier, sample, classes);
-        n_abstract_classes = abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,only_top,&has_counterexample);
+        n_abstract_classes = abstract_classifier_classify(abstract_classifier, adversarial_region, abstract_classes,fair_opt,has_counterexample);
         /* Compute metrics */
         is_correct = n_concrete_classes == 1 && strcmp(classes[0], dataset_get_label(dataset, i)) == 0;
         is_robust = n_abstract_classes <= n_concrete_classes;
@@ -293,9 +306,9 @@ int main(const int argc, const char **argv) {
             counterexamples_found += has_counterexample;
         } */
 
-        counterexamples_found += has_counterexample;
-
-        if(is_robust && has_counterexample)
+        counterexamples_found += has_counterexample[0];
+        counterRegion_found += has_counterexample[1];
+        if(is_robust && has_counterexample[0])
         {
             printf("\n\n\n\n There must never be a counterexample for robust perturbations \n\n\n\n");
             exit(0);
@@ -306,12 +319,13 @@ int main(const int argc, const char **argv) {
         }
     }
     printf("\n");
+    printf("counterRegion: %d\n", counterRegion_found);
     double balanced_accuracy;
     if(is_binary)
     {balanced_accuracy = 50 * ( ( (TP*1.0)/(TP+FN) ) + ( (TN*1.0)/(TN+FP) )) ;}
     double accuracy = correct_cases*100.0/dataset_get_size(dataset);
     double robust_percent = robust_cases*100.0/dataset_get_size(dataset);
-    
+
     stopwatch_stop(stopwatch);
 
     /* Append results to a output file*/
@@ -323,7 +337,7 @@ int main(const int argc, const char **argv) {
     char *param_name[] = {"SVM Path","Data Path", "Abstraction", "Perturbation", "Perturbation Value/Path", "Tier Path", "Is binary"};
     /*Output the arguments*/
 
-    for(int i = 1; i< argc-1;i++)
+    for(int i = 1; i< argc-4;i++)
     {
         fprintf(resultFile,"%d) %s : %s\n",i,param_name[i-1],argv[i]);
     }
@@ -336,8 +350,8 @@ int main(const int argc, const char **argv) {
     float ce = (dataset_get_size(dataset)*1.0 - counterexamples_found*1.0)/dataset_get_size(dataset)*100.0;
 
     /* Writes summary */
-    printf("WITH OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f CE: %f \n\n",balanced_accuracy,accuracy,robust_percent,ce);
-    fprintf(resultFile,"WITH OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f CE: %f \n\n",balanced_accuracy,accuracy,robust_percent,ce);
+    printf("OH on: %d Bal. Acc.: %f; Acc: %f; Robust -> LB: %f UB: %f \n\n",fair_opt[1],balanced_accuracy,accuracy,robust_percent,ce);
+    fprintf(resultFile,"OH on: %d WITH OH epsilon: 0.05; Bal. Acc.: %f; Acc: %f; Robust: %f CE: %f \n\n",fair_opt[1],balanced_accuracy,accuracy,robust_percent,ce);
 
     printf("------------------------------------------------------------------------------------------------------------\n");
     fprintf(resultFile,"------------------------------------------------------------------------------------------------------------\n");

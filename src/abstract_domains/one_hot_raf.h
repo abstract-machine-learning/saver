@@ -92,7 +92,7 @@ void partitionRaf(Raf score);
 void partitionRerun(Raf score, Raf * abstract_sample, float percent,
     const RafClassifier raf_classifier,
     const AdversarialRegion adversarial_region,
-    bool isTop,
+    bool* fair_opt,
     unsigned int* has_counterexample,
     float* RegSize,
     Tier tiers);

@@ -46,7 +46,8 @@ void interval_classifier_delete(IntervalClassifier *interval_classifier);
  */
 Interval *interval_classifier_score(
     const IntervalClassifier interval_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt
 );
 
 
@@ -61,7 +62,8 @@ Interval *interval_classifier_score(
 unsigned int interval_classifier_classify(
     const IntervalClassifier interval_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool* fair_opt
 );
 
 #endif

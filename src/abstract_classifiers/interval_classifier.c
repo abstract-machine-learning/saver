@@ -224,7 +224,8 @@ static void overapproximate(
 
 static Interval *interval_classifier_ovo_score(
     const IntervalClassifier interval_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt
 ) {
     const Real *alpha = classifier_get_alpha(interval_classifier->classifier);
     const Real *bias = classifier_get_bias(interval_classifier->classifier);
@@ -246,7 +247,7 @@ static Interval *interval_classifier_ovo_score(
         total_support_vectors += n_support_vectors[i];
     }
 
-    #ifdef ONE_HOT_ON
+    if(fair_opt[1]){
         if (kernel_get_type(kernel) == KERNEL_LINEAR) {
             const Real *coefficients = classifier_get_coefficients(interval_classifier->classifier);
             bool* isOneHot = (bool*)malloc(space_size*sizeof(bool));
@@ -266,7 +267,6 @@ static Interval *interval_classifier_ovo_score(
                     }
                     tier_aware_sum(&sum,isOneHot,adversarial_region.tier,featureInt,origins,space_size);
                     interval_classifier->buffer[index] = sum;
-//printf("SUM()-> [%f,%f]\n",sum.l,sum.u);
                 }
             }
             free(abstract_sample);
@@ -288,8 +288,8 @@ static Interval *interval_classifier_ovo_score(
                 space_size
             ); 
         }
-        
-    #else
+    }
+    else{
             /* Computes a complete version if kernel is linear */
         if (kernel_get_type(kernel) == KERNEL_LINEAR) {
             const Real *coefficients = classifier_get_coefficients(interval_classifier->classifier);
@@ -321,7 +321,7 @@ static Interval *interval_classifier_ovo_score(
                 space_size
             );
         }        
-    #endif
+    }
 
     /* Computes scores */
     for (i = 0; i < N; ++i) {
@@ -370,9 +370,10 @@ static Interval *interval_classifier_ovo_score(
 static unsigned int interval_classifier_ovo_classify(
     const IntervalClassifier interval_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool* fair_opt
 ) {
-    const Interval *scores = interval_classifier_ovo_score(interval_classifier, adversarial_region);
+    const Interval *scores = interval_classifier_ovo_score(interval_classifier, adversarial_region,fair_opt);
     Interval *votes;
     unsigned int i, j, winning_classes = 0;
     const unsigned int N = classifier_get_n_classes(interval_classifier->classifier);
@@ -497,12 +498,13 @@ void interval_classifier_delete(IntervalClassifier *interval_classifier) {
 
 Interval *interval_classifier_score(
     const IntervalClassifier interval_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt
 
 ) {
     switch (classifier_get_type(interval_classifier->classifier)) {
         case CLASSIFIER_OVO:
-            return interval_classifier_ovo_score(interval_classifier, adversarial_region);
+            return interval_classifier_ovo_score(interval_classifier, adversarial_region,fair_opt);
         default:
             report_error("Unsupported classifier type.");
     }
@@ -513,11 +515,12 @@ Interval *interval_classifier_score(
 unsigned int interval_classifier_classify(
     const IntervalClassifier interval_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool* fair_opt
 ) {
     switch (classifier_get_type(interval_classifier->classifier)) {
         case CLASSIFIER_OVO:
-            return interval_classifier_ovo_classify(interval_classifier, adversarial_region, classes);
+            return interval_classifier_ovo_classify(interval_classifier, adversarial_region, classes , fair_opt);
         default:
             report_error("Unsupported classifier.");
     }

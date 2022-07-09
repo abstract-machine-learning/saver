@@ -8,6 +8,9 @@
 #define eps 0.0000001
 #define MIN_PART 6.0
 
+/**
+ * Assert that input RAF is 0 , 1 or [0,1] and flag them accordingly.  
+ */
 void Raf_sanityCheck(const bool* isOneHot,short* origin,const Raf *y, const unsigned int space_size)
 {
 	for(unsigned int i = 0; i<space_size;i++)
@@ -79,6 +82,8 @@ void ohraf_pow(Raf *r, const Raf x, const unsigned int degree)
 	r->index = x.index;
 }
 
+
+/* Obtain a single RAF for a tier using OH in RAF form for all its features*/
 void ohraf_Rafize(Raf *r,const Raf* x,const short* origin,const unsigned int tier_size)
 {
 	Real min = 0.0, max = 0.0;
@@ -115,9 +120,10 @@ void ohraf_Rafize(Raf *r,const Raf* x,const short* origin,const unsigned int tie
     r->index = x[0].index;
 }
 
+/*Obtain the flags to be use to obtain the counter example*/
 void tierize_raf(Raf *r,const bool *isOneHot,const Tier tier,const short* origins,const unsigned int space_size,bool* maxExample,bool* minExample)
 {
-    //unsigned int* has_counterexample = 0;
+
     
     for(unsigned int i = 0;i < space_size; i++){
         minExample[i] = false;
@@ -170,6 +176,11 @@ void tierize_raf(Raf *r,const bool *isOneHot,const Tier tier,const short* origin
     }
     printf("\n");*/
 }
+
+/*
+ * Given an RAF modify it so as to reduce noises for features to a single noise for the tier.
+ * And store the feature setting which to one leads to the min and max.
+ */
 void tierize_raf_helper(Raf *r,unsigned int f1,unsigned int fn,const short* origin,unsigned int* pos)
 {
     Real min = 0.0, max = 0.0;
@@ -221,6 +232,10 @@ void tierize_raf_helper(Raf *r,unsigned int f1,unsigned int fn,const short* orig
     pos[1] = max_id;
 }
 
+/*
+ * Use the Flag to obtain potential counterexample and predit their label using the classifer being analised.
+ * To check if thye are actually counter examples.
+*/
 int rafOH_has_counterexample(const Classifier classifier, const Raf* abstract_sample,bool* maxExample,bool* minExample,const unsigned int space_size)
 {
     Real* maxSample = malloc(sizeof(Real)*space_size);
@@ -264,24 +279,15 @@ int rafOH_has_counterexample(const Classifier classifier, const Raf* abstract_sa
     return (maxSampleClass != minSampleClass);
 }
 
-void partitionRaf(Raf score)
-{
-for (unsigned int l = 0; l<score.size; l++)
-{
-            printf("+ %f ",score.noise[l]);
-           
-}
-    float* regionSize = malloc(2*sizeof(float));
-    labelSize(score,regionSize,100.0);
-    //printf("LR: %f RR: %f",regionSize[0],regionSize[1]);
-    free(regionSize);
-
-}
-
+/*
+*  Partition over the feature with highest weight in the score RAF.
+*  And recursively analyse these partitions to find counter examples
+*  and counter sub-regions 
+*/
 void partitionRerun(Raf score, Raf * abstract_sample, float percent, 
     const RafClassifier raf_classifier,
     const AdversarialRegion adversarial_region,
-    bool isTop,
+    bool* fair_opt,
     unsigned int* has_counterexample,float* RegSize, Tier tiers)
 {
     Interval* intScr = malloc(sizeof(Interval));
@@ -302,7 +308,7 @@ void partitionRerun(Raf score, Raf * abstract_sample, float percent,
     {
         RegSize[0] += percent; 
     }
-    else if(percent < MIN_PART || *has_counterexample == 1){}
+    else if(percent < MIN_PART ){} //|| has_counterexample[0] == 1
     else
     {
         unsigned int pos = 0;
@@ -311,14 +317,8 @@ void partitionRerun(Raf score, Raf * abstract_sample, float percent,
         {
             if(fabs(score.noise[l]) > maxW)
             {
-                /*if((tiers.tiers[l] == tiers.tiers[l+1]) || (tiers.tiers[l] == tiers.tiers[l-1]))
-                {
-                    printf("Most Influential Feature cant be partitioned as OH");
-                    continue;
-                }*/
                 if(tiers.tiers[tiers.size+l] == 1)
                 {
-                    //printf("Most Influential Feature cant be partitioned as OH");
                     continue;
                 }
                 pos = l;
@@ -334,17 +334,20 @@ void partitionRerun(Raf score, Raf * abstract_sample, float percent,
         Real mid = (intInput->l + intInput->u)/2;
         abstract_sample[pos].c = (intInput->l + mid)/2;
         abstract_sample[pos].noise[0] = (mid - intInput->l)/2;
+        
+
         unsigned int dummy1 = 0;
-        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,&dummy1,abstract_sample,percent/2,RegSize);
+        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,fair_opt,&dummy1,abstract_sample,percent/2,RegSize);
 
         mid = (intInput->l + intInput->u)/2;
         abstract_sample[pos].c = (intInput->u + mid)/2;
         abstract_sample[pos].noise[0] = (intInput->u - mid)/2;
+        
         unsigned int dummy2 = 0;
-        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,isTop,&dummy2,abstract_sample,percent/2,RegSize);
+        raf_classifier_ovo_score_helper(raf_classifier,adversarial_region,fair_opt,&dummy2,abstract_sample,percent/2,RegSize);
 
         if(dummy2 == 1 || dummy1 == 1)
-            *has_counterexample = 1;
+            has_counterexample[0] = 1;
         abstract_sample[pos].c = store_c;
         abstract_sample[pos].noise[0] = store_noise;
 
@@ -353,11 +356,25 @@ void partitionRerun(Raf score, Raf * abstract_sample, float percent,
     free(intScr);
 
 }
+
+/*
+* Faster alternative to partition where instead of reruning we restrict the values noise can take.
+* While being significtly faster its a worse over approximation than reruning on partition.
+*/
+
+void partitionRaf(Raf score)
+{
+    float* regionSize = malloc(2*sizeof(float));
+    labelSize(score,regionSize,100.0);
+    //printf("LR: %f RR: %f",regionSize[0],regionSize[1]);
+    free(regionSize);
+}
+
 void labelSize(Raf score, float * regionSize, float percent)
 {
     Interval* intScr = malloc(sizeof(Interval));
     raf_to_interval(intScr, score);
-printf("%f -> [%f,%f]",percent,intScr->l,intScr->u);
+    //printf("%f -> [%f,%f]",percent,intScr->l,intScr->u);
     if(intScr->l >= 0 && intScr->u >= 0)
     {
         regionSize[1] += percent; 
@@ -390,13 +407,13 @@ printf("%f -> [%f,%f]",percent,intScr->l,intScr->u);
         upperRaf->c += maxW/2;
         upperRaf->noise[pos] = maxW/2;
 
-        Interval* intScr1 = malloc(sizeof(Interval));
+        /*Interval* intScr1 = malloc(sizeof(Interval));
         raf_to_interval(intScr1, *lowerRaf);
         printf("-> [%f,%f]",intScr1->l,intScr1->u);
 
         Interval* intScr2 = malloc(sizeof(Interval));
         raf_to_interval(intScr2, *upperRaf);
-        printf("; [%f,%f]\n",intScr2->l,intScr2->u);
+        printf("; [%f,%f]\n",intScr2->l,intScr2->u);*/
 
         labelSize(*lowerRaf,regionSize, percent/2);
         labelSize(*upperRaf,regionSize, percent/2);
