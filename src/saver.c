@@ -39,10 +39,12 @@ void check_soundness(
     const Classifier classifier,
     const AbstractClassifier abstract_classifier,
     const Real *sample,
-    const AdversarialRegion adversarial_region 
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt,
+    unsigned int* has_counterexample 
 ) {
     Real *scores = classifier_score(classifier, sample);
-    Interval *abstract_scores = abstract_classifier_score(abstract_classifier, adversarial_region);
+    Interval *abstract_scores = abstract_classifier_score(abstract_classifier, adversarial_region,fair_opt,has_counterexample);
     unsigned int N = classifier_get_n_classes(classifier), i, j;
 
     for (i = 0; i < N; ++i) {
@@ -315,7 +317,7 @@ int main(const int argc, const char **argv) {
         }
 
         if (options.debug_output) {
-            check_soundness(classifier, abstract_classifier, sample, adversarial_region);
+            check_soundness(classifier, abstract_classifier, sample, adversarial_region,fair_opt,has_counterexample);
         }
     }
     printf("\n");

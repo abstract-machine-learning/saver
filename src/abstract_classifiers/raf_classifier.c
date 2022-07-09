@@ -751,12 +751,13 @@ void raf_classifier_delete(RafClassifier *raf_classifier) {
 
 Interval *raf_classifier_score(
     const RafClassifier raf_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt,
+    unsigned int* has_counterexample
 ) {
     switch (classifier_get_type(raf_classifier->classifier)) {
         case CLASSIFIER_OVO:
-            unsigned int dummy = 0;
-            return raf_classifier_ovo_score(raf_classifier, adversarial_region,false, &dummy);
+            return raf_classifier_ovo_score(raf_classifier, adversarial_region, fair_opt,has_counterexample);
         default:
             report_error("Unsupported classifier type.");
     }

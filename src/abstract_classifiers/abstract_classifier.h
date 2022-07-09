@@ -90,7 +90,9 @@ Classifier abstract_classifier_get_classifier(
  */
 void *abstract_classifier_score(
     const AbstractClassifier abstract_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt,
+    unsigned int* has_counterexample
 );
 
 

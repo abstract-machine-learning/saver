@@ -109,23 +109,30 @@ Classifier abstract_classifier_get_classifier(
 
 void *abstract_classifier_score(
     const AbstractClassifier abstract_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt,
+    unsigned int* has_counterexample
 ) {
     switch (abstract_classifier->abstract_domain) {
         case ABSTRACT_DOMAIN_INTERVAL:
             return interval_classifier_score(
                 (IntervalClassifier) abstract_classifier->abstract_classifier,
-                adversarial_region
+                adversarial_region,
+                fair_opt
             );
         case ABSTRACT_DOMAIN_RAF:
             return raf_classifier_score(
                 (RafClassifier) abstract_classifier->abstract_classifier,
-                adversarial_region
+                adversarial_region,
+                fair_opt,
+                has_counterexample
             );
         case ABSTRACT_DOMAIN_HYBRID:
             return hybrid_classifier_score(
                 (HybridClassifier) abstract_classifier->abstract_classifier,
-                adversarial_region
+                adversarial_region,
+                fair_opt,
+                has_counterexample
             );
         default:
             report_error("Unsupported abstract domain.");
@@ -160,7 +167,9 @@ unsigned int abstract_classifier_classify(
             return hybrid_classifier_classify(
                 (HybridClassifier) abstract_classifier->abstract_classifier,
                 adversarial_region,
-                classes
+                classes,
+                fair_opt,
+                has_counterexample
             );
         default:
             report_error("Unsupported abstract domain.");

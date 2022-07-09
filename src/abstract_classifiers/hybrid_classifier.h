@@ -46,7 +46,9 @@ void hybrid_classifier_delete(HybridClassifier *hybrid_classifier);
  */
 Interval *hybrid_classifier_score(
     const HybridClassifier hybrid_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt,
+    unsigned int* has_counterexample
 );
 
 
@@ -61,7 +63,9 @@ Interval *hybrid_classifier_score(
 unsigned int hybrid_classifier_classify(
     const HybridClassifier hybrid_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool* fair_opt,
+    unsigned int* has_counterexample
 );
 
 #endif

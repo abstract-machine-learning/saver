@@ -19,17 +19,19 @@ struct hybrid_classifier {
 
 static Interval *hybrid_classifier_ovo_score(
     const HybridClassifier hybrid_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt,
+    unsigned int* has_counterexample
 ) {
     long offset = 0;
     if (perturbation_get_type(adversarial_region.perturbation) == PERTURBATION_FROM_FILE) {
         offset = ftell(perturbation_get_file_stream(adversarial_region.perturbation));
     }
-    const Interval *interval_scores = interval_classifier_score(hybrid_classifier->interval_classifier, adversarial_region);
+    const Interval *interval_scores = interval_classifier_score(hybrid_classifier->interval_classifier, adversarial_region,fair_opt);
     if (perturbation_get_type(adversarial_region.perturbation) == PERTURBATION_FROM_FILE) {
         fseek(perturbation_get_file_stream(adversarial_region.perturbation), offset, SEEK_SET);
     }
-    const Interval *raf_scores = raf_classifier_score(hybrid_classifier->raf_classifier, adversarial_region);
+    const Interval *raf_scores = raf_classifier_score(hybrid_classifier->raf_classifier, adversarial_region,fair_opt,has_counterexample);
     const unsigned int N = classifier_get_n_classes(hybrid_classifier->classifier);
     unsigned int i, j;
 
@@ -49,10 +51,12 @@ static Interval *hybrid_classifier_ovo_score(
 static unsigned int hybrid_classifier_ovo_classify(
     const HybridClassifier hybrid_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool* fair_opt,
+    unsigned int* has_counterexample
 ) {
     const Classifier classifier = hybrid_classifier->classifier;
-    const Interval *scores = hybrid_classifier_ovo_score(hybrid_classifier, adversarial_region);
+    const Interval *scores = hybrid_classifier_ovo_score(hybrid_classifier, adversarial_region,fair_opt,has_counterexample);
     unsigned int *votes, i, j, max_class = 0, winning_classes = 0;
     const unsigned int N = classifier_get_n_classes(classifier);
 
@@ -132,11 +136,13 @@ void hybrid_classifier_delete(HybridClassifier *hybrid_classifier) {
 
 Interval *hybrid_classifier_score(
     const HybridClassifier hybrid_classifier,
-    const AdversarialRegion adversarial_region
+    const AdversarialRegion adversarial_region,
+    bool* fair_opt,
+    unsigned int* has_counterexample
 ) {
     switch (classifier_get_type(hybrid_classifier->classifier)) {
         case CLASSIFIER_OVO:
-            return hybrid_classifier_ovo_score(hybrid_classifier, adversarial_region);
+            return hybrid_classifier_ovo_score(hybrid_classifier, adversarial_region,fair_opt,has_counterexample);
         default:
             report_error("Unsupported classifier type.");
     }
@@ -147,11 +153,13 @@ Interval *hybrid_classifier_score(
 unsigned int hybrid_classifier_classify(
     const HybridClassifier hybrid_classifier,
     const AdversarialRegion adversarial_region,
-    char **classes
+    char **classes,
+    bool* fair_opt,
+    unsigned int* has_counterexample
 ) {
     switch (classifier_get_type(hybrid_classifier->classifier)) {
         case CLASSIFIER_OVO:
-            return hybrid_classifier_ovo_classify(hybrid_classifier, adversarial_region, classes);
+            return hybrid_classifier_ovo_classify(hybrid_classifier, adversarial_region, classes,fair_opt,has_counterexample);
         default:
             report_error("Unsupported classifier.");
     }
