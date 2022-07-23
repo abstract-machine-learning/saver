@@ -321,7 +321,7 @@ int main(const int argc, const char **argv) {
         }
     }
     printf("\n");
-    printf("counterRegion: %d\n", counterRegion_found);
+    //printf("counterRegion: %d\n", counterRegion_found);
     double balanced_accuracy;
     if(is_binary)
     {balanced_accuracy = 50 * ( ( (TP*1.0)/(TP+FN) ) + ( (TN*1.0)/(TN+FP) )) ;}

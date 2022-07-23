@@ -371,13 +371,13 @@ Interval *raf_classifier_ovo_score_helper(
     for (i = 0; i < N; ++i) {
         total_support_vectors += n_support_vectors[i];
     }
-    if(fair_opt[0]){
+    if(fair_opt[0]){        // if Top
         featureRawFile = fopen("feature_score_raw.txt", "a");
     }
     bool* isOneHot = (bool*)malloc(space_size*sizeof(bool));
     short* origins = (short*)calloc(space_size,sizeof(short));
 
-    if(fair_opt[1])
+    if(fair_opt[1])     // if OH
     {
         /* Computes a complete version if kernel is linear */
         
@@ -392,8 +392,9 @@ Interval *raf_classifier_ovo_score_helper(
                 raf_create(&featureRaf[i], abstract_sample[0].size);
             }
 
-            Raf sum;
+            Raf sum,sumFeature;
             raf_create(&sum, space_size);
+            raf_create(&sumFeature, space_size);
             for (i = 0; i < N; ++i) {
                 for (j = i + 1; j < N; ++j) {
                     const unsigned int index = i * (N - 1) - (i * (i + 1)) / 2 + j - 1;
@@ -403,26 +404,43 @@ Interval *raf_classifier_ovo_score_helper(
                             ohraf_scale(&featureRaf[k], abstract_sample[k], coefficients[index * space_size + k]);
                         else
                             raf_scale(&featureRaf[k], abstract_sample[k], coefficients[index * space_size + k]);
+
+                        raf_fma_in_place(&sumFeature, coefficients[index * space_size + k], abstract_sample[k]);
                     }
                     tier_aware_sum(&sum,isOneHot,adversarial_region.tier,featureRaf,origins,space_size);
+
                     if(percent == 100.0f)
                         raf_to_interval(raf_classifier->buffer + index, sum);
                     //printf("BUFFER : [%f,%f]\n",(raf_classifier->buffer + index)->l,(raf_classifier->buffer + index)->u);
-                    if(fair_opt[0])   // Store the score for feature ranking
-                    {
-                        //printf("SVM (%d,%d) -> %f",i,j,sum.c);
-                        fprintf(featureRawFile,"%f ",sum.c);
-                        for (unsigned int l = 0; l<sum.size; l++)
-                        {
-                            //printf("+ %f e%d ",sum.noise[l], l);
-                            fprintf(featureRawFile,"%f ",sum.noise[l]);
-                        }
-                        fprintf(featureRawFile,"%f\n");
-                    }
+                    
                     }
             }
             bool* maxExample = malloc(sizeof(bool)*space_size);
             bool* minExample = malloc(sizeof(bool)*space_size);
+
+            if(fair_opt[0] && !fair_opt[2])   // Store the score for feature ranking
+            {
+                printf("SVM (%d,%d) -> %f",i,j,sum.c);
+                fprintf(featureRawFile,"%f ",sum.c);
+                for (unsigned int l = 0; l<sum.size; l++)
+                {
+                    printf("+ %f e%d ",sum.noise[l], l);
+                    fprintf(featureRawFile,"%f ",sum.noise[l]);
+                }
+                fprintf(featureRawFile,"%f\n");
+            }
+            if(fair_opt[0] && fair_opt[2])   // Store the score for feature ranking
+            {
+                printf("SVM (%d,%d) -> %f",i,j,sum.c);
+                fprintf(featureRawFile,"%f ",sumFeature.c);
+                for (unsigned int l = 0; l<sumFeature.size; l++)
+                {
+                    printf("+ %f e%d ",sum.noise[l], l);
+                    fprintf(featureRawFile,"%f ",sumFeature.noise[l]);
+                }
+                fprintf(featureRawFile,"%f\n");
+            }
+
             tierize_raf(&sum,isOneHot,adversarial_region.tier,origins,space_size,maxExample,minExample);
             if(fair_opt[2]){
                 has_counterexample[0] = rafOH_has_counterexample(classifier,abstract_sample,maxExample,minExample,space_size);
@@ -551,6 +569,18 @@ Interval *raf_classifier_ovo_score_helper(
                 );
             }            
             if(fair_opt[1]){
+                if(fair_opt[0])
+                {
+                    //printf("SVM (%d,%d) -> %f",i,j,sum.c);
+                    fprintf(featureRawFile,"%f ",sum.c);
+                    for (unsigned int l = 0; l<sum.size; l++)
+                    {
+                        //printf("+ %f e%d ",sum.noise[l], l);
+                        fprintf(featureRawFile,"%f ",sum.noise[l]);
+                    }
+                    //printf("+ %f delta ",sum.delta);
+                    fprintf(featureRawFile,"\n");
+                }
                 bool* maxExample = malloc(sizeof(bool)*space_size);
                 bool* minExample = malloc(sizeof(bool)*space_size);
                 tierize_raf(&sum,isOneHot,adversarial_region.tier,origins,space_size,maxExample,minExample);
@@ -561,18 +591,7 @@ Interval *raf_classifier_ovo_score_helper(
                     partitionRerun(sum, abstract_sample, percent, raf_classifier, adversarial_region,fair_opt,has_counterexample,RegSize,adversarial_region.tier);
                 //printf("%f -> CE: %d\n",percent,*has_counterexample);
             }
-            if(fair_opt[0])
-            {
-                //printf("SVM (%d,%d) -> %f",i,j,sum.c);
-                fprintf(featureRawFile,"%f ",sum.c);
-                for (unsigned int l = 0; l<sum.size; l++)
-                {
-                    //printf("+ %f e%d ",sum.noise[l], l);
-                    fprintf(featureRawFile,"%f ",sum.noise[l]);
-                }
-                //printf("+ %f delta ",sum.delta);
-                fprintf(featureRawFile,"\n");
-            }
+            
             if(percent == 100.0f)
                 raf_to_interval(raf_classifier->buffer + index, sum);
             raf_delete(&sum);
