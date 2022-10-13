@@ -4,7 +4,7 @@
  * Defines the structure of an adversarial region.
  *
  * @file adversarial_region.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef ADVERSARIAL_REGION_H
 #define ADVERSARIAL_REGION_H

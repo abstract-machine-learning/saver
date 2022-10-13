@@ -4,7 +4,7 @@
  * Allows to switch among float, double and long double.
  * 
  * @file type.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef TYPE_H
 #define TYPE_H

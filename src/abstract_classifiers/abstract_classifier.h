@@ -4,7 +4,7 @@
  * Defines the abstract version of an SVM classifier.
  * 
  * @file abstract_classifier.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ *
  */
 #ifndef ABSTRACT_CLASSIFIER_H
 #define ABSTRACT_CLASSIFIER_H

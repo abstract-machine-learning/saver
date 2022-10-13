@@ -4,7 +4,7 @@
  * Verifies property of SVM classifiers using abstract interpretation.
  * 
  * @file saver.c
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #include <stdio.h>
 #include <stdlib.h>

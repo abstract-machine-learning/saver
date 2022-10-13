@@ -5,7 +5,7 @@
  * two events.
  * 
  * @file stopwatch.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef STOPWATCH_H
 #define STOPWATCH_H

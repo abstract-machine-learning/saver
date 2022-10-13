@@ -4,7 +4,7 @@
  * Defines some utility function to manipulate a dataset.
  * 
  * @file dataset.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef DATASET_H
 #define DATASET_H

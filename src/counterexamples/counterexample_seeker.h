@@ -4,7 +4,7 @@
  * Automatically searches for counterexamples.
  *
  * @file counterexample_seeker.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef COUNTEREXAMPLE_SEEKER_H
 #define COUNTEREXAMPLE_SEEKER_H

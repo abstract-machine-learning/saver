@@ -2,7 +2,7 @@
  * A simple heuristic for finding robustness counterexamples.
  *
  * @file robustness_vertex_heuristic.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef ROBSTNESS_VERTEX_HEURISTIC_H
 #define ROBSTNESS_VERTEX_HEURISTIC_H

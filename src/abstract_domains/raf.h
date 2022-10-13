@@ -4,7 +4,7 @@
  * Defines abstract transfer functions for RAFs.
  *
  * @file raf.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef RAF_H
 #define RAF_H

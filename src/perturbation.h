@@ -4,7 +4,7 @@
  * Defines which perturbations are available.
  *
  * @file perturbation.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef PERTURBATION_H
 #define PERTURBATION_H

@@ -4,7 +4,7 @@
  * Defines a (concrete) SVM classifier.
  * 
  * @file classifier.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  * 
  * @todo Binary and OVR classifiers are currently not supported.
  */

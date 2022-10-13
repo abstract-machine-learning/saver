@@ -3,7 +3,7 @@
  * genetic algorithm.
  *
  * @file genetic_algorithm.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef GENETIC_ALGORITHM_H
 #define GENETIC_ALGORITHM_H

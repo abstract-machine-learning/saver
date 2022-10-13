@@ -4,7 +4,7 @@
  * Defines abstract transfer functions for OHInts.
  *
  * @file one_hot_interval.h
- * @author Abhinandan Pal <abhinandan.mike123@gmail.com>
+ * 
  */
 #ifndef ONE_HOT_INTERVAL_H
 #define ONE_HOT_INTERVAL_H

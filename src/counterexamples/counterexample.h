@@ -5,7 +5,7 @@
  * region.
  *
  * @file counterexample.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef COUNTEREXAMPLE_H
 #define COUNTEREXAMPLE_H

@@ -420,22 +420,22 @@ Interval *raf_classifier_ovo_score_helper(
 
             if(fair_opt[0] && !fair_opt[2])   // Store the score for feature ranking
             {
-                printf("SVM (%d,%d) -> %f",i,j,sum.c);
+                //printf("SVM (%d,%d) -> %f",i,j,sum.c);
                 fprintf(featureRawFile,"%f ",sum.c);
                 for (unsigned int l = 0; l<sum.size; l++)
                 {
-                    printf("+ %f e%d ",sum.noise[l], l);
+                    //printf("+ %f e%d ",sum.noise[l], l);
                     fprintf(featureRawFile,"%f ",sum.noise[l]);
                 }
                 fprintf(featureRawFile,"%f\n");
             }
             if(fair_opt[0] && fair_opt[2])   // Store the score for feature ranking
             {
-                printf("SVM (%d,%d) -> %f",i,j,sum.c);
+                //printf("SVM (%d,%d) -> %f",i,j,sum.c);
                 fprintf(featureRawFile,"%f ",sumFeature.c);
                 for (unsigned int l = 0; l<sumFeature.size; l++)
                 {
-                    printf("+ %f e%d ",sum.noise[l], l);
+                    //printf("+ %f e%d ",sum.noise[l], l);
                     fprintf(featureRawFile,"%f ",sumFeature.noise[l]);
                 }
                 fprintf(featureRawFile,"%f\n");

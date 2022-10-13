@@ -2,7 +2,7 @@
  * A genetic algorithm to generate robustness counterexamples.
  *
  * @file robustness_genetic_algorithm.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ * 
  */
 #ifndef ROBUSTNESS_GENETIC_ALGORITHM_H
 #define ROBUSTNESS_GENERIC_ALGORITHM_H

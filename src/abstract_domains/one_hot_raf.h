@@ -4,7 +4,7 @@
  * Defines abstract transfer functions for OHRAF.
  *
  * @file one_hot_raf.h
- * @author Abhinandan Pal <abhinandan.mike123@gmail.com>
+ *
  */
 #ifndef ONE_HOT_RAF_H
 #define ONE_HOT_RAF_H

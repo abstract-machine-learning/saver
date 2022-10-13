@@ -5,7 +5,7 @@
  * improve precision.
  *
  * @file hybrid_classifier.h
- * @author Marco Zanella <marco.zanella.1991@gmail.com>
+ *
  */
 #ifndef HYBRID_CLASSIFIER_H
 #define HYBRID_CLASSIFIER_H
